@@ -6,8 +6,8 @@ class PaymentScreen(TeleniumTestProcess):
 
     def test_select_subscripton(self):
         """Select Subscripton From List of Subscriptons"""
-        print("=====================Test -Select Subscripton From List of Subscriptons=====================")
-        self.cli.sleep(4)
+        print("=====================Test -Select Subscription From List of Subscription=====================")
+        self.cli.sleep(10)
         self.cli.click_on('//MDToolbar/BoxLayout[0]/MDActionTopAppBarButton[0]')
         self.cli.sleep(3)
         self.cli.drag("//NavigationItem[@text=\"Sent\"]", "//NavigationItem[@text=\"Inbox\"]", 1)

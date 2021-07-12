@@ -49,7 +49,9 @@ requirements =
 	pyzbar,
 	bitmsghash,
 	git+https://github.com/kivymd/KivyMD#egg=kivymd,
+	kivy_garden.qrcode,
 	qrcode,
+	kivy_garden,
 	msgpack
 
 # (str) Custom source folders for requirements
@@ -57,7 +59,8 @@ requirements =
 # requirements.source.kivy = ../../kivy
 
 # (list) Garden requirements
-garden_requirements = qrcode
+#requirements = kivy_garden.qrcode
+#garden_requirements = qrcode
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png

@@ -7,7 +7,7 @@ class SettingScreen(TeleniumTestProcess):
     def test_setting_screen(self):
         """Show Setting Screen"""
         print("=====================Test -Show Setting Screen=====================")
-        self.cli.sleep(3)
+        self.cli.sleep(10)
         # self.cli.wait_click("//MDToolbar/BoxLayout[0]/MDActionTopAppBarButton[0]", timeout=20)
         self.cli.click_on('//MDToolbar/BoxLayout[0]/MDActionTopAppBarButton[0]')
         self.cli.sleep(3)
