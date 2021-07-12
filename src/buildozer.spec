@@ -59,7 +59,6 @@ requirements =
 # requirements.source.kivy = ../../kivy
 
 # (list) Garden requirements
-#requirements = kivy_garden.qrcode
 #garden_requirements = qrcode
 
 # (str) Presplash of the application
