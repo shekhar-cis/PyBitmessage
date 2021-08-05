@@ -13,7 +13,7 @@ import state
 
 from bitmessagekivy.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor,
-    avatarImageFirstLetter, CutsomSwipeToDeleteItem,
+    avatarImageFirstLetter, CustomSwipeToDeleteItem,
     ShowTimeHistoy
 )
 from bitmessagekivy.baseclass.maildetail import MailDetail
@@ -90,7 +90,7 @@ class Allmails(Screen):
         for item in self.all_mails:
             body = item[3].decode() if isinstance(item[3], bytes) else item[3]
             subject = item[2].decode() if isinstance(item[2], bytes) else item[2]
-            message_row = CutsomSwipeToDeleteItem(
+            message_row = CustomSwipeToDeleteItem(
                 text=item[1],
             )
 

@@ -16,7 +16,7 @@ import state
 
 from bitmessagekivy.baseclass.common import (
     toast, showLimitedCnt, ThemeClsColor,
-    CutsomSwipeToDeleteItem, ShowTimeHistoy,
+    CustomSwipeToDeleteItem, ShowTimeHistoy,
     avatarImageFirstLetter
 )
 
@@ -85,7 +85,7 @@ class Trash(Screen):
         for item in self.trash_messages:
             subject = item[2].decode() if isinstance(item[2], bytes) else item[2]
             body = item[3].decode() if isinstance(item[3], bytes) else item[3]
-            message_row = CutsomSwipeToDeleteItem(
+            message_row = CustomSwipeToDeleteItem(
                 text=item[1],
             )
             message_row.bind(on_swipe_complete=partial(self.on_swipe_complete, message_row))

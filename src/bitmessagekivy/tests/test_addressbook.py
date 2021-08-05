@@ -1,4 +1,3 @@
-from tkinter.constants import S
 from .telenium_process import TeleniumTestProcess
 from .common import ordered
 
@@ -120,14 +119,14 @@ class AddressBook(TeleniumTestProcess):
         # Checking current screen
         self.assertExists("//AddressBook[@name~=\"addressbook\"]", timeout=2)
         # Swipe to delete
-        self.assertTrue('//MDList[0]/CutsomSwipeToDeleteItem[0]//MDIconButton[@disabled]', 'True')
+        self.assertTrue('//MDList[0]/CustomSwipeToDeleteItem[0]//MDIconButton[@disabled]', 'True')
         self.drag(
             '//MDList[0]//TwoLineAvatarIconListItem[0]/BoxLayout[1]',
             '//MDList[0]//TwoLineAvatarIconListItem[0]/BoxLayout[2]')
         # Click on trash-can icon
         self.cli.wait_click('//MDList[0]//SwipeToDeleteItem[0]', timeout=3)
         # Checking the trash icon is acrivated
-        self.assertTrue('//MDList[0]/CutsomSwipeToDeleteItem[0]//MDIconButton[@disabled]', 'False')
+        self.assertTrue('//MDList[0]/CustomSwipeToDeleteItem[0]//MDIconButton[@disabled]', 'False')
         # Click on trash icon
         self.cli.click_on('//MDList[0]//MDIconButton[@icon=\"delete-forever\"]')
         # Checking current screen

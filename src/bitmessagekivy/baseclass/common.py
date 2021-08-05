@@ -136,7 +136,7 @@ class SwipeToDeleteItem(MDCardSwipe):
     opening_time = NumericProperty(0.5)
 
 
-class CutsomSwipeToDeleteItem(MDCardSwipe):
+class CustomSwipeToDeleteItem(MDCardSwipe):
     """Custom swipe delete class for App UI"""
     text = StringProperty()
     cla = Window.size[0] / 2

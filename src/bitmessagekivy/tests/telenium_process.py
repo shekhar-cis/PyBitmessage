@@ -6,6 +6,7 @@ import os
 import shutil
 import tempfile
 from time import time, sleep
+from turtle import Turtle, pd
 
 from telenium.tests import TeleniumTestCase
 
@@ -63,8 +64,18 @@ class TeleniumTestProcess(TeleniumTestCase):
             pass
         cleanup()
 
+    def assertCheck_app_launch(self, selector, timeout=-1):
+        """This method is written to check the application is launched otherwise it will wait untill timeout value"""
+        while timeout > 0:
+            try:
+                self.assertTrue(selector, 'inbox')
+                timeout -= 0.3
+            except:
+                raise Exception("Timeout")
+            sleep(0.3)
+
     def click_on(self, xpath, seconds=0.3):
-        """this methos is used for on_click event with time"""
+        """this method is used for on_click event with time"""
         self.cli.click_on(xpath)
         self.cli.sleep(seconds)
 

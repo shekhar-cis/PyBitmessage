@@ -7,8 +7,13 @@ class AllMailMessage(TeleniumTestProcess):
     @ordered
     def test_show_allmail_list(self):
         """Show All Messages on Mail Screen/Window"""
-        print("=====================Test -Show Messages Of Mail Screen=====================")
-        self.cli.sleep(8)
+        try:
+            # checking current screen
+            self.assertExists("//ScreenManager[@current=\"inbox\"]", timeout=5)
+        except:
+            self.cli.sleep(8)
+            # checking current screen
+            self.assertExists("//ScreenManager[@current=\"inbox\"]", timeout=5)
         # this is for opening Nav drawer
         self.cli.wait_click('//MDActionTopAppBarButton[@icon=\"menu\"]', timeout=3)
         # checking state of Nav drawer
@@ -16,20 +21,17 @@ class AllMailMessage(TeleniumTestProcess):
         # this is for opening All Mail screen
         self.cli.wait_click('//NavigationItem[@text=\"All Mails\"]', timeout=5)
         # Assert for checking Current Screen(All mail)
-        self.assertExists("//Allmails[@name~=\"allmails\"]", timeout=5)
+        self.assertExists("//ScreenManager[@current=\"allmails\"]", timeout=5)
 
     @ordered
     def test_delete_message_from_allmail_list(self):
         """Delete Message From Message body of Mail Screen/Window"""
-        print("=====================Test -Delete Messages Of Mail Screen=====================")
-        # Assert for checking Current Screen(All mail)
-        self.assertExists("//Allmails[@name~=\"allmails\"]", timeout=2)
         # click on a Message to get message details screen
         self.cli.wait_click(
-            '//MDList[0]/CutsomSwipeToDeleteItem[0]', timeout=3)
+            '//MDList[0]/CustomSwipeToDeleteItem[0]', timeout=3)
         # Assert for checking Current Screen(Mail Detail)
-        self.assertExists("//MailDetail[@name~=\"mailDetail\"]", timeout=3)
+        self.assertExists("//ScreenManager[@current=\"mailDetail\"]", timeout=5)
         # CLicking on Trash-Can icon to delete Message
         self.cli.wait_click('//MDToolbar/BoxLayout[2]/MDActionTopAppBarButton[@icon=\"delete-forever\"]', timeout=5)
         # After deleting msg, screen is redirected to All mail screen
-        self.assertExists("//Allmails[@name~=\"allmails\"]", timeout=5)
+        self.assertExists("//ScreenManager[@current=\"allmails\"]", timeout=5)

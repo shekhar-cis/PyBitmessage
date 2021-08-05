@@ -1,3 +1,4 @@
+from requests import sessions
 from .telenium_process import TeleniumTestProcess
 
 
@@ -6,8 +7,12 @@ class PaymentScreen(TeleniumTestProcess):
 
     def test_select_subscripton(self):
         """Select Subscripton From List of Subscriptons"""
-        print("=====================Test -Select Subscripton From List of Subscriptons=====================")
-        self.cli.sleep(8)
+        try:
+            # checking current screen
+            self.assertExists("//Scre enManager[@current=\"inbox\"]", timeout=5)
+        except:
+            self.cli.sleep(8)
+            self.assertExists("//ScreenManager[@current=\"inbox\"]", timeout=5)
         # this is for opening Nav drawer
         self.cli.wait_click('//MDActionTopAppBarButton[@icon=\"menu\"]', timeout=3)
         # checking state of Nav drawer
@@ -19,9 +24,9 @@ class PaymentScreen(TeleniumTestProcess):
         # this is for opening Payment screen
         self.cli.wait_click('//NavigationItem[@text=\"Purchase\"]', timeout=2)
         # Assert for checking Current Screen
-        self.assertExists("//Payment[@name~=\"payment\"]", timeout=3)
+        self.assertExists("//ScreenManager[@current=\"payment\"]", timeout=3)
         # Scrolling Down Product list
-        self.cli.sleep(0.5)
+        self.click_on('//ProductCategoryLayout[0]/ProductLayout[1]', seconds=1)
         self.drag(
             '//ProductCategoryLayout[0]/ProductLayout[1]',
             '//ProductCategoryLayout[0]/ProductLayout[0]')
@@ -36,4 +41,4 @@ class PaymentScreen(TeleniumTestProcess):
         # Click out side to dismiss the popup
         self.cli.wait_click('//MDRaisedButton[3]', timeout=2)
         # Checking Current screen(Payment screen)
-        self.assertExists("//Payment[@name~=\"payment\"]", timeout=2)
+        self.assertExists("//ScreenManager[@current=\"payment\"]", timeout=3)
