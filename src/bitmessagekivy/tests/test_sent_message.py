@@ -16,7 +16,6 @@ class SendMessage(TeleniumTestProcess):
             Sending Message From Inbox Screen
             opens a pop-up(screen)which send message from sender to reciever
         """
-        print("=======Test - Sending Message From Inbox Screen with validation Checks=======")
         self.cli.sleep(8)
         # this is for opening Nav drawer
         self.cli.wait_click('//MDActionTopAppBarButton[@icon=\"menu\"]', timeout=3)

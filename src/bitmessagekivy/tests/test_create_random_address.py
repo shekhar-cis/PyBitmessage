@@ -4,6 +4,9 @@ from .telenium_process import TeleniumTestProcess, cleanup
 from .common import ordered
 from random import choice
 from string import ascii_lowercase
+from time import time, sleep
+from telenium.client import TeleniumHttpException
+
 
 class CreateRandomAddress(TeleniumTestProcess):
     """This is for testing randrom address creation"""
@@ -13,19 +16,35 @@ class CreateRandomAddress(TeleniumTestProcess):
         os.environ["BITMESSAGE_HOME"] = tempfile.gettempdir()
         cleanup()
         super(TeleniumTestProcess, cls).setUpClass()
-
+ 
     @ordered
     def test_login_screen(self):
         """Clicking on Proceed Button to Proceed to Next Screen."""
-        print("=====================Test - Login Screen=====================")
-        self.cli.sleep(8)
-        # Checking current Screen(Login screen)
-        self.assertExists("//Login[@name~=\"login\"]", timeout=3)
+        # This is for checking Current screen
+        self.assert_wait_no_except('//ScreenManager[@current]', timeout=20, value='login')
+        # self.assertExists("//Login[@name~=\"login\"]", timeout=3)
         # Clicking on Proceed Next Button
-        self.cli.wait_click(
-            '//Screen[0]/BoxLayout[0]/AnchorLayout[3]/MDFillRoundFlatIconButton[@text=\"Proceed Next\"]', timeout=2)
+        # self.assertExists("//ScreenManager[@current=\"login\"]", timeout=5)
+        print(self.cli.getattr('//ScreenManager[@current]', 'current'), '--------------------------------------')
+        get_screen_value = self.cli.getattr('//ScreenManager[@current]', 'current')
+        start = time()
+        deadline = start + 5
+        while time() < deadline:
+            self.cli.click_on(
+                    '//Screen[0]/BoxLayout[0]/AnchorLayout[3]/MDFillRoundFlatIconButton[@text=\"Proceed Next\"]')
+            try:
+                if self.cli.getattr('//ScreenManager[@current]', 'current') == 'random':
+                    self.assertTrue(get_screen_value, 'random')
+                    break
+            except TeleniumHttpException:
+               
+                sleep(0.1)
+                continue
+            raise AssertionError('timeout')
         # Checking Current Screen(Random Screen) after Clicking on Proceed Next Button 
-        self.assertExists("//Random[@name~=\"random\"]", timeout=2)
+        print(self.cli.getattr('//ScreenManager[@current]', 'current'), '--------------------------------------')
+        self.assert_wait_no_except('//ScreenManager[@current]', timeout=15, value='random')
+
 
     @ordered
     def test_random_screen(self):

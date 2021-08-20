@@ -7,13 +7,12 @@ class AllMailMessage(TeleniumTestProcess):
     @ordered
     def test_show_allmail_list(self):
         """Show All Messages on Mail Screen/Window"""
-        try:
-            # checking current screen
-            self.assertExists("//ScreenManager[@current=\"inbox\"]", timeout=5)
-        except:
-            self.cli.sleep(8)
-            # checking current screen
-            self.assertExists("//ScreenManager[@current=\"inbox\"]", timeout=5)
+        # This is for checking Current screen
+        self.assert_wait_no_except('//ScreenManager[@current]', timeout=15, value='inbox')
+        # This is for checking the Side nav Bar id closed
+        self.assertExists('//MDNavigationDrawer[@status~=\"closed\"]', timeout=5)
+        # This is for checking the menu button is appeared
+        self.assertExists('//MDActionTopAppBarButton[@icon~=\"menu\"]', timeout=5)
         # this is for opening Nav drawer
         self.cli.wait_click('//MDActionTopAppBarButton[@icon=\"menu\"]', timeout=3)
         # checking state of Nav drawer

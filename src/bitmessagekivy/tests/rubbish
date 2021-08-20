@@ -1,11 +1,13 @@
+my address test
+
 from .telenium_process import TeleniumTestProcess
 from .common import ordered
+
 
 data = [
     'BM-2cWmjntZ47WKEUtocrdvs19y5CivpKoi1h',
     'BM-2cVpswZo8rWLXDVtZEUNcDQvnvHJ6TLRYr'
 ]
-
 
 class MyAddressScreen(TeleniumTestProcess):
     """MyAddress Screen Functionality Testing"""
@@ -32,6 +34,7 @@ class MyAddressScreen(TeleniumTestProcess):
         # Checking current screen
         self.assertExists("//ScreenManager[@current=\"myaddress\"]", timeout=3)
 
+
     @ordered
     def test_show_Qrcode(self):
         """Show the Qr code of selected address"""
@@ -49,6 +52,7 @@ class MyAddressScreen(TeleniumTestProcess):
         self.cli.wait_click('//MDToolbar//MDActionTopAppBarButton[@icon=\"arrow-left\"]', timeout=2)
         # Checking current screen(My Address) after BACK press
         self.assertExists("//ScreenManager[@current=\"myaddress\"]", timeout=3)
+        
 
     @ordered
     def test_send_message_from(self):
@@ -63,22 +67,54 @@ class MyAddressScreen(TeleniumTestProcess):
         self.cli.wait_click('//MyaddDetailPopup//MDRaisedButton[0]/MDLabel[0]', timeout=2)
         # Checking Current screen(Create)
         self.assertExists("//ScreenManager[@current=\"create\"]", timeout=2)
-        # Entering Receiver Address
+         # Entering Receiver Address
         self.cli.setattr(
             '//DropDownWidget/ScrollView[0]//MyTextInput[0]', "text", data[1])
         # Checking Receiver Address filled or not
         self.assertNotEqual('//DropDownWidget//MyTextInput[0]', '')
-        # ADD SUBJECT
+         # ADD SUBJECT
         self.cli.setattr('//DropDownWidget/ScrollView[0]//MyMDTextField[0]', 'text', 'Hey this is Demo Subject')
         # Checking Subject Field is Entered
         self.assertNotEqual('//DropDownWidget/ScrollView[0]//MyMDTextField[0]', '')
-        # ADD MESSAGE BODY
-        self.cli.setattr(
-            '//DropDownWidget/ScrollView[0]//ScrollView[0]/MDTextField[0]', 'text',
-            'Hey,i am sending message directly from MyAddress book')
+         # ADD MESSAGE BODY
+        self.cli.setattr('//DropDownWidget/ScrollView[0]//ScrollView[0]/MDTextField[0]',
+                             'text', 'Hey,i am sending message directly from MyAddress book')
         # Checking Message body is Entered
         self.assertNotEqual('//DropDownWidget/ScrollView[0]//ScrollView[0]/MDTextField[@text]', '')
         # Click on Send Icon
         self.cli.wait_click('//MDActionTopAppBarButton[@icon=\"send\"]', timeout=3)
-        # Checking Current screen after Sending a message
+        self.cli.sleep(2) # Send Messages takes 2 seconds to send message so need to user sleep
+        # Checking Current screen after Send a message
         self.assert_wait_no_except('//ScreenManager[@current]', timeout=5, value='inbox')
+
+    @ordered
+    def test_disable_address(self):
+        """Disable Addresses"""
+        # this is for checking current screen
+        self.assert_wait_no_except('//ScreenManager[@current]', timeout=5, value='inbox')
+        # this is for opening Nav drawer
+        self.cli.wait_click('//MDActionTopAppBarButton[@icon=\"menu\"]', timeout=4)
+        # checking state of Nav drawer
+        self.assertExists("//MDNavigationDrawer[@state~=\"open\"]", timeout=4)
+        # this is for scrolling Nav drawer
+        self.drag("//NavigationItem[@text=\"Sent\"]", "//NavigationItem[@text=\"Inbox\"]")
+        # assert for checking scroll function
+        self.assertCheckScrollDown('//ContentNavigationDrawer//ScrollView[0]', timeout=4)
+        # this is for opening setting screen
+        self.cli.wait_click('//NavigationItem[@text=\"My addresses\"]', timeout=4)
+        # Checking current screen
+        self.assertExists("//ScreenManager[@current=\"myaddress\"]", timeout=3)
+        # ADDRESS DISABLED
+        # self.cli.sleep(1)
+        self.cli.wait_click('//Thumb', timeout=2)
+        # CLICKING ON DISABLE ACCOUNT TO OPEN POPUP
+        self.click_on('//MyAddress//MDList[0]/CustomTwoLineAvatarIconListItem[0]', seconds=2)
+        # Checking the pop is Opened
+        self.assertExists('//MDDialog[@text=\"Address is not currently active. Please click on Toggle button to active it.\"]', timeout=2)
+        # Clicking on 'Ok' Button To Dismiss the pop
+        self.click_on('//MDFlatButton[@text=\"Ok\"]', seconds=2)
+        self.assertNotExists('//MDDialog[@text=\"Address is not currently active. Please click on Toggle button to active it.\"]', timeout=2)
+        # ADDRESS ENABLED
+        self.click_on('//Thumb', seconds=2)
+        # self.assertExists('//Thumb[@active=\"False\"]', timeout=2)
+        self.assertExists("//ScreenManager[@current=\"myaddress\"]", timeout=3)

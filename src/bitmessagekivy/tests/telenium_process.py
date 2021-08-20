@@ -6,8 +6,7 @@ import os
 import shutil
 import tempfile
 from time import time, sleep
-from turtle import Turtle, pd
-
+from telenium.client import TeleniumHttpException
 from telenium.tests import TeleniumTestCase
 
 _files = (
@@ -64,15 +63,50 @@ class TeleniumTestProcess(TeleniumTestCase):
             pass
         cleanup()
 
-    def assertCheck_app_launch(self, selector, timeout=-1):
-        """This method is written to check the application is launched otherwise it will wait untill timeout value"""
-        while timeout > 0:
+    def assert_wait_no_except(self, selector, timeout=-1, value='inbox'):
+        """This method is to check the application is launched."""
+        start = time()
+        deadline = start + timeout
+        while time() < deadline:
             try:
-                self.assertTrue(selector, 'inbox')
-                timeout -= 0.3
-            except:
-                raise Exception("Timeout")
-            sleep(0.3)
+                if self.cli.getattr(selector, 'current') == value:
+                    self.assertTrue(selector, value)
+                    break
+            except TeleniumHttpException:
+                sleep(0.1)
+                continue
+            finally:
+                # Finally Sleep is used to make the menu button funcationlly available for the click process. 
+                # (because Transition is little bit slow)
+                sleep(0.2)
+    def swipe_drag(self, is_drag_open, timeout=-1):
+        start = time()
+        deadline = start + timeout
+        while time() < deadline:
+            try:
+                if is_drag_open:
+                    print('except --------------1', is_drag_open)
+                    self.cli.wait_click('//MDList[0]/CustomSwipeToDeleteItem[0]/MDCardSwipeLayerBox[0]')
+                    self.assertEqual(is_drag_open, True)
+                    self.cli.wait_click('//MDList[0]/CustomSwipeToDeleteItem[0]//MDIconButton[@icon=\"trash-can\"]', timeout=5)
+                    print('except --------------2', is_drag_open)
+                    break
+                else:
+                    print('except --------------3', is_drag_open)
+                    self.cli.drag(
+                        '//Trash[0]//TwoLineAvatarIconListItem[0]/BoxLayout[1]',
+                        '//Trash[0]//TwoLineAvatarIconListItem[0]/BoxLayout[2]', 1)
+                    print('except --------------4', is_drag_open)
+                    # self.cli.wait_click('//MDList[0]/CustomSwipeToDeleteItem[0]/MDCardSwipeLayerBox[0]')
+                    print('except --------------5', is_drag_open)
+                    sleep(0.2)
+                    continue
+            except TeleniumHttpException:
+                print('------------------6-')
+                sleep(0.2)
+                continue
+                # self.assertEqual(is_drag_open, True)
+                # self.cli.wait_click('//MDList[0]/CustomSwipeToDeleteItem[0]//MDIconButton[@icon=\"trash-can\"]', timeout=5)
 
     def click_on(self, xpath, seconds=0.3):
         """this method is used for on_click event with time"""
