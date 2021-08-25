@@ -173,7 +173,7 @@ class NavigationDrawerSubheader(OneLineListItem):
 
 
 class ContentNavigationDrawer(BoxLayout):
-    """ContentNavigationDrawer class for kivy Uir"""
+    """ContentNavigationDrawer class for kivy Ui"""
 
     def __init__(self, *args, **kwargs):
         """Method used for contentNavigationDrawer"""
