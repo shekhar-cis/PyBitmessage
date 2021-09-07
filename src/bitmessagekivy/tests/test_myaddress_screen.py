@@ -1,10 +1,9 @@
 from .telenium_process import TeleniumTestProcess
 from .common import ordered
 
-data = [
-    'BM-2cWmjntZ47WKEUtocrdvs19y5CivpKoi1h',
-    'BM-2cVpswZo8rWLXDVtZEUNcDQvnvHJ6TLRYr'
-]
+test_address = {
+    'recipient': 'BM-2cVpswZo8rWLXDVtZEUNcDQvnvHJ6TLRYr'
+}
 
 
 class MyAddressScreen(TeleniumTestProcess):
@@ -49,7 +48,7 @@ class MyAddressScreen(TeleniumTestProcess):
         self.assertExists("//ScreenManager[@current=\"create\"]", timeout=2)
         # Entering Receiver Address
         self.cli.setattr(
-            '//DropDownWidget/ScrollView[0]//MyTextInput[0]', "text", data[1])
+            '//DropDownWidget/ScrollView[0]//MyTextInput[0]', "text", test_address['recipient'])
         # Checking Receiver Address filled or not
         self.assertNotEqual('//DropDownWidget//MyTextInput[0]', '')
         # ADD SUBJECT
@@ -68,7 +67,7 @@ class MyAddressScreen(TeleniumTestProcess):
         self.assertExists("//ScreenManager[@current=\"inbox\"]", timeout=7)
 
     @ordered
-    def test_show_Qrcode(self):
+    def test_show_qrcode(self):
         """Show the Qr code of selected address"""
         # This is for checking the Side nav Bar is closed
         self.assertExists('//MDNavigationDrawer[@status~=\"closed\"]', timeout=5)
