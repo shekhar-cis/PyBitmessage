@@ -27,14 +27,15 @@ class CreateRandomAddress(TeleniumTestProcess):
         # self.assertExists("//ScreenManager[@current=\"login\"]", timeout=5)
         start = time()
         deadline = start + 2
+
         while time() < deadline:
             try:
                 # Clicking on Proceed Next Button to redirect to "random" screen
                 self.cli.wait_click('//Screen[0]//MDFillRoundFlatIconButton[@text=\"Proceed Next\"]', timeout=5)
-            except:
+            except TeleniumHttpException:
                 # Checking Current Screen(Random Screen) after Clicking on "Proceed Next" Button 
                 self.assertExists("//ScreenManager[@current=\"random\"]", timeout=5)
-                
+
         # if not is_checked:
         #     # self.assertExists('//Screen[0]//AnchorLayout[1]//Check[@active=\"True\"]', timeout=5)
         #     self.cli.wait_click('//Screen[0]//AnchorLayout[1]//Check', timeout=2)
@@ -72,19 +73,19 @@ class CreateRandomAddress(TeleniumTestProcess):
         # self.assertExists("//MyAddress[@name~=\"myaddress\"]", timeout=3)
         # import pdb; pdb.set_trace()
         self.assertExists("//ScreenManager[@current=\"myaddress\"]", timeout=5)
-        num_of_addresses = len(self.cli.select('//MDList[0]/CustomTwoLineAvatarIconListItem'))
-        
-        start = time()
-        deadline = start + 6
-        while time() < deadline:
-            try:
-                if num_of_addresses >= 1:
-                    self.assertEqual(num_of_addresses, 1)
-                    break
-            except TeleniumHttpException:
-                print('iexcept------------------------------------------')
-                continue
-        print(len(self.cli.select('//MDList[0]/CustomTwoLineAvatarIconListItem')), '>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        # self.cli.sleep(10)
+        self.assertExists('//MDList[0]/CustomTwoLineAvatarIconListItem', timeout=10)
+        # self.cli.sleep(5)
+        # start = time()
+        # deadline = start + 7
+        # while time() < deadline:
+        #     try:
+        #         self.assertExists('//MDList[0]/CustomTwoLineAvatarIconListItem', timeout=7)
+        #     except TeleniumHttpException:
+        #         self.cli.sleep(0.1)
+        #         continue
+
+        # print(len(self.cli.select('//MDList[0]/CustomTwoLineAvatarIconListItem')), '>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         #         # Clicking on Proceed Next Button to redirect to "random" screen
         # self.cli.sleep(5)     
         #     except:
