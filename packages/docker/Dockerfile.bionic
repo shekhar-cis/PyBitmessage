@@ -20,10 +20,10 @@ RUN apt-get -y install sudo
 
 RUN apt-get install -yq --no-install-suggests --no-install-recommends \
     # travis xenial bionic
-    python-setuptools libssl-dev libpq-dev python-prctl python-dev \
-    python-dev python-virtualenv python-pip virtualenv \
+    python-setuptools libssl-dev libpq-dev python-prctl \
+    python-dev python-virtualenv virtualenv \
     # dpkg
-    python-minimal python-setuptools python-all python openssl libssl-dev \
+    python-minimal python-all python openssl \
     dh-apparmor debhelper dh-python python-msgpack python-qt4 python-stdeb \
     python-all-dev python-crypto python-psutil \
     fakeroot python-pytest \
@@ -34,13 +34,20 @@ RUN apt-get install -yq --no-install-suggests --no-install-recommends \
     # Wine
     python python-pip wget wine-stable winetricks mingw-w64 wine32 wine64 xvfb \
     # Buildbot
-    python3-dev libffi-dev python3-setuptools \
+    python3-dev libffi-dev\
     python3-pip \
     # python 3.7
     python3.7 python3.7-dev \
     # .travis.yml
     build-essential libcap-dev tor \
-    language-pack-en
+    language-pack-en \
+    # Buildozer dependencies
+    autoconf automake ccache cmake gettext git libltdl-dev \
+    libtool openjdk-8-jdk patch pkg-config python2.7 python3-venv \
+    unzip zip zlib1g-dev
+
+RUN pip3 install "cython==0.28.6"
+RUN pip3 install "buildozer==1.0"
 
 
 # cleanup
@@ -85,3 +92,17 @@ RUN echo 'buildbot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER buildbot
 
 ENTRYPOINT /entrypoint.sh "$BUILDMASTER" "$WORKERNAME" "$WORKERPASS"
+
+#####################################################################################################
+
+FROM base AS kivy
+
+# travis2bash
+RUN wget -O /usr/local/bin/travis2bash.sh https://git.bitmessage.org/Bitmessage/buildbot-scripts/raw/branch/master/travis2bash.sh
+RUN chmod +x /usr/local/bin/travis2bash.sh
+
+# WORKDIR /home/builder/src
+COPY packages/docker/buildbot-entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/travis2bash.sh", ".travis-kivy.yml"]
