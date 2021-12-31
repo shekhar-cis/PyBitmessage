@@ -270,7 +270,7 @@ class NavigateApp(MDApp):
             if os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(text)):
                 self.load_selected_Image(text)
             else:
-                self.set_identicon(text)
+                # self.set_identicon(text)
                 self.root.ids.content_drawer.ids.reset_image.opacity = 0
                 self.root.ids.content_drawer.ids.reset_image.disabled = True
             address_label = self.current_address_label(
@@ -449,8 +449,8 @@ class NavigateApp(MDApp):
                     return state.imageDir + '/default_identicon/{}.png'.format(
                             first_addr)
                 else:
-                    img = identiconGeneration.generate(first_addr)
-                    instance.texture = img.texture
+                    # img = identiconGeneration.generate(first_addr)
+                    # instance.texture = img.texture
                     return
         return state.imageDir + '/drawer_logo1.png'
 
@@ -785,10 +785,11 @@ class NavigateApp(MDApp):
 
     def set_identicon(self, text):
         """Show identicon in address spinner"""
-        img = identiconGeneration.generate(text)
+        # img = identiconGeneration.generate(text)
         # self.root.children[0].children[0].ids.btn.children[1].texture = (img.texture)
         # below line is for displaing logo
-        self.root.ids.content_drawer.ids.top_box.children[0].texture = (img.texture)
+        # self.root.ids.content_drawer.ids.top_box.children[0].texture = (img.texture)
+        pass
 
     def set_mail_detail_header(self):
         """Setting the details of the page"""
@@ -926,7 +927,7 @@ class NavigateApp(MDApp):
 
     def rest_default_avatar_img(self):
         """set default avatar generated image"""
-        self.set_identicon(state.association)
+        # self.set_identicon(state.association)
         img_path = state.imageDir + '/default_identicon/{}.png'.format(state.association)
         try:
             if os.path.exists(img_path):

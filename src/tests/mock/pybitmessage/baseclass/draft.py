@@ -166,30 +166,30 @@ class Draft(Screen):
         sendMessageToPeople = True
         if sendMessageToPeople:
             streamNumber, ripe = decodeAddress(toAddress)[2:]
-            from addresses import addBMIfNotPresent
+            from pybitmessage.addresses import addBMIfNotPresent
             toAddress = addBMIfNotPresent(toAddress)
             stealthLevel = BMConfigParser().safeGetInt(
                 'bitmessagesettings', 'ackstealthlevel')
-            from helper_ackPayload import genAckPayload
-            ackdata = genAckPayload(streamNumber, stealthLevel)
-            sqlExecute(
-                '''INSERT INTO sent VALUES
-                (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
-                '',
-                toAddress,
-                ripe,
-                fromAddress,
-                subject,
-                message,
-                ackdata,
-                int(time.time()),
-                int(time.time()),
-                0,
-                'msgqueued',
-                0,
-                'draft',
-                encoding,
-                BMConfigParser().safeGetInt('bitmessagesettings', 'ttl'))
+            # from helper_ackPayload import genAckPayload
+            # ackdata = genAckPayload(streamNumber, stealthLevel)
+            # sqlExecute(
+            #     '''INSERT INTO sent VALUES
+            #     (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+            #     '',
+            #     toAddress,
+            #     ripe,
+            #     fromAddress,
+            #     subject,
+            #     message,
+            #     ackdata,
+            #     int(time.time()),
+            #     int(time.time()),
+            #     0,
+            #     'msgqueued',
+            #     0,
+            #     'draft',
+            #     encoding,
+            #     BMConfigParser().safeGetInt('bitmessagesettings', 'ttl'))
             state.msg_counter_objs = src_object.children[2].children[0].ids
             state.draft_count = str(int(state.draft_count) + 1) \
                 if state.association == fromAddress else state.draft_count

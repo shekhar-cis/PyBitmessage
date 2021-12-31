@@ -1,8 +1,3 @@
-# from pybitmessage.get_platform import platform
-# from pybitmessage import identiconGeneration
-
-# from pybitmessage import kivy_helper_search
-# from pybitmessage.bmconfigparser import BMConfigParser
 from pybitmessage.helper_sql import sqlExecute
 from functools import partial
 from kivy.clock import Clock
@@ -21,8 +16,6 @@ from pybitmessage.baseclass.common import (
     ThemeClsColor, toast, SwipeToDeleteItem,
     ShowTimeHistoy
 )
-# from maildetail import MailDetail
-# from trash import Trash
 
 
 class Inbox(Screen):
@@ -34,22 +27,18 @@ class Inbox(Screen):
 
     def __init__(self, *args, **kwargs):
         """Method Parsing the address"""
-        # import pdb; pdb.set_trace()
         super(Inbox, self).__init__(*args, **kwargs)
         Clock.schedule_once(self.init_ui, 0)
 
     @staticmethod
     def set_defaultAddress():
-        """This method set's default address"""
-        # import pdb; pdb.set_trace()
-        
+        """This method set's default address"""        
         if state.association == "":
             if state.kivyapp.variable_1:
                 state.association = state.kivyapp.variable_1[0]
 
     def init_ui(self, dt=0):
         """Clock schdule for method inbox accounts"""
-        # import pdb; pdb.set_trace()
         self.loadMessagelist()
 
     def loadMessagelist(self, where="", what=""):
@@ -57,7 +46,6 @@ class Inbox(Screen):
         self.set_defaultAddress()
         self.account = state.association
         if state.searcing_text:
-            # self.children[2].children[0].children[0].scroll_y = 1.0
             self.ids.scroll_y.scroll_y = 1.0
             where = ["subject", "message"]
             what = state.searcing_text
@@ -71,7 +59,6 @@ class Inbox(Screen):
             state.kivyapp.get_inbox_count()
             self.set_inboxCount(state.inbox_count)
             for mail in self.queryreturn:
-                # third_text = mail[3].replace('\n', ' ')
                 body = mail[3].decode() if isinstance(mail[3], bytes) else mail[3]
                 subject = mail[5].decode() if isinstance(mail[5], bytes) else mail[5]
                 data.append(
@@ -117,9 +104,6 @@ class Inbox(Screen):
 
     def inboxDataQuery(self, xAddress, where, what, start_indx=0, end_indx=20):
         """This method is used for retrieving inbox data"""
-        # self.queryreturn = kivy_helper_search.search_sql(
-        #     xAddress, self.account, "inbox", where, what, False, start_indx, end_indx
-        # )
         pass
 
     def set_mdList(self, data):
@@ -159,7 +143,6 @@ class Inbox(Screen):
             what = state.searcing_text
         self.inboxDataQuery("toaddress", where, what, total_message, 5)
         for mail in self.queryreturn:
-            # third_text = mail[3].replace('\n', ' ')
             subject = mail[3].decode() if isinstance(mail[3], bytes) else mail[3]
             body = mail[5].decode() if isinstance(mail[5], bytes) else mail[5]
             data.append(
@@ -211,29 +194,20 @@ class Inbox(Screen):
                 state.all_count = str(int(state.all_count) - 1)
 
             if int(state.inbox_count) <= 0:
-                # self.ids.identi_tag.children[0].text = ''
                 self.ids.tag_label.text = ''
         self.ids.ml.remove_widget(
             instance.parent.parent)
         toast('Deleted')
-        # self.update_trash()
 
     def archive(self, data_index, instance, *args):
         """Archive inbox mail from inbox listing"""
-        sqlExecute("UPDATE inbox SET folder = 'trash' WHERE msgid = ?;", data_index)
+        # sqlExecute("UPDATE inbox SET folder = 'trash' WHERE msgid = ?;", data_index)
         self.ids.ml.remove_widget(instance.parent.parent)
         self.update_trash()
 
     def update_trash(self):
         """Update trash screen mails which is deleted from inbox"""
         self.manager.parent.ids.sc5.clear_widgets()
-        # self.manager.parent.ids.sc5.add_widget(Trash())
-        # try:
-        #     self.parent.screens[4].clear_widgets()
-        #     self.parent.screens[4].add_widget(Trash())
-        # except Exception:
-        #     self.parent.parent.screens[4].clear_widgets()
-        #     self.parent.parent.screens[4].add_widget(Trash())
 
     def refresh_callback(self, *args):
         """Method updates the state of application,

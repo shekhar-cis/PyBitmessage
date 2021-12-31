@@ -179,8 +179,7 @@ class AppClosingPopup(Popup):
         """Action on closing window"""
         if text == 'Yes':
             print("*******************EXITING FROM APPLICATION*******************")
-            import pdb; pdb.set_trace()
-            import shutdown
+            from pybitmessage import shutdown
             shutdown.doCleanShutdown()
         else:
             self.dismiss()

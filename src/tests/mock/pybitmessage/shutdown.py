@@ -4,13 +4,13 @@ import queue as Queue
 import threading
 import time
 
-import state
-from debug import logger
-from helper_sql import sqlQuery, sqlStoredProcedure
-from inventory import Inventory
-from knownnodes import saveKnownNodes
-from network import StoppableThread
-from queues import (
+from pybitmessage import state
+# from debug import logger
+# from helper_sql import sqlQuery, sqlStoredProcedure
+# from inventory import Inventory
+# from knownnodes import saveKnownNodes
+from pybitmessage.network.threads import StoppableThread
+from pybitmessage.queues import (
     addressGeneratorQueue, objectProcessorQueue, UISignalQueue, workerQueue)
 
 
@@ -28,18 +28,18 @@ def doCleanShutdown():
     UISignalQueue.put((
         'updateStatusBar',
         'Saving the knownNodes list of peers to disk...'))
-    logger.info('Saving knownNodes list of peers to disk')
-    saveKnownNodes()
-    logger.info('Done saving knownNodes list of peers to disk')
+    # logger.info('Saving knownNodes list of peers to disk')
+    # saveKnownNodes()
+    # logger.info('Done saving knownNodes list of peers to disk')
     UISignalQueue.put((
         'updateStatusBar',
         'Done saving the knownNodes list of peers to disk.'))
-    logger.info('Flushing inventory in memory out to disk...')
+    # logger.info('Flushing inventory in memory out to disk...')
     UISignalQueue.put((
         'updateStatusBar',
         'Flushing inventory in memory out to disk.'
         ' This should normally only take a second...'))
-    Inventory().flush()
+    # Inventory().flush()
 
     # Verify that the objectProcessor has finished exiting. It should have
     # incremented the shutdown variable from 1 to 2. This must finish before
@@ -58,15 +58,15 @@ def doCleanShutdown():
             and isinstance(thread, StoppableThread)
             and thread.name != 'SQL'
         ):
-            logger.debug("Waiting for thread %s", thread.name)
+            # logger.debug("Waiting for thread %s", thread.name)
             thread.join()
 
     # This one last useless query will guarantee that the previous flush
     # committed and that the
     # objectProcessorThread committed before we close the program.
-    sqlQuery('SELECT address FROM subscriptions')
-    logger.info('Finished flushing inventory.')
-    sqlStoredProcedure('exit')
+    # sqlQuery('SELECT address FROM subscriptions')
+    # logger.info('Finished flushing inventory.')
+    # sqlStoredProcedure('exit')
 
     # flush queues
     for queue in (
@@ -79,11 +79,11 @@ def doCleanShutdown():
             except Queue.Empty:
                 break
 
-    if state.thisapp.daemon or not state.enableGUI:
-        logger.info('Clean shutdown complete.')
-        state.thisapp.cleanup()
-        os._exit(0)  # pylint: disable=protected-access
-    else:
-        logger.info('Core shutdown complete.')
-    for thread in threading.enumerate():
-        logger.debug('Thread %s still running', thread.name)
+    # if state.thisapp.daemon or not state.enableGUI:
+        # logger.info('Clean shutdown complete.')
+    #     state.thisapp.cleanup()
+    #     os._exit(0)  # pylint: disable=protected-access
+    # else:
+        # logger.info('Core shutdown complete.')
+    # for thread in threading.enumerate():
+        # logger.debug('Thread %s still running', thread.name)

@@ -87,25 +87,8 @@ class singleCleaner(StoppableThread):
             if timeWeLastClearedInventoryAndPubkeysTables < \
                     int(time.time()) - 7380:
                 timeWeLastClearedInventoryAndPubkeysTables = int(time.time())
-                import pdb;pdb.set_trace()
-                # Inventory().clean()
                 queues.workerQueue.put(('sendOnionPeerObj', ''))
-                # pubkeys
-                # sqlExecute(
-                #     "DELETE FROM pubkeys WHERE time<? AND usedpersonally='no'",
-                #     int(time.time()) - lengthOfTimeToHoldOnToAllPubkeys)
-
-                # Let us resend getpubkey objects if we have not yet heard
-                # a pubkey, and also msg objects if we have not yet heard
-                # an acknowledgement
                 queryreturn = []
-                # sqlQuery(
-                #     "SELECT toaddress, ackdata, status FROM sent"
-                #     " WHERE ((status='awaitingpubkey' OR status='msgsent')"
-                #     " AND folder='sent' AND sleeptill<? AND senttime>?)",
-                #     int(time.time()), int(time.time())
-                #     - state.maximumLengthOfTimeToBotherResendingMessages
-                # )
                 for row in queryreturn:
                     if len(row) < 2:
                         self.logger.error(
@@ -121,35 +104,6 @@ class singleCleaner(StoppableThread):
                     elif status == 'msgsent':
                         self.resendMsg(ackData)
             deleteTrashMsgPermonantly()
-            # try:
-            #     # Cleanup knownnodes and handle possible severe exception
-            #     # while writing it to disk
-            #     knownnodes.cleanupKnownNodes()
-            # except Exception as err:
-            #     # pylint: disable=protected-access
-            #     if "Errno 28" in str(err):
-            #         self.logger.fatal(
-            #             '(while writing knownnodes to disk)'
-            #             ' Alert: Your disk or data storage volume is full.'
-            #         )
-            #         queues.UISignalQueue.put((
-            #             'alert',
-            #             (tr._translate("MainWindow", "Disk full"),
-            #              tr._translate(
-            #                  "MainWindow",
-            #                  'Alert: Your disk or data storage volume'
-            #                  ' is full. Bitmessage will now exit.'),
-            #              True)
-            #         ))
-            #         # FIXME redundant?
-            #         if state.thisapp.daemon or not state.enableGUI:
-            #             os._exit(1)
-
-            # inv/object tracking
-
-            # for connection in BMConnectionPool().connections():
-            #     connection.clean()
-
             # discovery tracking
             exp = time.time() - singleCleaner.expireDiscoveredPeers
             reaper = (k for k, v in state.discoveredPeers.items() if v < exp)
@@ -185,9 +139,6 @@ class singleCleaner(StoppableThread):
             'updateStatusBar',
             'Doing work necessary to again attempt to request a public key...'
         ))
-        # sqlExecute(
-        #     '''UPDATE sent SET status='msgqueued' WHERE toaddress=?''',
-        #     address)
         queues.workerQueue.put(('sendmessage', ''))
 
     def resendMsg(self, ackdata):
@@ -196,9 +147,6 @@ class singleCleaner(StoppableThread):
             'It has been a long time and we haven\'t heard an acknowledgement'
             ' to our msg. Sending again.'
         )
-        # sqlExecute(
-        #     '''UPDATE sent SET status='msgqueued' WHERE ackdata=?''',
-        #     ackdata)
         queues.workerQueue.put(('sendmessage', ''))
         queues.UISignalQueue.put((
             'updateStatusBar',
@@ -210,10 +158,4 @@ def deleteTrashMsgPermonantly():
     """This method is used to delete old messages"""
     ndays_before_time = datetime.now() - timedelta(days=30)
     old_messages = time.mktime(ndays_before_time.timetuple())
-    # sqlExecute(
-    #     "delete from sent where folder = 'trash' and lastactiontime <= ?;",
-    #     int(old_messages))
-    # sqlExecute(
-    #     "delete from inbox where folder = 'trash' and received <= ?;",
-    #     int(old_messages))
     return
