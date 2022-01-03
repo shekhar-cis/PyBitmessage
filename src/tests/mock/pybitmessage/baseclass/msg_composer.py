@@ -2,7 +2,6 @@ import time
 
 from pybitmessage.get_platform import platform
 from pybitmessage.bmconfigparser import BMConfigParser
-from pybitmessage.helper_sql import sqlExecute, sqlQuery
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.factory import Factory
@@ -93,25 +92,9 @@ class DropDownWidget(BoxLayout):
             if status == "success":
                 navApp.root.ids.sc3.children[0].active = True
                 if state.detailPageType == "draft" and state.send_draft_mail:
-                    # sqlExecute(
-                    #     "UPDATE sent SET toaddress = ?"
-                    #     ", fromaddress = ? , subject = ?"
-                    #     ", message = ?, folder = 'sent'"
-                    #     ", senttime = ?, lastactiontime = ?"
-                    #     " WHERE ackdata = ?;",
-                    #     toAddress,
-                    #     fromAddress,
-                    #     subject,
-                    #     message,
-                    #     int(time.time()),
-                    #     int(time.time()),
-                    #     state.send_draft_mail)
                     self.parent.parent.screens[13].clear_widgets()
                     self.parent.parent.screens[13].add_widget(Factory.Draft())
-                    # state.detailPageType = ''
-                    # state.send_draft_mail = None
                 else:
-                    # toAddress = addBMIfNotPresent(toAddress)
                     if (addressVersionNumber > 4) or (
                             addressVersionNumber <= 1):
                         print(
@@ -121,36 +104,11 @@ class DropDownWidget(BoxLayout):
                         print("streamNumber > 1 or streamNumber == 0")
                     stealthLevel = BMConfigParser().safeGetInt(
                         'bitmessagesettings', 'ackstealthlevel')
-                    # from helper_ackPayload import genAckPayload
-                    # ackdata = genAckPayload(streamNumber, stealthLevel)
-                    # t = ()
-                    # sqlExecute(
-                    #     '''INSERT INTO sent VALUES
-                    #     (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
-                    #     '',
-                    #     addBMIfNotPresent(toAddress),
-                    #     ripe,
-                    #     fromAddress,
-                    #     subject,
-                    #     message,
-                    #     genAckPayload(streamNumber, stealthLevel),  #ackdata
-                    #     int(time.time()),
-                    #     int(time.time()),
-                    #     0,
-                    #     'msgqueued',
-                    #     0,
-                    #     'sent',
-                    #     3,  #encoding
-                    #     BMConfigParser().safeGetInt(
-                    #         'bitmessagesettings', 'ttl'))
+                    
                 state.check_sent_acc = fromAddress
-                # state.msg_counter_objs = self.parent.parent.parent.parent\
-                #     .parent.parent.children[2].children[0].ids
                 if state.detailPageType == 'draft' \
                         and state.send_draft_mail:
                     state.draft_count = str(int(state.draft_count) - 1)
-                    # state.msg_counter_objs.draft_cnt.badge_text = (
-                    #     state.draft_count)
                     state.detailPageType = ''
                     state.send_draft_mail = None
                 self.parent.parent.parent.ids.sc4.update_sent_messagelist()
@@ -237,22 +195,7 @@ class DropDownWidget(BoxLayout):
             """Callback of alert box"""
             dialog_box.dismiss()
             toast(text_item)
-    
 
-
-# class HoverItem(MDBoxLayout, ThemableBehavior, HoverBehavior):
-#     '''Custom item implementing hover behavior.'''
-#     def __init__(self, **kwargs):
-#         """Getting Text Input."""
-#         super(HoverItem, self).__init__(**kwargs)
-#         # import pdb; pdb.set_trace()
-
-#     def on_enter(self):
-#         # import pdb; pdb.set_trace()
-#         Window.set_system_cursor('hand')
-
-#     def on_leave(self):
-#         Window.set_system_cursor('arrow')
 
 class MyTextInput(MDTextField):
     """MyTextInput class for kivy Ui"""
@@ -266,8 +209,6 @@ class MyTextInput(MDTextField):
     def __init__(self, **kwargs):
         """Getting Text Input."""
         super(MyTextInput, self).__init__(**kwargs)
-        # import pdb; pdb.set_trace()
-
         self.__lineBreak__ = 0
 
     def on_text(self, instance, value):  # pylint: disable=unused-argument

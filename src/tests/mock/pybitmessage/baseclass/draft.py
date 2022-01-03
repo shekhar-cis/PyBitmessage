@@ -1,8 +1,5 @@
-import time
-
 from pybitmessage import kivy_helper_search
 from pybitmessage.bmconfigparser import BMConfigParser
-from pybitmessage.helper_sql import sqlExecute
 from functools import partial
 from pybitmessage.addresses import decodeAddress
 from kivy.clock import Clock
@@ -144,7 +141,6 @@ class Draft(Screen):
 
     def delete_draft(self, data_index, instance, *args):
         """Delete draft message permanently"""
-        sqlExecute("DELETE FROM sent WHERE ackdata = ?;", data_index)
         if int(state.draft_count) > 0:
             state.draft_count = str(int(state.draft_count) - 1)
             self.set_draftCnt(state.draft_count)
@@ -170,26 +166,6 @@ class Draft(Screen):
             toAddress = addBMIfNotPresent(toAddress)
             stealthLevel = BMConfigParser().safeGetInt(
                 'bitmessagesettings', 'ackstealthlevel')
-            # from helper_ackPayload import genAckPayload
-            # ackdata = genAckPayload(streamNumber, stealthLevel)
-            # sqlExecute(
-            #     '''INSERT INTO sent VALUES
-            #     (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
-            #     '',
-            #     toAddress,
-            #     ripe,
-            #     fromAddress,
-            #     subject,
-            #     message,
-            #     ackdata,
-            #     int(time.time()),
-            #     int(time.time()),
-            #     0,
-            #     'msgqueued',
-            #     0,
-            #     'draft',
-            #     encoding,
-            #     BMConfigParser().safeGetInt('bitmessagesettings', 'ttl'))
             state.msg_counter_objs = src_object.children[2].children[0].ids
             state.draft_count = str(int(state.draft_count) + 1) \
                 if state.association == fromAddress else state.draft_count

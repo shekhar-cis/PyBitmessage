@@ -17,7 +17,6 @@ from pybitmessage.uikivysignaler import UIkivySignaler
 from pybitmessage.bmconfigparser import BMConfigParser
 # from debug import logger
 from functools import partial
-from pybitmessage.helper_sql import sqlExecute, sqlQuery
 from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivy.core.clipboard import Clipboard
@@ -394,10 +393,8 @@ class NavigateApp(MDApp):
             folder="addressbook")]
         if label and address and address not in stored_address \
                 and label not in stored_labels and pupup_obj.valid:
-            # state.navinstance = self.parent.children[1]
             queues.UISignalQueue.put(('rerenderAddressBook', ''))
             self.add_popup.dismiss()
-            sqlExecute("INSERT INTO addressbook VALUES(?,?)", label, address)
             try:
                 rootIds = self.root.ids
             except Exception as e:
@@ -647,57 +644,20 @@ class NavigateApp(MDApp):
     @staticmethod
     def get_inbox_count():
         """Getting inbox count"""
-        # state.inbox_count = str(sqlQuery(
-        #     "SELECT COUNT(*) FROM inbox WHERE toaddress = '{}' and"
-        #     " folder = 'inbox' ;".format(state.association))[0][0])
         pass
 
     @staticmethod
     def get_sent_count():
         """Getting sent count"""
-        # state.sent_count = str(sqlQuery(
-        #     "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
-        #     " folder = 'sent' ;".format(state.association))[0][0])
         pass
 
     def set_message_count(self):
         """Setting message count"""
-        # msg_counter_objs = state.kivyapp.root.children[0].children[0].ids
-        # try:
-        #     msg_counter_objs = (
-        #         self.root_window.children[0].children[2].children[0].ids)
-        # except Exception:
-        #     msg_counter_objs = (
-        #         self.root_window.children[2].children[2].children[0].ids)
-        # self.get_inbox_count()
-        # self.get_sent_count()
-        # state.trash_count = str(sqlQuery(
-        #     "SELECT (SELECT count(*) FROM  sent"
-        #     " where fromaddress = '{0}' and  folder = 'trash' )"
-        #     "+(SELECT count(*) FROM inbox where toaddress = '{0}' and"
-        #     " folder = 'trash') AS SumCount".format(state.association))[0][0])
-        # state.draft_count = str(sqlQuery(
-        #     "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
-        #     " folder = 'draft' ;".format(state.association))[0][0])
-        # state.all_count = str(int(state.sent_count) + int(state.inbox_count))
         pass
-        # if msg_counter_objs:
-        #     msg_counter_objs.send_cnt.badge_text = state.sent_count
-        #     msg_counter_objs.inbox_cnt.badge_text = state.inbox_count
-        #     msg_counter_objs.trash_cnt.badge_text = state.trash_count
-        #     msg_counter_objs.draft_cnt.badge_text = state.draft_count
-        #     msg_counter_objs.allmail_cnt.badge_text = state.all_count
-
+        
     def on_start(self):
         """Setting message count"""
         self.set_message_count()
-
-    # @staticmethod
-    # def on_stop():
-    #     """On stop methos is used for stoping the runing script"""
-    #     print("*******************EXITING FROM APPLICATION*******************")
-    #     import shutdown
-    #     shutdown.doCleanShutdown()
 
     @staticmethod
     def current_address_label(current_add_label=None, current_addr=None):

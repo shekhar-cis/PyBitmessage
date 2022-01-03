@@ -1,5 +1,3 @@
-from pybitmessage.bmconfigparser import BMConfigParser
-from pybitmessage.helper_sql import sqlExecute, sqlQuery
 from functools import partial
 from kivy.clock import Clock
 from kivy.properties import (
@@ -200,18 +198,3 @@ class Allmails(Screen):
         nav_lay_obj.sc17.remove_widget(instance.parent.parent)
         toast('Deleted')
 
-    def refresh_callback(self, *args):
-        """Method updates the state of application,
-        While the spinner remains on the screen"""
-        def refresh_callback(interval):
-            """Load the allmails screen data"""
-            self.ids.ml.clear_widgets()
-            self.remove_widget(self.children[1])
-            try:
-                screens_obj = self.parent.screens[16]
-            except Exception:
-                screens_obj = self.parent.parent.screens[16]
-            screens_obj.add_widget(Allmails())
-            self.ids.refresh_layout.refresh_done()
-            self.tick = 0
-        Clock.schedule_once(refresh_callback, 1)

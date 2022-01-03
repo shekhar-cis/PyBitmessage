@@ -174,11 +174,6 @@ class MyAddress(Screen):
             dialog_box.dismiss()
             toast(text_item)
 
-    # @staticmethod
-    # def callback_for_menu_items(text_item, *arg):
-    #     """Callback of alert box"""
-    #     toast(text_item)
-
     def refresh_callback(self, *args):
         """Method updates the state of application,
         While the spinner remains on the screen"""

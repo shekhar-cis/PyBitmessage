@@ -58,7 +58,11 @@ class addressGenerator(StoppableThread):
             queueValue = queues.addressGeneratorQueue.get()
             try:
                 address = self.address_list.pop(0)
-                label = queueValue[3]
+                print("queueValue: ", queueValue)
+                if len(queueValue) >= 3:
+                    label = queueValue[3]
+                else:
+                    label = ''
 
                 BMConfigParser().add_section(address)
                 BMConfigParser().set(address, 'label', label)

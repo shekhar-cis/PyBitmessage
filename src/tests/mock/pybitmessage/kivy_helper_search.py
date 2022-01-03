@@ -1,7 +1,6 @@
 """
 Sql queries for bitmessagekivy
 """
-from pybitmessage.helper_sql import sqlQuery
 
 
 def search_sql(
@@ -69,6 +68,4 @@ def search_sql(
         sqlStatementBase += \
             "ORDER BY received DESC limit {0}, {1}".format(
                 start_indx, end_indx)
-    # elif folder == "addressbook":
-    #     sqlStatementBase += " limit {0}, {1}".format(start_indx, end_indx)
-    return []#sqlQuery(sqlStatementBase, sqlArguments)
+    return []

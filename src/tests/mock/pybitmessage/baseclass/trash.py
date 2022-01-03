@@ -1,6 +1,4 @@
 from pybitmessage.get_platform import platform
-# from pybitmessage.bmconfigparser import BMConfigParser
-from pybitmessage.helper_sql import sqlExecute, sqlQuery
 from functools import partial
 from kivy.clock import Clock
 from kivy.properties import (
@@ -62,17 +60,7 @@ class Trash(Screen):
 
     def trashDataQuery(self, start_indx, end_indx):
         """Trash message query"""
-        self.trash_messages = sqlQuery(
-            "SELECT toaddress, fromaddress, subject, message,"
-            " folder ||',' || 'sent' as  folder, ackdata As"
-            " id, DATE(senttime) As actionTime, senttime as msgtime FROM sent"
-            " WHERE folder = 'trash'  and fromaddress = '{0}' UNION"
-            " SELECT toaddress, fromaddress, subject, message,"
-            " folder ||',' || 'inbox' as  folder, msgid As id,"
-            " DATE(received) As actionTime, received as msgtime FROM inbox"
-            " WHERE folder = 'trash' and toaddress = '{0}'"
-            " ORDER BY actionTime DESC limit {1}, {2}".format(
-                state.association, start_indx, end_indx))
+        self.trash_messages = []
 
     def set_TrashCnt(self, Count):  # pylint: disable=no-self-use
         """This method is used to set trash message count"""
@@ -159,25 +147,10 @@ class Trash(Screen):
                 toast(text_item)
             dialog_box.dismiss()
 
-    # def callback_for_delete_msg(self, text_item, *arg):
-    #     """Getting the callback of alert box"""
-    #     if text_item == 'Yes':
-    #         self.delete_message_from_trash()
-    #     else:
-    #         toast(text_item)
-
     def delete_message_from_trash(self):
         """Deleting message from trash"""
         self.children[1].active = True
-        if self.table_name == 'inbox':
-            sqlExecute(
-                "DELETE FROM inbox WHERE msgid = ?;", self.delete_index)
-        elif self.table_name == 'sent':
-            sqlExecute(
-                "DELETE FROM sent WHERE ackdata = ?;", self.delete_index)
         if int(state.trash_count) > 0:
-            # msg_count_objs.trash_cnt.badge_text = str(
-            #     int(state.trash_count) - 1)
             self.set_TrashCnt(int(state.trash_count) - 1)
             state.trash_count = str(int(state.trash_count) - 1)
             Clock.schedule_once(self.callback_for_screen_load, 1)

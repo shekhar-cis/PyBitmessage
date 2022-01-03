@@ -1,8 +1,5 @@
 # from pybitmessage import identiconGeneration
-from pybitmessage import kivy_helper_search
-from pybitmessage.bmconfigparser import BMConfigParser
 from functools import partial
-from pybitmessage.helper_sql import sqlExecute
 from kivy.clock import Clock
 from kivy.factory import Factory
 from kivy.properties import StringProperty, ListProperty
@@ -207,17 +204,11 @@ class Sent(Screen):
             state.all_count = str(int(state.all_count) - 1)
             if int(state.sent_count) <= 0:
                 self.ids.tag_label.text = ''
-        sqlExecute(
-            "UPDATE sent SET folder = 'trash'"
-            " WHERE ackdata = ?;", data_index)
         self.ids.ml.remove_widget(instance.parent.parent)
         toast('Deleted')
 
     def archive(self, data_index, instance, *args):
         """Archive sent mail from sent mail listing"""
-        sqlExecute(
-            "UPDATE sent SET folder = 'trash'"
-            " WHERE ackdata = ?;", data_index)
         self.ids.ml.remove_widget(instance.parent.parent)
         self.update_trash()
 

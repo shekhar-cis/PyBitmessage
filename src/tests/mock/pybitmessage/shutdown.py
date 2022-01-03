@@ -5,10 +5,6 @@ import threading
 import time
 
 from pybitmessage import state
-# from debug import logger
-# from helper_sql import sqlQuery, sqlStoredProcedure
-# from inventory import Inventory
-# from knownnodes import saveKnownNodes
 from pybitmessage.network.threads import StoppableThread
 from pybitmessage.queues import (
     addressGeneratorQueue, objectProcessorQueue, UISignalQueue, workerQueue)
@@ -39,13 +35,12 @@ def doCleanShutdown():
         'updateStatusBar',
         'Flushing inventory in memory out to disk.'
         ' This should normally only take a second...'))
-    # Inventory().flush()
 
     # Verify that the objectProcessor has finished exiting. It should have
     # incremented the shutdown variable from 1 to 2. This must finish before
     # we command the sqlThread to exit.
-    while state.shutdown == 1:
-        time.sleep(.1)
+    # while state.shutdown == 1:
+    #     time.sleep(.1)
 
     # Wait long enough to guarantee that any running proof of work worker
     # threads will check the shutdown variable and exit. If the main thread

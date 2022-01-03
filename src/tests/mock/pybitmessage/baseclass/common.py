@@ -50,26 +50,6 @@ def chipTag(text):
     return obj
 
 
-# def initailize_detail_page(manager):
-#     if not manager.has_screen(
-#         data_screens['MailDetail']["name_screen"]
-#     ):
-#         Builder.load_file(
-#             os.path.join(
-#                 # os.environ["KITCHEN_SINK_ROOT"],
-#                 os.path.dirname(os.path.dirname(__file__)),
-#                 "kv",
-#                 "maildetail.kv",
-#             )
-#         )
-#         if "Import" in data_screens['MailDetail']:
-#             exec(data_screens['MailDetail']["Import"])
-#         screen_object = eval(data_screens['MailDetail']["Factory"])
-#         data_screens['MailDetail']["object"] = screen_object
-#         manager.add_widget(screen_object)
-#     manager.current = data_screens['MailDetail']["name_screen"]
-
-
 def toast(text):
     """Method will display the toast message"""
     kivytoast.toast(text)

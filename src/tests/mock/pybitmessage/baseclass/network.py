@@ -4,9 +4,6 @@ from kivy.clock import Clock
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
 
-# from pybitmessage.network import objectracker, stats
-
-
 class NetworkStat(Screen):
     """NetworkStat class for kivy Ui"""
 
