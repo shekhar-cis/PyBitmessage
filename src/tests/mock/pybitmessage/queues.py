@@ -5,11 +5,6 @@ import time
 
 from six.moves import queue
 
-# try:
-#     from multiqueue import MultiQueue
-# except ImportError:
-#     from .multiqueue import MultiQueue
-
 
 class ObjectProcessorQueue(queue.Queue):
     """Special queue class using lock for `.threads.objectProcessor`"""

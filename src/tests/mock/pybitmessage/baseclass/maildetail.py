@@ -1,8 +1,5 @@
 from datetime import datetime
 
-# from pybitmessage.get_platform import platform
-platform = "linux"
-
 from kivy.core.clipboard import Clipboard
 from kivy.clock import Clock
 from kivy.properties import (
@@ -25,6 +22,8 @@ from .common import (
     toast, avatarImageFirstLetter, ShowTimeHistoy
 )
 from .popup import SenderDetailPopup
+# from pybitmessage.get_platform import platform
+platform = "linux"
 
 
 class OneLineListTitle(OneLineListItem):

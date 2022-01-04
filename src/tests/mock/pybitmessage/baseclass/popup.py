@@ -1,6 +1,3 @@
-# from ..get_platform import platform
-platform = "linux"
-# from pybitmessage import kivy_helper_search
 
 from kivy.clock import Clock
 from kivy.metrics import dp
@@ -14,6 +11,8 @@ from pybitmessage.addresses import decodeAddress
 from datetime import datetime
 
 from pybitmessage.baseclass.common import toast
+
+platform = "linux"
 
 
 class LoadingPopup(Popup):
@@ -40,44 +39,10 @@ class GrashofPopup(BoxLayout):
 
     def checkAddress_valid(self, instance):
         """Checking address is valid or not"""
-        # my_addresses = (
-        #     state.kivyapp.root.ids.content_drawer.ids.btn.values)
-        # add_book = [addr[1] for addr in kivy_helper_search.search_sql(
-        #     folder="addressbook")]
-        # entered_text = str(instance.text).strip()
-        # if entered_text in add_book:
-        #     text = 'Address is already in the addressbook.'
-        # elif entered_text in my_addresses:
-        #     text = 'You can not save your own address.'
-        # elif entered_text:
-        #     text = self.addressChanged(entered_text)
-
-        # if entered_text in my_addresses or entered_text in add_book:
-        #     self.ids.address.error = True
-        #     self.ids.address.helper_text = text
-        # elif entered_text and self.valid:
-        #     self.ids.address.error = False
-        # elif entered_text:
-        #     self.ids.address.error = True
-        #     self.ids.address.helper_text = text
-        # else:
-        #     self.ids.address.error = False
-        #     self.ids.address.helper_text = 'This field is required'
         pass
 
     def checkLabel_valid(self, instance):
         """Checking address label is unique or not"""
-        # entered_label = instance.text.strip()
-        # addr_labels = [labels[0] for labels in kivy_helper_search.search_sql(
-        #     folder="addressbook")]
-        # if entered_label in addr_labels:
-        #     self.ids.label.error = True
-        #     self.ids.label.helper_text = 'label name already exists.'
-        # elif entered_label:
-        #     self.ids.label.error = False
-        # else:
-        #     self.ids.label.error = False
-        #     self.ids.label.helper_text = 'This field is required'
         pass
 
     def _onSuccess(self, addressVersion, streamNumber, ripe):
@@ -96,7 +61,6 @@ class GrashofPopup(BoxLayout):
         elif status == 'checksumfailed':
             text = (
                 "The address is not typed or copied correctly"
-                # " (the checksum failed)."
             )
         elif status == 'versiontoohigh':
             text = (
@@ -126,7 +90,7 @@ class AddbookDetailPopup(BoxLayout):
     def checkLabel_valid(self, instance):
         """Checking address label is unique of not"""
         entered_label = str(instance.text.strip())
-        address_list = kivy_helper_search.search_sql(folder="addressbook")
+        address_list = []
         addr_labels = [labels[0] for labels in address_list]
         add_dict = dict(address_list)
         if self.address and entered_label in addr_labels \

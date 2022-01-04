@@ -139,7 +139,7 @@ class MyAddress(Screen):
         """Loads more data on scroll down"""
         self.set_mdList(my_addresses, my_addresses + 20)
 
-    # @staticmethod
+    @staticmethod
     def myadd_detail(self, fromaddress, label, *args):
         """Load myaddresses details"""
         if BMConfigParser().get(fromaddress, 'enabled') == 'true':

@@ -1,5 +1,3 @@
-import time
-
 from pybitmessage.get_platform import platform
 from pybitmessage.bmconfigparser import BMConfigParser
 from kivy.clock import Clock
@@ -21,10 +19,6 @@ from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.screenmanager import Screen
-from kivy.uix.textinput import TextInput
-from kivymd.uix.behaviors.hover_behavior import HoverBehavior
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.theming import ThemableBehavior
 from pybitmessage import state
 from pybitmessage import queues
 
@@ -104,7 +98,7 @@ class DropDownWidget(BoxLayout):
                         print("streamNumber > 1 or streamNumber == 0")
                     stealthLevel = BMConfigParser().safeGetInt(
                         'bitmessagesettings', 'ackstealthlevel')
-                    
+
                 state.check_sent_acc = fromAddress
                 if state.detailPageType == 'draft' \
                         and state.send_draft_mail:

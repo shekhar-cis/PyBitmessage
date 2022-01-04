@@ -1,7 +1,4 @@
-from turtle import pd
 from pybitmessage.get_platform import platform
-from pybitmessage import kivy_helper_search
-from functools import partial
 from kivy.clock import Clock
 from kivy.properties import (
     ListProperty,
@@ -14,10 +11,7 @@ from kivy.uix.screenmanager import Screen
 
 from pybitmessage import state
 
-from pybitmessage.baseclass.common import (
-    avatarImageFirstLetter, toast,
-    ThemeClsColor, SwipeToDeleteItem
-)
+from pybitmessage.baseclass.common import toast
 from pybitmessage.baseclass.popup import AddbookDetailPopup
 
 
@@ -72,6 +66,7 @@ class AddressBook(Screen):
         """Refresh the Widget"""
         # state.navinstance.ids.sc11.ids.ml.clear_widgets()
         # state.navinstance.ids.sc11.loadAddresslist(None, 'All', '')
+        pass
 
     # @staticmethod
     def addBook_detail(self, address, label, instance, *args):
@@ -123,7 +118,6 @@ class AddressBook(Screen):
 
     def update_addbook_label(self, instance):
         """Updating the label of address book address"""
-        # address_list = kivy_helper_search.search_sql(folder="addressbook")
         address_list = []
         stored_labels = [labels[0] for labels in address_list]
         add_dict = dict(address_list)

@@ -1,4 +1,3 @@
-from pybitmessage import kivy_helper_search
 from pybitmessage.bmconfigparser import BMConfigParser
 from functools import partial
 from pybitmessage.addresses import decodeAddress
@@ -71,9 +70,7 @@ class Draft(Screen):
 
     def draftDataQuery(self, xAddress, where, what, start_indx=0, end_indx=20):
         """This methosd is for retrieving draft messages"""
-        self.queryreturn = kivy_helper_search.search_sql(
-            xAddress, self.account, "draft", where, what,
-            False, start_indx, end_indx)
+        self.queryreturn = []
 
     def set_draftCnt(self, Count):  # pylint: disable=no-self-use
         """This method set the count of draft mails"""

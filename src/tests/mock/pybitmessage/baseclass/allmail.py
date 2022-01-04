@@ -14,8 +14,6 @@ from pybitmessage.baseclass.common import (
     avatarImageFirstLetter, CutsomSwipeToDeleteItem,
     ShowTimeHistoy
 )
-# from pybitmessage.baseclass.maildetail import MailDetail
-# from pybitmessage.baseclass.trash import Trash
 
 
 class Allmails(Screen):
@@ -43,17 +41,8 @@ class Allmails(Screen):
         """Load Inbox, Sent anf Draft list of messages"""
         self.account = state.association
         self.ids.tag_label.text = ''
-        self.allMessageQuery(0, 20)
         if self.all_mails:
-            self.ids.tag_label.text = 'All Mails'
-            state.kivyapp.get_inbox_count()
-            state.kivyapp.get_sent_count()
-            state.all_count = str(
-                int(state.sent_count) + int(state.inbox_count))
-            self.set_AllmailCnt(state.all_count)
-            self.set_mdlist()
-            # self.ids.refresh_layout.bind(scroll_y=self.check_scroll_y)
-            self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
+            pass
         else:
             self.set_AllmailCnt('0')
             content = MDLabel(
@@ -64,19 +53,6 @@ class Allmails(Screen):
                 size_hint_y=None,
                 valign='top')
             self.ids.ml.add_widget(content)
-
-    def allMessageQuery(self, start_indx, end_indx):
-        """Retrieving data from inbox or sent both tables"""
-        self.all_mails = []
-        # sqlQuery(
-        #     "SELECT toaddress, fromaddress, subject, message, folder, ackdata"
-        #     " As id, DATE(senttime) As actionTime, senttime as msgtime FROM sent WHERE"
-        #     " folder = 'sent' and fromaddress = '{0}'"
-        #     " UNION SELECT toaddress, fromaddress, subject, message, folder,"
-        #     " msgid As id, DATE(received) As actionTime, received as msgtime FROM inbox"
-        #     " WHERE folder = 'inbox' and toaddress = '{0}'"
-        #     " ORDER BY actionTime DESC limit {1}, {2}".format(
-        #         self.account, start_indx, end_indx))
 
     def set_AllmailCnt(self, Count):  # pylint: disable=no-self-use
         """This method is used to set allmails message count"""
@@ -107,21 +83,6 @@ class Allmails(Screen):
                 self.mail_detail, item[5], item[4], message_row))
             message_row.ids.time_tag.text = str(ShowTimeHistoy(item[7]))
             message_row.ids.chip_tag.text = item[4]
-            # listItem = message_row.ids.content
-            # secondary_text = (subject[:50] + '........' if len(
-            #     subject) >= 50 else (
-            #         subject + ',' + body)[0:50] + '........').replace('\t', '').replace('  ', '')
-            # listItem.secondary_text = secondary_text
-            # listItem.theme_text_color = "Custom"
-            # listItem.text_color = ThemeClsColor
-
-            # listItem.add_widget(AvatarSampleWidget(
-            #     source=state.imageDir + '/text_images/{}.png'.format(
-            #         avatarImageFirstLetter(body.strip()))))
-            # listItem.bind(on_release=partial(
-            #     self.mail_detail, item[5], item[4], message_row))
-            # listItem.add_widget(AddTimeWidget(item[7]))
-            # listItem.add_widget(chipTag(item[4]))
             message_row.ids.delete_msg.bind(on_press=partial(
                 self.swipe_delete, item[5], item[4]))
             self.ids.ml.add_widget(message_row)
@@ -133,13 +94,6 @@ class Allmails(Screen):
         if self.ids.scroll_y.scroll_y <= -0.00 and self.has_refreshed:
             self.ids.scroll_y.scroll_y = .06
             load_more = len(self.ids.ml.children)
-            self.updating_allmail(load_more)
-
-    def updating_allmail(self, load_more):
-        """This method is used to update the all mail
-        listing value on the scroll of screen"""
-        self.allMessageQuery(load_more, 5)
-        self.set_mdlist()
 
     def mail_detail(self, unique_id, folder, instance, *args):
         """Load sent and inbox mail details"""
@@ -154,21 +108,12 @@ class Allmails(Screen):
                 else:
                     src_mng_obj = self.parent.parent
                 src_mng_obj.screens[11].clear_widgets()
-                # src_mng_obj.screens[11].add_widget(MailDetail())
                 src_mng_obj.current = 'mailDetail'
         else:
             instance.ids.delete_msg.disabled = False
 
     def swipe_delete(self, unique_id, folder, instance, *args):
         """Delete inbox mail from all mail listing"""
-        if folder == 'inbox':
-            sqlExecute(
-                "UPDATE inbox SET folder = 'trash' WHERE msgid = ?;",
-                unique_id)
-        else:
-            sqlExecute(
-                "UPDATE sent SET folder = 'trash' WHERE ackdata = ?;",
-                unique_id)
         self.ids.ml.remove_widget(instance.parent.parent)
         try:
             msg_count_objs = self.parent.parent.ids.content_drawer.ids
@@ -193,8 +138,5 @@ class Allmails(Screen):
         state.trash_count = str(int(state.trash_count) + 1)
         if int(state.all_count) <= 0:
             self.ids.tag_label.text = ''
-        # nav_lay_obj.sc5.clear_widgets()
-        # nav_lay_obj.sc5.add_widget(Trash())
         nav_lay_obj.sc17.remove_widget(instance.parent.parent)
         toast('Deleted')
-

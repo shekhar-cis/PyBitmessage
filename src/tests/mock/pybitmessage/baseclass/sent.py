@@ -1,4 +1,3 @@
-# from pybitmessage import identiconGeneration
 from functools import partial
 from kivy.clock import Clock
 from kivy.factory import Factory
@@ -13,7 +12,6 @@ from pybitmessage.baseclass.common import (
     showLimitedCnt, ThemeClsColor, avatarImageFirstLetter,
     toast, SwipeToDeleteItem, ShowTimeHistoy
 )
-# from pybitmessage.baseclass.maildetail import MailDetail
 
 
 class Sent(Screen):
@@ -46,7 +44,6 @@ class Sent(Screen):
         xAddress = 'fromaddress'
         data = []
         self.ids.tag_label.text = ''
-        self.sentDataQuery(xAddress, where, what)
         if self.queryreturn:
             self.ids.tag_label.text = 'Sent'
             self.set_sentCount(state.sent_count)
@@ -71,19 +68,6 @@ class Sent(Screen):
                 size_hint_y=None,
                 valign='top')
             self.ids.ml.add_widget(content)
-
-    def sentDataQuery(self, xAddress, where, what, start_indx=0, end_indx=20):
-        """This method is used to retrieving data from sent table"""
-        # self.queryreturn = kivy_helper_search.search_sql(
-        #     xAddress,
-        #     self.account,
-        #     'sent',
-        #     where,
-        #     what,
-        #     False,
-        #     start_indx,
-        #     end_indx)
-        pass
 
     def set_mdlist(self, data, set_index=0):
         """This method is used to create the mdList"""
@@ -121,7 +105,6 @@ class Sent(Screen):
                 total_sent = int(state.sent_count)
         else:
             data = []
-            self.sentDataQuery('fromaddress', '', '', 0, 1)
             if state.association == state.check_sent_acc:
                 total_sent = int(state.sent_count) + 1
                 state.sent_count = str(int(state.sent_count) + 1)
@@ -154,7 +137,6 @@ class Sent(Screen):
         if state.searcing_text:
             where = ['subject', 'message']
             what = state.searcing_text
-        self.sentDataQuery('fromaddress', where, what, total_sent_msg, 5)
         data = []
         for mail in self.queryreturn:
             data.append({
@@ -217,10 +199,6 @@ class Sent(Screen):
         try:
             self.parent.screens[3].clear_widgets()
             self.parent.screens[3].add_widget(Factory.Trash())
-            # self.parent.screens[14].clear_widgets()
-            # self.parent.screens[14].add_widget(Factory.Allmails())
         except Exception:
             self.parent.parent.screens[3].clear_widgets()
             self.parent.parent.screens[3].add_widget(Factory.Trash())
-            # self.parent.parent.screens[14].clear_widgets()
-            # self.parent.parent.screens[14].add_widget(Factory.Allmails())

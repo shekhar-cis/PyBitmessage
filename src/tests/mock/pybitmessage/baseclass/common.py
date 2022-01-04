@@ -1,6 +1,5 @@
 from datetime import datetime
 from kivy.core.window import Window
-from kivy.lang import Builder
 from kivy.metrics import dp
 from kivymd.uix.list import (
     ILeftBody,
@@ -8,8 +7,6 @@ from kivymd.uix.list import (
 )
 from kivy.uix.image import Image
 from kivymd.uix.label import MDLabel
-# from pybitmessage.get_platform import platform
-platform = "linux"
 from kivymd.toast import kivytoast
 from kivymd.uix.card import MDCardSwipe
 from kivymd.uix.chip import MDChip
@@ -17,6 +14,8 @@ from kivy.properties import (
     NumericProperty,
     StringProperty
 )
+# from pybitmessage.get_platform import platform
+platform = "linux"
 
 
 ThemeClsColor = [0.12, 0.58, 0.95, 1]
@@ -53,6 +52,7 @@ def chipTag(text):
 def toast(text):
     """Method will display the toast message"""
     kivytoast.toast(text)
+
 
 def showLimitedCnt(total_msg):
     """This method set the total count limit in badge_text"""

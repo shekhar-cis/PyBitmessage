@@ -11,11 +11,7 @@ Bitmessage android(mobile) interface
 
 from pybitmessage.get_platform import platform
 import os
-from pybitmessage import identiconGeneration
-from pybitmessage import kivy_helper_search
-from pybitmessage.uikivysignaler import UIkivySignaler
 from pybitmessage.bmconfigparser import BMConfigParser
-# from debug import logger
 from functools import partial
 from kivymd.app import MDApp
 from kivy.clock import Clock
@@ -44,21 +40,14 @@ from kivymd.uix.list import (
 from kivy.uix.screenmanager import RiseInTransition, SlideTransition, FallOutTransition
 
 from pybitmessage import queues
-from pybitmessage.semaphores import kivyuisignaler
-
 from pybitmessage import state
 from kivymd.uix.bottomsheet import MDCustomBottomSheet
 
 from kivy.lang import Observable
-# import gettext
-# import l10n
-# import locale
 import ast
 
 from pybitmessage.baseclass.common import toast
 
-# from qr_scanner.zbarcam import ZBarCam
-# from pyzbar.pyzbar import ZBarSymbol
 
 if platform != "android":
     from kivy.config import Config
@@ -238,16 +227,15 @@ class NavigateApp(MDApp):
                 )
             )
         # self.obj_1 = AddressBook()
-        kivysignalthread = UIkivySignaler()
-        kivysignalthread.daemon = True
-        kivysignalthread.start()
+        # kivysignalthread = UIkivySignaler()
+        # kivysignalthread.daemon = True
+        # kivysignalthread.start()
         Window.bind(on_keyboard=self.on_key, on_request_close=self.on_request_close)
         return Builder.load_file(
             os.path.join(os.path.dirname(__file__), 'main.kv'))
 
     def run(self):
         """Running the widgets"""
-        kivyuisignaler.release()
         super(NavigateApp, self).run()
 
     @staticmethod
@@ -269,7 +257,6 @@ class NavigateApp(MDApp):
             if os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(text)):
                 self.load_selected_Image(text)
             else:
-                # self.set_identicon(text)
                 self.root.ids.content_drawer.ids.reset_image.opacity = 0
                 self.root.ids.content_drawer.ids.reset_image.disabled = True
             address_label = self.current_address_label(
@@ -387,10 +374,8 @@ class NavigateApp(MDApp):
             pupup_obj.ids.address.focus = True
             # pupup_obj.ids.label.focus = True
 
-        stored_address = [addr[1] for addr in kivy_helper_search.search_sql(
-            folder="addressbook")]
-        stored_labels = [labels[0] for labels in kivy_helper_search.search_sql(
-            folder="addressbook")]
+        stored_address = [addr[1] for addr in []]
+        stored_labels = [labels[0] for labels in []]
         if label and address and address not in stored_address \
                 and label not in stored_labels and pupup_obj.valid:
             queues.UISignalQueue.put(('rerenderAddressBook', ''))
@@ -413,26 +398,6 @@ class NavigateApp(MDApp):
         """Getting Default Account Data"""
         if self.variable_1:
             state.association = first_addr = self.variable_1[0]
-            # if BMConfigParser().get(str(first_addr), 'enabled') == 'true':
-                # img = identiconGeneration.generate(first_addr)
-                # print('line...........................................426')
-                # self.createFolder(state.imageDir + '/default_identicon/')
-                # if platform == 'android':
-                #     # android_path = os.path.expanduser
-                #     # ("~/user/0/org.test.bitapp/files/app/")
-                #     if not os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(
-                #             BMConfigParser().addresses()[0])):
-                #         android_path = os.path.join(
-                #             os.environ['ANDROID_PRIVATE'] + '/app/')
-                #         img.texture.save('{1}/images/kivy/default_identicon/{0}.png'.format(
-                #             BMConfigParser().addresses()[0], android_path))
-                # else:
-                #     if not os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(
-                #             BMConfigParser().addresses()[0])):
-                #         img.texture.save(state.imageDir + '/default_identicon/{}.png'.format(
-                #             BMConfigParser().addresses()[0]))
-                # instance.parent.parent.parent.parent.parent.ids.top_box.children[0].texture = (
-                    # img.texture)
             return first_addr
         return 'Select Address'
 
@@ -446,8 +411,6 @@ class NavigateApp(MDApp):
                     return state.imageDir + '/default_identicon/{}.png'.format(
                             first_addr)
                 else:
-                    # img = identiconGeneration.generate(first_addr)
-                    # instance.texture = img.texture
                     return
         return state.imageDir + '/drawer_logo1.png'
 
@@ -743,14 +706,6 @@ class NavigateApp(MDApp):
             Clock.schedule_once(self.search_callback, 0.5)
         return
 
-    def set_identicon(self, text):
-        """Show identicon in address spinner"""
-        # img = identiconGeneration.generate(text)
-        # self.root.children[0].children[0].ids.btn.children[1].texture = (img.texture)
-        # below line is for displaing logo
-        # self.root.ids.content_drawer.ids.top_box.children[0].texture = (img.texture)
-        pass
-
     def set_mail_detail_header(self):
         """Setting the details of the page"""
         if state.association and state.in_search_mode:
@@ -887,7 +842,6 @@ class NavigateApp(MDApp):
 
     def rest_default_avatar_img(self):
         """set default avatar generated image"""
-        # self.set_identicon(state.association)
         img_path = state.imageDir + '/default_identicon/{}.png'.format(state.association)
         try:
             if os.path.exists(img_path):
