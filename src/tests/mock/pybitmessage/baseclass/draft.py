@@ -15,7 +15,6 @@ from pybitmessage.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor,
     SwipeToDeleteItem, ShowTimeHistoy
 )
-# from pybitmessage.baseclass.maildetail import MailDetail
 
 
 class Draft(Screen):

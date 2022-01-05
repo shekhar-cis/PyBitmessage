@@ -60,9 +60,9 @@ class AddressBook(Screen):
         if self.ids.scroll_y.scroll_y <= -0.0 and self.has_refreshed:
             self.ids.scroll_y.scroll_y = 0.06
             exist_addresses = len(self.ids.ml.children)
-            
+
     @staticmethod
-    def refreshs(*args):
+    def refreshes(*args):
         """Refresh the Widget"""
         # state.navinstance.ids.sc11.ids.ml.clear_widgets()
         # state.navinstance.ids.sc11.loadAddresslist(None, 'All', '')

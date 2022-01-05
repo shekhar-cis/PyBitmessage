@@ -2,7 +2,6 @@ from pybitmessage.get_platform import platform
 from functools import partial
 from pybitmessage.bmconfigparser import BMConfigParser
 from kivy.clock import Clock
-# from kivy.metrics import dp
 from kivy.properties import (
     ListProperty,
     StringProperty

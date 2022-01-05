@@ -1,6 +1,5 @@
 from functools import partial
 from kivy.clock import Clock
-from kivy.factory import Factory
 from kivy.properties import StringProperty, ListProperty
 
 from kivy.uix.screenmanager import Screen

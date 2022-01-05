@@ -7,7 +7,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 
 from pybitmessage import state
-from pybitmessage.addresses import decodeAddress
 from datetime import datetime
 
 from pybitmessage.baseclass.common import toast

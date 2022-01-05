@@ -1,22 +1,14 @@
-from pybitmessage.get_platform import platform
-from functools import partial
 from kivy.clock import Clock
 from kivy.properties import (
     ListProperty,
     StringProperty
 )
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen
 
 from pybitmessage import state
 
-from pybitmessage.baseclass.common import (
-    toast, showLimitedCnt, ThemeClsColor,
-    CutsomSwipeToDeleteItem, ShowTimeHistoy,
-    avatarImageFirstLetter
-)
+from pybitmessage.baseclass.common import showLimitedCnt
 
 
 class Trash(Screen):

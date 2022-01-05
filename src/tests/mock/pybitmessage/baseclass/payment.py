@@ -11,12 +11,6 @@ from kivymd.uix.list import (
     OneLineAvatarIconListItem
 )
 
-# from bmconfigparser import BMConfigParser
-from pybitmessage.baseclass.common import toast
-
-# import queues
-from pybitmessage import state
-
 
 class Payment(Screen):
     """Payment Screen class for kivy Ui"""

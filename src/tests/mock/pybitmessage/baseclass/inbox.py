@@ -25,7 +25,7 @@ class Inbox(Screen):
 
     @staticmethod
     def set_defaultAddress():
-        """This method set's default address"""        
+        """This method set's default address"""
         if state.association == "":
             if state.kivyapp.variable_1:
                 state.association = state.kivyapp.variable_1[0]
