@@ -4,6 +4,7 @@ from kivy.clock import Clock
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
 
+
 class NetworkStat(Screen):
     """NetworkStat class for kivy Ui"""
 
@@ -26,14 +27,3 @@ class NetworkStat(Screen):
     def init_ui(self, dt=0):
         """Clock Schdule for method networkstat screen"""
         pass
-        # self.text_variable_1 = '{0} :: {1}'.format(
-        #     'Total Connections', str(len(stats.connectedHostsList())))
-        # self.text_variable_2 = 'Processed {0} per-to-per messages'.format(
-        #     str(state.numberOfMessagesProcessed))
-        # self.text_variable_3 = 'Processed {0} brodcast messages'.format(
-        #     str(state.numberOfBroadcastsProcessed))
-        # self.text_variable_4 = 'Processed {0} public keys'.format(
-        #     str(state.numberOfPubkeysProcessed))
-        # self.text_variable_5 = '{0} object to be synced'.format(
-        #     len(objectracker.missingObjects))
-    

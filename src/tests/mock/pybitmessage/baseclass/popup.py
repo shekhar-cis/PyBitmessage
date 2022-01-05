@@ -48,34 +48,6 @@ class GrashofPopup(BoxLayout):
     def _onSuccess(self, addressVersion, streamNumber, ripe):
         pass
 
-    def addressChanged(self, addr):
-        """Address validation callback, performs validation and gives feedback"""
-        status, addressVersion, streamNumber, ripe = decodeAddress(
-            str(addr))
-        self.valid = status == 'success'
-        if self.valid:
-            text = "Address is valid."
-            self._onSuccess(addressVersion, streamNumber, ripe)
-        elif status == 'missingbm':
-            text = "The address should start with ''BM-''"
-        elif status == 'checksumfailed':
-            text = (
-                "The address is not typed or copied correctly"
-            )
-        elif status == 'versiontoohigh':
-            text = (
-                "The version number of this address is higher than this"
-                " software can support. Please upgrade Bitmessage.")
-        elif status == 'invalidcharacters':
-            text = "The address contains invalid characters."
-        elif status == 'ripetooshort':
-            text = "Some data encoded in the address is too short."
-        elif status == 'ripetoolong':
-            text = "Some data encoded in the address is too long."
-        elif status == 'varintmalformed':
-            text = "Some data encoded in the address is malformed."
-        return text
-
 
 class AddbookDetailPopup(BoxLayout):
     """AddbookDetailPopup class for kivy Ui"""

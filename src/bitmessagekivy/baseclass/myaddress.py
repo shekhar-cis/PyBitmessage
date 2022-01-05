@@ -142,6 +142,7 @@ class MyAddress(Screen):
     # @staticmethod
     def myadd_detail(self, fromaddress, label, *args):
         """Load myaddresses details"""
+        import pdb;pdb.set_trace()
         if BMConfigParser().get(fromaddress, 'enabled') == 'true':
             obj = MyaddDetailPopup()
             self.address_label = obj.address_label = label

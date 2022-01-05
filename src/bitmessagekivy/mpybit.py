@@ -51,6 +51,9 @@ import state
 from kivymd.uix.bottomsheet import MDCustomBottomSheet
 
 from kivy.lang import Observable
+# import gettext
+# import l10n
+# import locale
 import ast
 
 from bitmessagekivy.baseclass.common import toast
@@ -206,6 +209,7 @@ class NavigateApp(MDApp):
     """Navigation Layout of class"""
     # pylint: disable=too-many-public-methods,inconsistent-return-statements
 
+    # theme_cls = ThemeManager()
     previous_date = ObjectProperty()
     obj_1 = ObjectProperty()
     variable_1 = ListProperty(addr for addr in BMConfigParser().addresses()
@@ -412,7 +416,26 @@ class NavigateApp(MDApp):
         """Getting Default Account Data"""
         if self.variable_1:
             state.association = first_addr = self.variable_1[0]
-            
+            # if BMConfigParser().get(str(first_addr), 'enabled') == 'true':
+                # img = identiconGeneration.generate(first_addr)
+                # print('line...........................................426')
+                # self.createFolder(state.imageDir + '/default_identicon/')
+                # if platform == 'android':
+                #     # android_path = os.path.expanduser
+                #     # ("~/user/0/org.test.bitapp/files/app/")
+                #     if not os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(
+                #             BMConfigParser().addresses()[0])):
+                #         android_path = os.path.join(
+                #             os.environ['ANDROID_PRIVATE'] + '/app/')
+                #         img.texture.save('{1}/images/kivy/default_identicon/{0}.png'.format(
+                #             BMConfigParser().addresses()[0], android_path))
+                # else:
+                #     if not os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(
+                #             BMConfigParser().addresses()[0])):
+                #         img.texture.save(state.imageDir + '/default_identicon/{}.png'.format(
+                #             BMConfigParser().addresses()[0]))
+                # instance.parent.parent.parent.parent.parent.ids.top_box.children[0].texture = (
+                    # img.texture)
             return first_addr
         return 'Select Address'
 
@@ -646,16 +669,14 @@ class NavigateApp(MDApp):
         #         self.root_window.children[2].children[2].children[0].ids)
         self.get_inbox_count()
         self.get_sent_count()
-        state.trash_count = 0
-        # str(sqlQuery(
-        #     "SELECT (SELECT count(*) FROM  sent"
-        #     " where fromaddress = '{0}' and  folder = 'trash' )"
-        #     "+(SELECT count(*) FROM inbox where toaddress = '{0}' and"
-        #     " folder = 'trash') AS SumCount".format(state.association))[0][0])
-        state.draft_count = 0
-        # str(sqlQuery(
-        #     "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
-        #     " folder = 'draft' ;".format(state.association))[0][0])
+        state.trash_count = str(sqlQuery(
+            "SELECT (SELECT count(*) FROM  sent"
+            " where fromaddress = '{0}' and  folder = 'trash' )"
+            "+(SELECT count(*) FROM inbox where toaddress = '{0}' and"
+            " folder = 'trash') AS SumCount".format(state.association))[0][0])
+        state.draft_count = str(sqlQuery(
+            "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
+            " folder = 'draft' ;".format(state.association))[0][0])
         state.all_count = str(int(state.sent_count) + int(state.inbox_count))
         if msg_counter_objs:
             msg_counter_objs.send_cnt.badge_text = state.sent_count

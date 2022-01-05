@@ -179,9 +179,7 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
     def inbox_reply(self):
         """Reply inbox messages"""
         state.in_composer = True
-        data = sqlQuery(
-            "select toaddress, fromaddress, subject, message, received from inbox where"
-            " msgid = ?;", state.mail_id)
+        data = []
         composer_obj = self.parent.screens[1].children[1].ids
         composer_obj.ti.text = data[0][0]
         composer_obj.btn.text = data[0][0]
@@ -203,9 +201,7 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
     def write_msg(self, navApp):
         """Write on draft mail"""
         state.send_draft_mail = state.mail_id
-        data = sqlQuery(
-            "select toaddress, fromaddress, subject, message from sent where"
-            " ackdata = ?;", state.mail_id)
+        data = []
         composer_ids = (
             self.parent.parent.ids.sc3.children[1].ids)
         composer_ids.ti.text = data[0][1]

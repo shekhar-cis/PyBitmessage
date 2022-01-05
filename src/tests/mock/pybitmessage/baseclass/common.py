@@ -73,17 +73,6 @@ def avatarImageFirstLetter(letter_string):
     return img_latter if img_latter else '!'
 
 
-def AddTimeWidget(time):  # pylint: disable=redefined-outer-name, W0201
-    """This method is used to create TimeWidget"""
-    action_time = TimeTagRightSampleWidget(
-        text=str(ShowTimeHistoy(time)),
-        font_style="Caption",
-        size=[120, 140] if platform == "android" else [64, 80],
-    )
-    action_time.font_size = "11sp"
-    return action_time
-
-
 def ShowTimeHistoy(act_time):
     """This method is used to return the message sent or receive time"""
     action_time = datetime.fromtimestamp(int(act_time))

@@ -12,29 +12,6 @@ from kivy.properties import (
 from kivy.uix.screenmanager import Screen
 
 
-# if platform != "android":
-#     from kivy.config import Config
-#     from kivy_garden.zbarcam import ZBarCam
-#     from pyzbar.pyzbar import ZBarSymbol
-
-#     Config.set("input", "mouse", "mouse, multitouch_on_demand")
-# elif platform == "android":
-#     from jnius import autoclass, cast
-#     from android.runnable import run_on_ui_thread
-#     from android import python_act as PythonActivity
-
-#     Toast = autoclass("android.widget.Toast")
-#     String = autoclass("java.lang.String")
-#     CharSequence = autoclass("java.lang.CharSequence")
-#     context = PythonActivity.mActivity
-
-#     @run_on_ui_thread
-#     def show_toast(text, length):
-#         """Its showing toast on screen"""
-#         t = Toast.makeText(context, text, length)
-#         t.show()
-
-
 class ScanScreen(Screen):
     """ScanScreen is for scaning Qr code"""
     # pylint: disable=unused-argument

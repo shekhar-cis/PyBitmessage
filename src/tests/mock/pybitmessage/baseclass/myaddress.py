@@ -128,18 +128,7 @@ class MyAddress(Screen):
         """Load data on scroll down"""
         if self.ids.refresh_layout.scroll_y <= -0.0 and self.has_refreshed:
             self.ids.refresh_layout.scroll_y = 0.06
-            my_addresses = len(self.ids.ml.children)
-            if my_addresses != len(self.addresses_list):
-                self.update_addressBook_on_scroll(my_addresses)
-            self.has_refreshed = (
-                True if my_addresses != len(self.addresses_list) else False
-            )
 
-    def update_addressBook_on_scroll(self, my_addresses):
-        """Loads more data on scroll down"""
-        self.set_mdList(my_addresses, my_addresses + 20)
-
-    @staticmethod
     def myadd_detail(self, fromaddress, label, *args):
         """Load myaddresses details"""
         if BMConfigParser().get(fromaddress, 'enabled') == 'true':

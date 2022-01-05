@@ -38,7 +38,6 @@ class Trash(Screen):
             if state.kivyapp.variable_1:
                 state.association = state.kivyapp.variable_1[0]
         self.ids.tag_label.text = ''
-        # self.trashDataQuery(0, 20)
         if len(self.trash_messages):
             self.ids.ml.clear_widgets()
             self.ids.tag_label.text = 'Trash'
@@ -58,10 +57,6 @@ class Trash(Screen):
                 valign='top')
             self.ids.ml.add_widget(content)
 
-    def trashDataQuery(self, start_indx, end_indx):
-        """Trash message query"""
-        self.trash_messages = []
-
     def set_TrashCnt(self, Count):  # pylint: disable=no-self-use
         """This method is used to set trash message count"""
         trashCnt_obj = state.kivyapp.root.ids.content_drawer.ids.trash_cnt
@@ -70,26 +65,6 @@ class Trash(Screen):
     def set_mdList(self):
         """This method is used to create the mdlist"""
         total_trash_msg = len(self.ids.ml.children)
-        for item in self.trash_messages:
-            subject = item[2].decode() if isinstance(item[2], bytes) else item[2]
-            body = item[3].decode() if isinstance(item[3], bytes) else item[3]
-            message_row = CutsomSwipeToDeleteItem(
-                text=item[1],
-            )
-            message_row.bind(on_swipe_complete=partial(self.on_swipe_complete, message_row))
-            listItem = message_row.ids.content
-            listItem.secondary_text = (item[2][:50] + '........' if len(
-                subject) >= 50 else (subject + ',' + body)[0:50] + '........').replace('\t', '').replace('  ', '')
-            listItem.theme_text_color = "Custom"
-            listItem.text_color = ThemeClsColor
-            img_latter = state.imageDir + '/text_images/{}.png'.format(
-                avatarImageFirstLetter(subject[0].strip()))
-            message_row.ids.avater_img.source = img_latter
-            message_row.ids.time_tag.text = str(ShowTimeHistoy(item[7]))
-            message_row.ids.chip_tag.text = 'inbox 'if 'inbox' in item[4] else 'sent'
-            message_row.ids.delete_msg.bind(on_press=partial(
-                                            self.delete_permanently, item[5], item[4]))
-            self.ids.ml.add_widget(message_row)
         self.has_refreshed = True if total_trash_msg != len(
             self.ids.ml.children) else False
 
@@ -102,55 +77,3 @@ class Trash(Screen):
         if self.ids.scroll_y.scroll_y <= -0.0 and self.has_refreshed:
             self.ids.scroll_y.scroll_y = 0.06
             total_trash_msg = len(self.ids.ml.children)
-            self.update_trash_screen_on_scroll(total_trash_msg)
-
-    def update_trash_screen_on_scroll(self, total_trash_msg):
-        """Load more data on scroll down"""
-        # self.trashDataQuery(total_trash_msg, 5)
-        self.set_mdList()
-
-    def delete_permanently(self, data_index, folder, instance, *args):
-        """Deleting trash mail permanently"""
-        self.table_name = folder.split(',')[1]
-        self.delete_index = data_index
-        self.delete_confirmation()
-
-    def callback_for_screen_load(self, dt=0):
-        """This methos is for loading screen"""
-        self.ids.ml.clear_widgets()
-        self.init_ui(0)
-        self.children[1].active = False
-        toast('Message is permanently deleted')
-
-    def delete_confirmation(self):
-        """Show confirmation delete popup"""
-        width = .8 if platform == 'android' else .55
-        dialog_box = MDDialog(
-            text='Are you sure you want to delete this'
-            ' message permanently from trash?',
-            size_hint=(width, .25),
-            buttons=[
-                MDFlatButton(
-                    text="Yes", on_release=lambda x: callback_for_delete_msg("Yes")
-                ),
-                MDFlatButton(
-                    text="No", on_release=lambda x: callback_for_delete_msg("No"),
-                ),
-            ],)
-        dialog_box.open()
-
-        def callback_for_delete_msg(text_item, *arg):
-            """Getting the callback of alert box"""
-            if text_item == 'Yes':
-                self.delete_message_from_trash()
-            else:
-                toast(text_item)
-            dialog_box.dismiss()
-
-    def delete_message_from_trash(self):
-        """Deleting message from trash"""
-        self.children[1].active = True
-        if int(state.trash_count) > 0:
-            self.set_TrashCnt(int(state.trash_count) - 1)
-            state.trash_count = str(int(state.trash_count) - 1)
-            Clock.schedule_once(self.callback_for_screen_load, 1)

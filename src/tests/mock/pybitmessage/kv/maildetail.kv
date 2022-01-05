@@ -5,18 +5,8 @@
         BoxLayout:
             size_hint_y: None
             orientation: 'vertical'
-            # height: dp(bod.height) + self.minimum_height
             height: self.minimum_height
             padding: dp(10)
-            # MDLabel:
-            #     size_hint_y: None
-            #     id: subj
-            #     text: root.subject
-            #     theme_text_color: 'Primary'
-            #     halign: 'left'
-            #     font_style: 'H5'
-            #     height: dp(40)
-            #     on_touch_down: root.allclick(self)
             OneLineListTitle:
                 id: subj
                 text: app.tr._(root.subject)

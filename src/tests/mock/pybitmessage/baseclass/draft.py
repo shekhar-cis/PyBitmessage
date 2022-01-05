@@ -49,9 +49,6 @@ class Draft(Screen):
         self.account = state.association
         xAddress = 'fromaddress'
         self.ids.tag_label.text = ''
-        self.draftDataQuery(xAddress, where, what)
-        # if state.msg_counter_objs:
-        #     state.msg_counter_objs.draft_cnt.children[0].children[0].text = showLimitedCnt(len(self.queryreturn))
         if self.queryreturn:
             self.ids.tag_label.text = 'Draft'
             self.set_draftCnt(state.draft_count)
@@ -67,10 +64,6 @@ class Draft(Screen):
                 size_hint_y=None,
                 valign='top')
             self.ids.ml.add_widget(content)
-
-    def draftDataQuery(self, xAddress, where, what, start_indx=0, end_indx=20):
-        """This methosd is for retrieving draft messages"""
-        self.queryreturn = []
 
     def set_draftCnt(self, Count):  # pylint: disable=no-self-use
         """This method set the count of draft mails"""
@@ -112,12 +105,6 @@ class Draft(Screen):
         if self.ids.scroll_y.scroll_y <= -0.0 and self.has_refreshed:
             self.ids.scroll_y.scroll_y = 0.06
             total_draft_msg = len(self.ids.ml.children)
-            self.update_draft_screen_on_scroll(total_draft_msg)
-
-    def update_draft_screen_on_scroll(self, total_draft_msg, where='', what=''):
-        """Load more data on scroll down"""
-        self.draftDataQuery('fromaddress', where, what, total_draft_msg, 5)
-        self.set_mdList()
 
     def draft_detail(self, ackdata, instance, *args):
         """Show draft Details"""

@@ -130,22 +130,6 @@ class Sent(Screen):
         if self.ids.scroll_y.scroll_y <= -0.0 and self.has_refreshed:
             self.ids.scroll_y.scroll_y = 0.06
             total_sent_msg = len(self.ids.ml.children)
-            self.update_sent_screen_on_scroll(total_sent_msg)
-
-    def update_sent_screen_on_scroll(self, total_sent_msg, where="", what=""):
-        """This method is used to load more data on scroll down"""
-        if state.searcing_text:
-            where = ['subject', 'message']
-            what = state.searcing_text
-        data = []
-        for mail in self.queryreturn:
-            data.append({
-                'text': mail[1].strip(),
-                'secondary_text': mail[2][:50] + '........' if len(
-                    mail[2]) >= 50 else (mail[2] + ',' + mail[3].replace(
-                        '\n', ''))[0:50] + '........',
-                'ackdata': mail[5], 'senttime': mail[6]})
-        self.set_mdlist(data, 0)
 
     @staticmethod
     def set_sentCount(total_sent):
@@ -188,17 +172,3 @@ class Sent(Screen):
                 self.ids.tag_label.text = ''
         self.ids.ml.remove_widget(instance.parent.parent)
         toast('Deleted')
-
-    def archive(self, data_index, instance, *args):
-        """Archive sent mail from sent mail listing"""
-        self.ids.ml.remove_widget(instance.parent.parent)
-        self.update_trash()
-
-    def update_trash(self):
-        """Update trash screen mails which is deleted from inbox"""
-        try:
-            self.parent.screens[3].clear_widgets()
-            self.parent.screens[3].add_widget(Factory.Trash())
-        except Exception:
-            self.parent.parent.screens[3].clear_widgets()
-            self.parent.parent.screens[3].add_widget(Factory.Trash())

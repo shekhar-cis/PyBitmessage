@@ -75,4 +75,3 @@ class Inbox(Screen):
         if self.ids.scroll_y.scroll_y <= -0.0 and self.has_refreshed:
             self.ids.scroll_y.scroll_y = 0.06
             total_message = len(self.ids.ml.children)
-
