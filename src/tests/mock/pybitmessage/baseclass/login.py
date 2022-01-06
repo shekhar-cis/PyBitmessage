@@ -1,13 +1,24 @@
+# pylint: disable=too-many-lines,import-error,no-name-in-module,unused-argument
+# pylint: disable=too-many-ancestors,too-many-locals,useless-super-delegation
+# pylint: disable=protected-access
+# pylint: disable=import-outside-toplevel,ungrouped-imports,wrong-import-order,unused-import,arguments-differ
+# pylint: disable=invalid-name,unnecessary-comprehension,broad-except,simplifiable-if-expression,no-member
+# pylint: disable=too-many-return-statements
+
+"""
+Login screen
+"""
+# pylint: disable=redefined-outer-name,inconsistent-return-statements
+from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.screenmanager import Screen
+from kivy.properties import StringProperty, BooleanProperty
+from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
+
 from pybitmessage import queues
 from pybitmessage.bmconfigparser import BMConfigParser
 from pybitmessage import state
 from pybitmessage.baseclass.common import toast
-
-from kivy.clock import Clock
-from kivy.properties import StringProperty, BooleanProperty
-from kivy.uix.boxlayout import BoxLayout
-from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
-from kivy.uix.screenmanager import Screen
 
 
 class Login(Screen):
@@ -85,7 +96,7 @@ class Random(Screen):
         if entered_label in lables:
             instance.error = True
             instance.helper_text = 'it is already exist you'\
-                ' can try this Ex. ( {0}_1, {0}_2 )'.format(
+                'can try this Ex. ( {0}_1, {0}_2 )'.format(
                     entered_label)
         elif entered_label:
             instance.error = False

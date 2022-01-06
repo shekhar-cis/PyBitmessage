@@ -1,3 +1,8 @@
+# pylint: disable=unnecessary-pass
+"""
+Setting screen
+"""
+
 from kivy.uix.screenmanager import Screen
 
 

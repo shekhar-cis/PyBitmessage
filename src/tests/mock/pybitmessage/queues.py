@@ -1,3 +1,10 @@
+# pylint: disable=too-many-lines,import-error,no-name-in-module,unused-argument
+# pylint: disable=too-many-ancestors,too-many-locals,useless-super-delegation
+# pylint: disable=protected-access
+# pylint: disable=import-outside-toplevel,ungrouped-imports,wrong-import-order,unused-import,arguments-differ
+# pylint: disable=invalid-name,unnecessary-comprehension,broad-except,simplifiable-if-expression,no-member
+# pylint: disable=too-many-return-statements
+
 """Most of the queues used by bitmessage threads are defined here."""
 
 import threading
@@ -39,8 +46,6 @@ addressGeneratorQueue = queue.Queue()
 #: `.network.ReceiveQueueThread` instances dump objects they hear
 #: on the network into this queue to be processed.
 objectProcessorQueue = ObjectProcessorQueue()
-# invQueue = MultiQueue()
-# addrQueue = MultiQueue()
 portCheckerQueue = queue.Queue()
 receiveDataQueue = queue.Queue()
 #: The address generator thread uses this queue to get information back

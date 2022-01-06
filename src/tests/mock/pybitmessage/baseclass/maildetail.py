@@ -1,3 +1,14 @@
+# pylint: disable=too-many-lines,import-error,no-name-in-module,unused-argument, no-else-return,  unused-variable
+# pylint: disable=too-many-ancestors,too-many-locals,useless-super-delegation, attribute-defined-outside-init
+# pylint: disable=protected-access, super-with-arguments, pointless-statement
+# pylint: disable=import-outside-toplevel,ungrouped-imports,wrong-import-order,unused-import,arguments-differ
+# pylint: disable=invalid-name,unnecessary-comprehension,broad-except,simplifiable-if-expression,no-member, consider-using-in
+# pylint: disable=too-many-return-statements, unnecessary-pass, bad-option-value, abstract-method, consider-using-f-string
+
+"""
+Mail Detail Screen Functionality
+"""
+
 from datetime import datetime
 
 from kivy.core.clipboard import Clipboard

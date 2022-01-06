@@ -1,3 +1,15 @@
+# pylint: disable=too-many-lines,import-error,no-name-in-module,unused-argument, no-else-return,  unused-variable
+# pylint: disable=too-many-ancestors,too-many-locals,useless-super-delegation, attribute-defined-outside-init, no-self-use
+# pylint: disable=protected-access, super-with-arguments, pointless-statement, no-method-argument, too-many-function-args
+# pylint: disable=import-outside-toplevel,ungrouped-imports,wrong-import-order,unused-import,arguments-differ, too-few-public-methods
+# pylint: disable=invalid-name,unnecessary-comprehension,broad-except,simplifiable-if-expression,no-member, consider-using-in
+# pylint: disable=too-many-return-statements, unnecessary-pass, bad-option-value, abstract-method, consider-using-f-string
+
+
+"""
+Trash Screen
+"""
+
 from kivy.clock import Clock
 from kivy.properties import (
     ListProperty,

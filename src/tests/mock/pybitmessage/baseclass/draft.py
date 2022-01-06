@@ -1,6 +1,16 @@
-from pybitmessage.bmconfigparser import BMConfigParser
+# pylint: disable=too-many-lines,import-error,no-name-in-module,unused-argument, no-else-return,  unused-variable
+# pylint: disable=too-many-ancestors,too-many-locals,useless-super-delegation, attribute-defined-outside-init
+# pylint: disable=protected-access
+# pylint: disable=import-outside-toplevel,ungrouped-imports,wrong-import-order,unused-import,arguments-differ
+# pylint: disable=invalid-name,unnecessary-comprehension,broad-except,simplifiable-if-expression,no-member
+# pylint: disable=too-many-return-statements
+
+"""
+Draft Screen
+"""
+
 from functools import partial
-from pybitmessage.addresses import decodeAddress
+
 from kivy.clock import Clock
 from kivy.properties import (
     ListProperty,
@@ -10,7 +20,8 @@ from kivy.uix.screenmanager import Screen
 from kivymd.uix.label import MDLabel
 
 from pybitmessage import state
-
+from pybitmessage.bmconfigparser import BMConfigParser
+from pybitmessage.addresses import decodeAddress
 from pybitmessage.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor,
     SwipeToDeleteItem, ShowTimeHistoy
@@ -43,7 +54,7 @@ class Draft(Screen):
         # self.account = state.association
         self.loadDraft()
 
-    def loadDraft(self, where="", what=""):
+    def loadDraft(self):
         """Load draft list for Draft messages"""
         self.account = state.association
         xAddress = 'fromaddress'
@@ -99,13 +110,13 @@ class Draft(Screen):
         updated_msg = len(self.ids.ml.children)
         self.has_refreshed = True if total_draft_msg != updated_msg else False
 
-    def check_scroll_y(self, instance, somethingelse):
+    def check_scroll_y(self):
         """Load data on scroll"""
         if self.ids.scroll_y.scroll_y <= -0.0 and self.has_refreshed:
             self.ids.scroll_y.scroll_y = 0.06
             total_draft_msg = len(self.ids.ml.children)
 
-    def draft_detail(self, ackdata, instance, *args):
+    def draft_detail(self, ackdata, instance):
         """Show draft Details"""
         if instance.state == 'closed':
             instance.ids.delete_msg.disabled = True
@@ -122,7 +133,7 @@ class Draft(Screen):
         else:
             instance.ids.delete_msg.disabled = False
 
-    def delete_draft(self, data_index, instance, *args):
+    def delete_draft(self, instance):
         """Delete draft message permanently"""
         if int(state.draft_count) > 0:
             state.draft_count = str(int(state.draft_count) - 1)

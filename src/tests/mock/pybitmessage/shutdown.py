@@ -1,5 +1,12 @@
+# pylint: disable=too-many-lines,import-error,no-name-in-module,unused-argument
+# pylint: disable=too-many-ancestors,too-many-locals,useless-super-delegation
+# pylint: disable=protected-access
+# pylint: disable=import-outside-toplevel,ungrouped-imports,wrong-import-order,unused-import,arguments-differ
+# pylint: disable=invalid-name,unnecessary-comprehension,broad-except,simplifiable-if-expression,no-member
+# pylint: disable=too-many-return-statements
+
 """shutdown function"""
-import os
+
 import queue as Queue
 import threading
 import time
@@ -73,12 +80,3 @@ def doCleanShutdown():
                 queue.task_done()
             except Queue.Empty:
                 break
-
-    # if state.thisapp.daemon or not state.enableGUI:
-        # logger.info('Clean shutdown complete.')
-    #     state.thisapp.cleanup()
-    #     os._exit(0)  # pylint: disable=protected-access
-    # else:
-        # logger.info('Core shutdown complete.')
-    # for thread in threading.enumerate():
-        # logger.debug('Thread %s still running', thread.name)

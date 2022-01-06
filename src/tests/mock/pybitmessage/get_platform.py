@@ -1,3 +1,10 @@
+# pylint: disable=too-many-lines,import-error,no-name-in-module,unused-argument
+# pylint: disable=too-many-ancestors,too-many-locals,useless-super-delegation
+# pylint: disable=protected-access
+# pylint: disable=import-outside-toplevel,ungrouped-imports,wrong-import-order,unused-import,arguments-differ
+# pylint: disable=invalid-name,unnecessary-comprehension,broad-except,simplifiable-if-expression,no-member
+# pylint: disable=too-many-return-statements
+
 from sys import platform as _sys_platform
 from os import environ
 
@@ -34,6 +41,7 @@ def _get_platform():
     elif _sys_platform.startswith("freebsd"):
         return "linux"
     return "unknown"
+
 
 platform = _get_platform()
 

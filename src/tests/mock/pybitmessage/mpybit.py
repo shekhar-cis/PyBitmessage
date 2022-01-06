@@ -37,7 +37,7 @@ from kivymd.uix.list import (
     OneLineListItem
 )
 
-from kivy.uix.screenmanager import RiseInTransition, SlideTransition, FallOutTransition
+from kivy.uix.screenmanager import SlideTransition, FallOutTransition
 
 from pybitmessage import queues
 from pybitmessage import state
@@ -53,7 +53,7 @@ if platform != "android":
     from kivy.config import Config
     Config.set("input", "mouse", "mouse, multitouch_on_demand")
 elif platform == "android":
-    from jnius import autoclass, cast
+    from jnius import autoclass, cast  # noqa:F401
     from android.runnable import run_on_ui_thread
     from android import python_act as PythonActivity
 
@@ -97,7 +97,7 @@ class Lang(Observable):
         if name == "_":
             self.observers.append((func, args, kwargs))
         else:
-            return super(Lang, self).fbind(name, func, *largs, **kwargs)
+            return super(Lang, self).fbind(name, func, **args, **kwargs)
 
     def funbind(self, name, func, args, **kwargs):
         if name == "_":
@@ -337,7 +337,6 @@ class NavigateApp(MDApp):
         # self.add_popup.set_normal_height()
         self.add_popup.auto_dismiss = False
         self.add_popup.open()
-        # p = GrashofPopup()
         # p.open()
 
     def scan_qr_code(self, instance):
@@ -406,10 +405,8 @@ class NavigateApp(MDApp):
         if self.variable_1:
             first_addr = self.variable_1[0]
             if BMConfigParser().get(str(first_addr), 'enabled') == 'true':
-                if os.path.exists(
-                    state.imageDir + '/default_identicon/{}.png'.format(first_addr)):
-                    return state.imageDir + '/default_identicon/{}.png'.format(
-                            first_addr)
+                if os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(first_addr)):
+                    return state.imageDir + '/default_identicon/{}.png'.format(first_addr)
                 else:
                     return
         return state.imageDir + '/drawer_logo1.png'
@@ -617,7 +614,7 @@ class NavigateApp(MDApp):
     def set_message_count(self):
         """Setting message count"""
         pass
-        
+
     def on_start(self):
         """Setting message count"""
         self.set_message_count()
@@ -626,7 +623,7 @@ class NavigateApp(MDApp):
     def current_address_label(current_add_label=None, current_addr=None):
         """Getting current address labels"""
         addresses = [addr for addr in BMConfigParser().addresses()
-                        if BMConfigParser().get(str(addr), 'enabled') == 'true']
+                     if BMConfigParser().get(str(addr), 'enabled') == 'true']
         if addresses:
             if current_add_label:
                 first_name = current_add_label
@@ -775,7 +772,7 @@ class NavigateApp(MDApp):
 
     def on_request_close(self, *args):  # pylint: disable=no-self-use
         """This method is for app closing request"""
-        AppClosingPopup().open()
+        AppClosingPopup().open()  # noqa:F821
         return True
 
     def file_manager_open(self):
@@ -874,9 +871,6 @@ class NavigateApp(MDApp):
         print("Purchasing {} through {}".format(self.product_id, method_name))
 
     def _after_scan(self, text):
-        # if platform == 'android':
-        #     toast_txt = cast(CharSequence, String(text))
-        #     show_toast(toast_txt, Toast.LENGTH_SHORT)
         if self.root.ids.sc23.previous_open_screen == 'composer':
             self.root.ids.sc3.children[1].ids.txt_input.text = text
             self.root.ids.scr_mngr.current = 'create'
