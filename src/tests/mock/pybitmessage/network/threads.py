@@ -1,1 +1,0 @@
-/home/cis/Bitmessagepeter/Bitmessagepeter/KivyPoject/BITMESSAGEQT/PyBitmessage/src/network/threads.py

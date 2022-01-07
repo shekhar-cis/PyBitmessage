@@ -1,1 +1,1 @@
-/home/cis/Bitmessagepeter/Bitmessagepeter/KivyPoject/BITMESSAGEQT/PyBitmessage/src/singleton.py
+../../../singleton.py
