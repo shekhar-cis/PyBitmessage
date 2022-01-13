@@ -13,6 +13,7 @@ from kivy.properties import (
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.label import MDLabel
 
+import kivy_state
 import state
 
 from bitmessagekivy.baseclass.common import (
@@ -39,9 +40,9 @@ class Inbox(Screen):
     @staticmethod
     def set_defaultAddress():
         """This method set's default address"""
-        if state.association == "":
+        if kivy_state.association == "":
             if state.kivyapp.variable_1:
-                state.association = state.kivyapp.variable_1[0]
+                kivy_state.association = state.kivyapp.variable_1[0]
 
     def init_ui(self, dt=0):
         """Clock schdule for method inbox accounts"""
@@ -50,12 +51,12 @@ class Inbox(Screen):
     def loadMessagelist(self, where="", what=""):
         """Load Inbox list for Inbox messages"""
         self.set_defaultAddress()
-        self.account = state.association
-        if state.searcing_text:
+        self.account = kivy_state.association
+        if kivy_state.searcing_text:
             # self.children[2].children[0].children[0].scroll_y = 1.0
             self.ids.scroll_y.scroll_y = 1.0
             where = ["subject", "message"]
-            what = state.searcing_text
+            what = kivy_state.searcing_text
         xAddress = "toaddress"
         data = []
         self.ids.tag_label.text = ""
@@ -64,7 +65,7 @@ class Inbox(Screen):
         if self.queryreturn:
             self.ids.tag_label.text = "Inbox"
             state.kivyapp.get_inbox_count()
-            self.set_inboxCount(state.inbox_count)
+            self.set_inboxCount(kivy_state.inbox_count)
             for mail in self.queryreturn:
                 # third_text = mail[3].replace('\n', ' ')
                 body = mail[3].decode() if isinstance(mail[3], bytes) else mail[3]
@@ -93,7 +94,7 @@ class Inbox(Screen):
                 font_style="Caption",
                 theme_text_color="Primary",
                 text="No message found!"
-                if state.searcing_text
+                if kivy_state.searcing_text
                 else "yet no message for this account!!!!!!!!!!!!!",
                 halign="center",
                 size_hint_y=None,
@@ -106,9 +107,9 @@ class Inbox(Screen):
         src_mng_obj = state.kivyapp.root.ids.content_drawer.ids
         src_mng_obj.inbox_cnt.ids.badge_txt.text = showLimitedCnt(int(msgCnt))
         state.kivyapp.get_sent_count()
-        state.all_count = str(
-            int(state.sent_count) + int(state.inbox_count))
-        src_mng_obj.allmail_cnt.ids.badge_txt.text = showLimitedCnt(int(state.all_count))
+        kivy_state.all_count = str(
+            int(kivy_state.sent_count) + int(kivy_state.inbox_count))
+        src_mng_obj.allmail_cnt.ids.badge_txt.text = showLimitedCnt(int(kivy_state.all_count))
 
     def inboxDataQuery(self, xAddress, where, what, start_indx=0, end_indx=20):
         """This method is used for retrieving inbox data"""
@@ -128,7 +129,7 @@ class Inbox(Screen):
             listItem.theme_text_color = "Custom"
             listItem.text_color = ThemeClsColor
             listItem._txt_right_pad = dp(70)
-            image = state.imageDir + "/text_images/{}.png".format(
+            image = kivy_state.imageDir + "/text_images/{}.png".format(
                 avatarImageFirstLetter(item["secondary_text"].strip()))
             message_row.ids.avater_img.source = image
             listItem.bind(on_release=partial(self.inbox_detail, item["msgid"], message_row))
@@ -148,9 +149,9 @@ class Inbox(Screen):
     def update_inbox_screen_on_scroll(self, total_message, where="", what=""):
         """This method is used to load more data on scroll down"""
         data = []
-        if state.searcing_text:
+        if kivy_state.searcing_text:
             where = ["subject", "message"]
-            what = state.searcing_text
+            what = kivy_state.searcing_text
         self.inboxDataQuery("toaddress", where, what, total_message, 5)
         for mail in self.queryreturn:
             # third_text = mail[3].replace('\n', ' ')
@@ -173,8 +174,8 @@ class Inbox(Screen):
         if instance.state == 'closed':
             instance.ids.delete_msg.disabled = True
             if instance.open_progress == 0.0:
-                state.detailPageType = "inbox"
-                state.mail_id = msg_id
+                kivy_state.detailPageType = "inbox"
+                kivy_state.mail_id = msg_id
                 if self.manager:
                     src_mng_obj = self.manager
                 else:
@@ -189,22 +190,22 @@ class Inbox(Screen):
         """Delete inbox mail from inbox listing"""
         sqlExecute("UPDATE inbox SET folder = 'trash' WHERE msgid = ?;", data_index)
         msg_count_objs = self.parent.parent.ids.content_drawer.ids
-        if int(state.inbox_count) > 0:
+        if int(kivy_state.inbox_count) > 0:
             msg_count_objs.inbox_cnt.ids.badge_txt.text = showLimitedCnt(
-                int(state.inbox_count) - 1
+                int(kivy_state.inbox_count) - 1
             )
             msg_count_objs.trash_cnt.ids.badge_txt.text = showLimitedCnt(
-                int(state.trash_count) + 1
+                int(kivy_state.trash_count) + 1
             )
-            state.inbox_count = str(int(state.inbox_count) - 1)
-            state.trash_count = str(int(state.trash_count) + 1)
-            if int(state.all_count) > 0:
+            kivy_state.inbox_count = str(int(kivy_state.inbox_count) - 1)
+            kivy_state.trash_count = str(int(kivy_state.trash_count) + 1)
+            if int(kivy_state.all_count) > 0:
                 msg_count_objs.allmail_cnt.ids.badge_txt.text = showLimitedCnt(
-                    int(state.all_count) - 1
+                    int(kivy_state.all_count) - 1
                 )
-                state.all_count = str(int(state.all_count) - 1)
+                kivy_state.all_count = str(int(kivy_state.all_count) - 1)
 
-            if int(state.inbox_count) <= 0:
+            if int(kivy_state.inbox_count) <= 0:
                 # self.ids.identi_tag.children[0].text = ''
                 self.ids.tag_label.text = ''
         self.ids.ml.remove_widget(
@@ -235,10 +236,10 @@ class Inbox(Screen):
 
         def refresh_callback(interval):
             """Method used for loading the inbox screen data"""
-            state.searcing_text = ""
+            kivy_state.searcing_text = ""
             self.children[2].children[1].ids.search_field.text = ""
             self.ids.ml.clear_widgets()
-            self.loadMessagelist(state.association)
+            self.loadMessagelist(kivy_state.association)
             self.has_refreshed = True
             self.ids.refresh_layout.refresh_done()
             self.tick = 0

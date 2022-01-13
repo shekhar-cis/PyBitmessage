@@ -8,6 +8,7 @@ from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 
+import kivy_state
 import state
 from addresses import decodeAddress
 from datetime import datetime

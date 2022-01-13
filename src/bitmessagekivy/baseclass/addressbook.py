@@ -13,6 +13,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen
 
+import kivy_state
 import state
 
 from bitmessagekivy.baseclass.common import (
@@ -43,10 +44,10 @@ class AddressBook(Screen):
 
     def loadAddresslist(self, account, where="", what=""):
         """Clock Schdule for method AddressBook"""
-        if state.searcing_text:
+        if kivy_state.searcing_text:
             self.ids.scroll_y.scroll_y = 1.0
             where = ['label', 'address']
-            what = state.searcing_text
+            what = kivy_state.searcing_text
         xAddress = ''
         self.ids.tag_label.text = ''
         self.queryreturn = kivy_helper_search.search_sql(
@@ -61,7 +62,7 @@ class AddressBook(Screen):
             content = MDLabel(
                 font_style='Caption',
                 theme_text_color='Primary',
-                text="No contact found!" if state.searcing_text
+                text="No contact found!" if kivy_state.searcing_text
                 else "No contact found yet...... ",
                 halign='center',
                 size_hint_y=None,
@@ -79,9 +80,9 @@ class AddressBook(Screen):
             listItem.theme_text_color = "Custom"
             listItem.text_color = ThemeClsColor
             # listItem.add_widget(AvatarSampleWidget(
-            #     source=state.imageDir + '/text_images/{}.png'.format(
+            #     source=kivy_state.imageDir + '/text_images/{}.png'.format(
             #         avatarImageFirstLetter(item[0].strip()))))
-            image = state.imageDir + "/text_images/{}.png".format(
+            image = kivy_state.imageDir + "/text_images/{}.png".format(
                 avatarImageFirstLetter(item[0].strip()))
             message_row.ids.avater_img.source = image
             listItem.bind(on_release=partial(

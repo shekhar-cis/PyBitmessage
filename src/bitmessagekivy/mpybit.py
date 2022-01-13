@@ -47,6 +47,7 @@ from kivy.uix.screenmanager import RiseInTransition, SlideTransition, FallOutTra
 import queues
 from semaphores import kivyuisignaler
 
+import kivy_state
 import state
 from kivymd.uix.bottomsheet import MDCustomBottomSheet
 
@@ -215,16 +216,16 @@ class NavigateApp(MDApp):
     variable_1 = ListProperty(addr for addr in BMConfigParser().addresses()
                               if BMConfigParser().get(str(addr), 'enabled') == 'true')
     nav_drawer = ObjectProperty()
-    state.screen_density = Window.size
-    window_size = state.screen_density
+    kivy_state.screen_density = Window.size
+    window_size = kivy_state.screen_density
     app_platform = platform
     title = "PyBitmessage"
     imgstatus = False
     count = 0
     manager_open = False
     file_manager = None
-    state.imageDir = os.path.join('./images', 'kivy')
-    image_path = state.imageDir
+    kivy_state.imageDir = os.path.join('./images', 'kivy')
+    image_path = kivy_state.imageDir
     tr = Lang("en")  # for changing in franch replace en with fr
 
     def build(self):
@@ -267,7 +268,7 @@ class NavigateApp(MDApp):
     def getCurrentAccountData(self, text):
         """Get Current Address Account Data"""
         if text != '':
-            if os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(text)):
+            if os.path.exists(kivy_state.imageDir + '/default_identicon/{}.png'.format(text)):
                 self.load_selected_Image(text)
             else:
                 self.set_identicon(text)
@@ -277,8 +278,8 @@ class NavigateApp(MDApp):
                 BMConfigParser().get(text, 'label'), text)
 
             self.root_window.children[1].ids.toolbar.title = address_label
-            state.association = text
-            state.searcing_text = ''
+            kivy_state.association = text
+            kivy_state.searcing_text = ''
             LoadingPopup().open()
             self.set_message_count()
             for nav_obj in self.root.ids.content_drawer.children[
@@ -297,11 +298,11 @@ class NavigateApp(MDApp):
     def setCurrentAccountData(self, dt=0):
         """This method set the current accout data on all the screens"""
         self.root.ids.sc1.ids.ml.clear_widgets()
-        self.root.ids.sc1.loadMessagelist(state.association)
+        self.root.ids.sc1.loadMessagelist(kivy_state.association)
 
         self.root.ids.sc4.ids.ml.clear_widgets()
         self.root.ids.sc4.children[2].children[2].ids.search_field.text = ''
-        self.root.ids.sc4.loadSent(state.association)
+        self.root.ids.sc4.loadSent(kivy_state.association)
 
         self.root.ids.sc16.clear_widgets()
         self.root.ids.sc16.add_widget(Draft())
@@ -320,8 +321,8 @@ class NavigateApp(MDApp):
     @staticmethod
     def getCurrentAccount():
         """It uses to get current account label"""
-        if state.association:
-            return state.association
+        if kivy_state.association:
+            return kivy_state.association
         return "Bitmessage Login"
 
     # @staticmethod
@@ -394,7 +395,7 @@ class NavigateApp(MDApp):
             folder="addressbook")]
         if label and address and address not in stored_address \
                 and label not in stored_labels and pupup_obj.valid:
-            # state.navinstance = self.parent.children[1]
+            # kivy_state.navinstance = self.parent.children[1]
             queues.UISignalQueue.put(('rerenderAddressBook', ''))
             self.add_popup.dismiss()
             sqlExecute("INSERT INTO addressbook VALUES(?,?)", label, address)
@@ -415,24 +416,24 @@ class NavigateApp(MDApp):
     def getDefaultAccData(self, instance):
         """Getting Default Account Data"""
         if self.variable_1:
-            state.association = first_addr = self.variable_1[0]
+            kivy_state.association = first_addr = self.variable_1[0]
             # if BMConfigParser().get(str(first_addr), 'enabled') == 'true':
                 # img = identiconGeneration.generate(first_addr)
                 # print('line...........................................426')
-                # self.createFolder(state.imageDir + '/default_identicon/')
+                # self.createFolder(kivy_state.imageDir + '/default_identicon/')
                 # if platform == 'android':
                 #     # android_path = os.path.expanduser
                 #     # ("~/user/0/org.test.bitapp/files/app/")
-                #     if not os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(
+                #     if not os.path.exists(kivy_state.imageDir + '/default_identicon/{}.png'.format(
                 #             BMConfigParser().addresses()[0])):
                 #         android_path = os.path.join(
                 #             os.environ['ANDROID_PRIVATE'] + '/app/')
                 #         img.texture.save('{1}/images/kivy/default_identicon/{0}.png'.format(
                 #             BMConfigParser().addresses()[0], android_path))
                 # else:
-                #     if not os.path.exists(state.imageDir + '/default_identicon/{}.png'.format(
+                #     if not os.path.exists(kivy_state.imageDir + '/default_identicon/{}.png'.format(
                 #             BMConfigParser().addresses()[0])):
-                #         img.texture.save(state.imageDir + '/default_identicon/{}.png'.format(
+                #         img.texture.save(kivy_state.imageDir + '/default_identicon/{}.png'.format(
                 #             BMConfigParser().addresses()[0]))
                 # instance.parent.parent.parent.parent.parent.ids.top_box.children[0].texture = (
                     # img.texture)
@@ -445,14 +446,14 @@ class NavigateApp(MDApp):
             first_addr = self.variable_1[0]
             if BMConfigParser().get(str(first_addr), 'enabled') == 'true':
                 if os.path.exists(
-                    state.imageDir + '/default_identicon/{}.png'.format(first_addr)):
-                    return state.imageDir + '/default_identicon/{}.png'.format(
+                    kivy_state.imageDir + '/default_identicon/{}.png'.format(first_addr)):
+                    return kivy_state.imageDir + '/default_identicon/{}.png'.format(
                             first_addr)
                 else:
                     img = identiconGeneration.generate(first_addr)
                     instance.texture = img.texture
                     return
-        return state.imageDir + '/drawer_logo1.png'
+        return kivy_state.imageDir + '/drawer_logo1.png'
 
     @staticmethod
     def addressexist():
@@ -462,18 +463,18 @@ class NavigateApp(MDApp):
         return False
 
     def on_key(self, window, key, *args):
-        # pylint: disable=inconsistent-return-statements, too-many-branches
+        # pylint: disable=inconsistent-return-kivy_statements, too-many-branches
         """Method is used for going on previous screen"""
         if key == 27:
-            if state.in_search_mode and self.root.ids.scr_mngr.current not in [
+            if kivy_state.in_search_mode and self.root.ids.scr_mngr.current not in [
                     "mailDetail", "create"]:
                 self.closeSearchScreen()
             elif self.root.ids.scr_mngr.current == "mailDetail":
                 self.root.ids.scr_mngr.current = 'sent'\
-                    if state.detailPageType == 'sent' else 'inbox' \
-                    if state.detailPageType == 'inbox' else 'draft'
+                    if kivy_state.detailPageType == 'sent' else 'inbox' \
+                    if kivy_state.detailPageType == 'inbox' else 'draft'
                 self.back_press()
-                if state.in_search_mode and state.searcing_text:
+                if kivy_state.in_search_mode and kivy_state.searcing_text:
                     toolbar_obj = self.root.ids.toolbar
                     toolbar_obj.left_action_items = [
                         ['arrow-left', lambda x: self.closeSearchScreen()]]
@@ -482,7 +483,7 @@ class NavigateApp(MDApp):
             elif self.root.ids.scr_mngr.current == "create":
                 self.save_draft()
                 self.set_common_header()
-                state.in_composer = False
+                kivy_state.in_composer = False
                 self.root.ids.scr_mngr.current = 'inbox'
             elif self.root.ids.scr_mngr.current == "showqrcode":
                 self.set_common_header()
@@ -493,10 +494,10 @@ class NavigateApp(MDApp):
                 self.set_common_header()
                 self.root.ids.scr_mngr.current = 'payment'
             elif self.root.ids.scr_mngr.current == 'chroom':
-                if state.association:
+                if kivy_state.association:
                     address_label = self.current_address_label(
                         BMConfigParser().get(
-                            state.association, 'label'), state.association)
+                            kivy_state.association, 'label'), kivy_state.association)
                     self.root.ids.toolbar.title = address_label
                 self.set_common_header()
                 self.root.ids.scr_mngr.transition = FallOutTransition()
@@ -508,39 +509,39 @@ class NavigateApp(MDApp):
             self.root.ids.scr_mngr.transition.direction = 'right'
             self.root.ids.scr_mngr.transition.bind(on_complete=self.reset)
             return True
-        elif key == 13 and state.searcing_text and not state.in_composer:
-            if state.search_screen == 'inbox':
+        elif key == 13 and kivy_state.searcing_text and not kivy_state.in_composer:
+            if kivy_state.search_screen == 'inbox':
                 self.root.ids.sc1.children[1].active = True
                 Clock.schedule_once(self.search_callback, 0.5)
-            elif state.search_screen == 'addressbook':
+            elif kivy_state.search_screen == 'addressbook':
                 self.root.ids.sc11.children[1].active = True
                 Clock.schedule_once(self.search_callback, 0.5)
-            elif state.search_screen == 'myaddress':
+            elif kivy_state.search_screen == 'myaddress':
                 self.loadMyAddressScreen(True)
                 Clock.schedule_once(self.search_callback, 0.5)
-            elif state.search_screen == 'sent':
+            elif kivy_state.search_screen == 'sent':
                 self.root.ids.sc4.children[1].active = True
                 Clock.schedule_once(self.search_callback, 0.5)
 
     def search_callback(self, dt=0):
         """Show data after loader is loaded"""
-        if state.search_screen == 'inbox':
+        if kivy_state.search_screen == 'inbox':
             self.root.ids.sc1.ids.ml.clear_widgets()
-            self.root.ids.sc1.loadMessagelist(state.association)
+            self.root.ids.sc1.loadMessagelist(kivy_state.association)
             self.root.ids.sc1.children[1].active = False
-        elif state.search_screen == 'addressbook':
+        elif kivy_state.search_screen == 'addressbook':
             self.root.ids.sc11.ids.ml.clear_widgets()
             self.root.ids.sc11.loadAddresslist(None, 'All', '')
             self.root.ids.sc11.children[1].active = False
-        elif state.search_screen == 'myaddress':
+        elif kivy_state.search_screen == 'myaddress':
             self.root.ids.sc10.ids.ml.clear_widgets()
             self.root.ids.sc10.init_ui()
             self.loadMyAddressScreen(False)
         else:
             self.root.ids.sc4.ids.ml.clear_widgets()
-            self.root.ids.sc4.loadSent(state.association)
+            self.root.ids.sc4.loadSent(kivy_state.association)
             self.root.ids.sc4.children[1].active = False
-        self.root.ids.scr_mngr.current = state.search_screen
+        self.root.ids.scr_mngr.current = kivy_state.search_screen
 
     def loadMyAddressScreen(self, action):
         """loadMyAddressScreen method spin the loader"""
@@ -554,8 +555,8 @@ class NavigateApp(MDApp):
         composer_objs = self.root
         from_addr = str(self.root.ids.sc3.children[1].ids.ti.text)
         # to_addr = str(self.root.ids.sc3.children[1].ids.txt_input.text)
-        if from_addr and state.detailPageType != 'draft' \
-                and not state.in_sent_method:
+        if from_addr and kivy_state.detailPageType != 'draft' \
+                and not kivy_state.in_sent_method:
             Draft().draft_msg(composer_objs)
         return
 
@@ -568,8 +569,8 @@ class NavigateApp(MDApp):
     def status_dispatching(data):
         """Dispatching Status acknowledgment"""
         ackData, message = data
-        if state.ackdata == ackData:
-            state.status.status = message
+        if kivy_state.ackdata == ackData:
+            kivy_state.status.status = message
 
     def clear_composer(self):
         """If slow down, the new composer edit screen"""
@@ -580,8 +581,8 @@ class NavigateApp(MDApp):
         composer_obj.txt_input.text = ''
         composer_obj.subject.text = ''
         composer_obj.body.text = ''
-        state.in_composer = True
-        state.in_sent_method = False
+        kivy_state.in_composer = True
+        kivy_state.in_sent_method = False
 
     def set_navbar_for_composer(self):
         """Clearing toolbar data when composer open"""
@@ -614,7 +615,7 @@ class NavigateApp(MDApp):
         if self.root.ids.scr_mngr.current == 'create':
             self.save_draft()
         if self.root.ids.scr_mngr.current == \
-                'mailDetail' and state.in_search_mode:
+                'mailDetail' and kivy_state.in_search_mode:
             toolbar_obj = self.root.ids.toolbar
             toolbar_obj.left_action_items = [
                 ['arrow-left', lambda x: self.closeSearchScreen()]]
@@ -622,16 +623,16 @@ class NavigateApp(MDApp):
             self.root.ids.toolbar.title = ''
         else:
             self.set_common_header()
-            if self.root.ids.scr_mngr.current == 'chroom' and state.association:
+            if self.root.ids.scr_mngr.current == 'chroom' and kivy_state.association:
                 self.root.ids.scr_mngr.transition = FallOutTransition()
                 address_label = self.current_address_label(
                     BMConfigParser().get(
-                        state.association, 'label'), state.association)
+                        kivy_state.association, 'label'), kivy_state.association)
                 self.root.ids.toolbar.title = address_label
         self.root.ids.scr_mngr.current = 'inbox' \
-            if state.in_composer else 'allmails'\
-            if state.is_allmail else state.detailPageType\
-            if state.detailPageType else 'myaddress'\
+            if kivy_state.in_composer else 'allmails'\
+            if kivy_state.is_allmail else kivy_state.detailPageType\
+            if kivy_state.detailPageType else 'myaddress'\
             if self.root.ids.scr_mngr.current == 'showqrcode' else 'payment'\
             if self.root.ids.scr_mngr.current == 'pay-options' else 'chlist'\
             if self.root.ids.scr_mngr.current == 'chroom' else 'inbox'
@@ -639,24 +640,24 @@ class NavigateApp(MDApp):
             self.root.ids.scr_mngr.transition = SlideTransition()
         self.root.ids.scr_mngr.transition.direction = 'right'
         self.root.ids.scr_mngr.transition.bind(on_complete=self.reset)
-        if state.is_allmail or state.detailPageType == 'draft':
-            state.is_allmail = False
-        state.detailPageType = ''
-        state.in_composer = False
+        if kivy_state.is_allmail or kivy_state.detailPageType == 'draft':
+            kivy_state.is_allmail = False
+        kivy_state.detailPageType = ''
+        kivy_state.in_composer = False
 
     @staticmethod
     def get_inbox_count():
         """Getting inbox count"""
-        state.inbox_count = str(sqlQuery(
+        kivy_state.inbox_count = str(sqlQuery(
             "SELECT COUNT(*) FROM inbox WHERE toaddress = '{}' and"
-            " folder = 'inbox' ;".format(state.association))[0][0])
+            " folder = 'inbox' ;".format(kivy_state.association))[0][0])
 
     @staticmethod
     def get_sent_count():
         """Getting sent count"""
-        state.sent_count = str(sqlQuery(
+        kivy_state.sent_count = str(sqlQuery(
             "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
-            " folder = 'sent' ;".format(state.association))[0][0])
+            " folder = 'sent' ;".format(kivy_state.association))[0][0])
 
     def set_message_count(self):
         """Setting message count"""
@@ -669,21 +670,21 @@ class NavigateApp(MDApp):
         #         self.root_window.children[2].children[2].children[0].ids)
         self.get_inbox_count()
         self.get_sent_count()
-        state.trash_count = str(sqlQuery(
+        kivy_state.trash_count = str(sqlQuery(
             "SELECT (SELECT count(*) FROM  sent"
             " where fromaddress = '{0}' and  folder = 'trash' )"
             "+(SELECT count(*) FROM inbox where toaddress = '{0}' and"
-            " folder = 'trash') AS SumCount".format(state.association))[0][0])
-        state.draft_count = str(sqlQuery(
+            " folder = 'trash') AS SumCount".format(kivy_state.association))[0][0])
+        kivy_state.draft_count = str(sqlQuery(
             "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
-            " folder = 'draft' ;".format(state.association))[0][0])
-        state.all_count = str(int(state.sent_count) + int(state.inbox_count))
+            " folder = 'draft' ;".format(kivy_state.association))[0][0])
+        kivy_state.all_count = str(int(kivy_state.sent_count) + int(kivy_state.inbox_count))
         if msg_counter_objs:
-            msg_counter_objs.send_cnt.badge_text = state.sent_count
-            msg_counter_objs.inbox_cnt.badge_text = state.inbox_count
-            msg_counter_objs.trash_cnt.badge_text = state.trash_count
-            msg_counter_objs.draft_cnt.badge_text = state.draft_count
-            msg_counter_objs.allmail_cnt.badge_text = state.all_count
+            msg_counter_objs.send_cnt.badge_text = kivy_state.sent_count
+            msg_counter_objs.inbox_cnt.badge_text = kivy_state.inbox_count
+            msg_counter_objs.trash_cnt.badge_text = kivy_state.trash_count
+            msg_counter_objs.draft_cnt.badge_text = kivy_state.draft_count
+            msg_counter_objs.allmail_cnt.badge_text = kivy_state.all_count
 
     def on_start(self):
         """Setting message count"""
@@ -719,33 +720,33 @@ class NavigateApp(MDApp):
 
     def searchQuery(self, instance):
         """Showing searched mails"""
-        state.search_screen = self.root.ids.scr_mngr.current
-        state.searcing_text = str(instance.text).strip()
-        if instance.focus and state.searcing_text:
+        kivy_state.search_screen = self.root.ids.scr_mngr.current
+        kivy_state.searcing_text = str(instance.text).strip()
+        if instance.focus and kivy_state.searcing_text:
             toolbar_obj = self.root.ids.toolbar
             toolbar_obj.left_action_items = [
                 ['arrow-left', lambda x: self.closeSearchScreen()]]
             toolbar_obj.right_action_items = []
             self.root.ids.toolbar.title = ''
-            state.in_search_mode = True
+            kivy_state.in_search_mode = True
 
     def closeSearchScreen(self):
         """Function for close search screen"""
         self.set_common_header()
-        if state.association:
+        if kivy_state.association:
             address_label = self.current_address_label(
                 BMConfigParser().get(
-                    state.association, 'label'), state.association)
+                    kivy_state.association, 'label'), kivy_state.association)
             self.root.ids.toolbar.title = address_label
-        state.searcing_text = ''
+        kivy_state.searcing_text = ''
         self.refreshScreen()
-        state.in_search_mode = False
+        kivy_state.in_search_mode = False
 
     def refreshScreen(self):
         """Method show search button only on inbox or sent screen"""
         # pylint: disable=unused-variable
-        state.searcing_text = ''
-        if state.search_screen == 'inbox':
+        kivy_state.searcing_text = ''
+        if kivy_state.search_screen == 'inbox':
             self.root.ids.sc1.ids.inbox_search.ids.search_field.text = ''
             # try:
             #     self.root.ids.sc1.children[
@@ -755,14 +756,14 @@ class NavigateApp(MDApp):
             #         2].children[2].ids.search_field.text = ''
             self.root.ids.sc1.children[1].active = True
             Clock.schedule_once(self.search_callback, 0.5)
-        elif state.search_screen == 'addressbook':
+        elif kivy_state.search_screen == 'addressbook':
             self.root.ids.sc11.ids.address_search.ids.search_field.text = ''
             # self.root.ids.sc11.children[
             #     2].children[2].ids.search_field.text = ''
             self.root.ids.sc11.children[
                 1].active = True
             Clock.schedule_once(self.search_callback, 0.5)
-        elif state.search_screen == 'myaddress':
+        elif kivy_state.search_screen == 'myaddress':
             self.root.ids.sc10.ids.search_bar.ids.search_field.text = ''
             # try:
             #     self.root.ids.sc10.children[
@@ -789,10 +790,10 @@ class NavigateApp(MDApp):
 
     def set_mail_detail_header(self):
         """Setting the details of the page"""
-        if state.association and state.in_search_mode:
+        if kivy_state.association and kivy_state.in_search_mode:
             address_label = self.current_address_label(
                 BMConfigParser().get(
-                    state.association, 'label'), state.association)
+                    kivy_state.association, 'label'), kivy_state.association)
             self.root.ids.toolbar.title = address_label
         toolbar_obj = self.root.ids.toolbar
         toolbar_obj.left_action_items = [
@@ -800,13 +801,13 @@ class NavigateApp(MDApp):
         delete_btn = ['delete-forever',
                       lambda x: self.root.ids.sc14.delete_mail()]
         dynamic_list = []
-        if state.detailPageType == 'inbox':
+        if kivy_state.detailPageType == 'inbox':
             dynamic_list = [
                 ['reply', lambda x: self.root.ids.sc14.inbox_reply()],
                 delete_btn]
-        elif state.detailPageType == 'sent':
+        elif kivy_state.detailPageType == 'sent':
             dynamic_list = [delete_btn]
-        elif state.detailPageType == 'draft':
+        elif kivy_state.detailPageType == 'draft':
             dynamic_list = [
                 ['pencil', lambda x: self.root.ids.sc14.write_msg(self)],
                 delete_btn]
@@ -835,7 +836,7 @@ class NavigateApp(MDApp):
         """This method is rotating loader for few seconds"""
         if instance.text == 'Inbox':
             self.root.ids.sc1.ids.ml.clear_widgets()
-            self.root.ids.sc1.loadMessagelist(state.association)
+            self.root.ids.sc1.loadMessagelist(kivy_state.association)
             self.root.ids.sc1.children[1].active = False
         elif instance.text == 'All Mails':
             self.root.ids.sc17.clear_widgets()
@@ -894,12 +895,12 @@ class NavigateApp(MDApp):
                 if not os.path.exists(android_path + '/default_identicon/'):
                     os.makedirs(android_path + '/default_identicon/')
                 newImg.save('{1}/default_identicon/{0}.png'.format(
-                    state.association, android_path))
+                    kivy_state.association, android_path))
             else:
-                if not os.path.exists(state.imageDir + '/default_identicon/'):
-                    os.makedirs(state.imageDir + '/default_identicon/')
-                newImg.save(state.imageDir + '/default_identicon/{0}.png'.format(state.association))
-            self.load_selected_Image(state.association)
+                if not os.path.exists(kivy_state.imageDir + '/default_identicon/'):
+                    os.makedirs(kivy_state.imageDir + '/default_identicon/')
+                newImg.save(kivy_state.imageDir + '/default_identicon/{0}.png'.format(kivy_state.association))
+            self.load_selected_Image(kivy_state.association)
             toast('Image changed')
         except Exception:
             toast('Exit')
@@ -915,7 +916,7 @@ class NavigateApp(MDApp):
         top_box_obj = self.root.ids.content_drawer.ids.top_box.children[0]
         # spinner_img_obj = self.root.ids.content_drawer.ids.btn.children[1]
         # spinner_img_obj.source = top_box_obj.source ='./images/default_identicon/{0}.png'.format(curerentAddr)
-        top_box_obj.source = state.imageDir + '/default_identicon/{0}.png'.format(curerentAddr)
+        top_box_obj.source = kivy_state.imageDir + '/default_identicon/{0}.png'.format(curerentAddr)
         self.root.ids.content_drawer.ids.reset_image.opacity = 1
         self.root.ids.content_drawer.ids.reset_image.disabled = False
         top_box_obj.reload()
@@ -923,8 +924,8 @@ class NavigateApp(MDApp):
 
     def rest_default_avatar_img(self):
         """set default avatar generated image"""
-        self.set_identicon(state.association)
-        img_path = state.imageDir + '/default_identicon/{}.png'.format(state.association)
+        self.set_identicon(kivy_state.association)
+        img_path = kivy_state.imageDir + '/default_identicon/{}.png'.format(kivy_state.association)
         try:
             if os.path.exists(img_path):
                 os.remove(img_path)

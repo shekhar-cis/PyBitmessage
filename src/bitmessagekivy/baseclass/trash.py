@@ -12,6 +12,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen
 
+import kivy_state
 import state
 
 from bitmessagekivy.baseclass.common import (
@@ -36,17 +37,17 @@ class Trash(Screen):
 
     def init_ui(self, dt=0):
         """Clock Schdule for method trash screen"""
-        if state.association == '':
+        if kivy_state.association == '':
             if state.kivyapp.variable_1:
-                state.association = state.kivyapp.variable_1[0]
+                kivy_state.association = state.kivyapp.variable_1[0]
         self.ids.tag_label.text = ''
         self.trashDataQuery(0, 20)
         if len(self.trash_messages):
             self.ids.ml.clear_widgets()
             self.ids.tag_label.text = 'Trash'
             # src_mng_obj = state.kivyapp.root.children[2].children[0].ids
-            # src_mng_obj.trash_cnt.badge_text = state.trash_count
-            self.set_TrashCnt(state.trash_count)
+            # src_mng_obj.trash_cnt.badge_text = kivy_state.trash_count
+            self.set_TrashCnt(kivy_state.trash_count)
             self.set_mdList()
             self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
         else:
@@ -72,7 +73,7 @@ class Trash(Screen):
             " DATE(received) As actionTime, received as msgtime FROM inbox"
             " WHERE folder = 'trash' and toaddress = '{0}'"
             " ORDER BY actionTime DESC limit {1}, {2}".format(
-                state.association, start_indx, end_indx))
+                kivy_state.association, start_indx, end_indx))
 
     def set_TrashCnt(self, Count):  # pylint: disable=no-self-use
         """This method is used to set trash message count"""
@@ -94,7 +95,7 @@ class Trash(Screen):
                 subject) >= 50 else (subject + ',' + body)[0:50] + '........').replace('\t', '').replace('  ', '')
             listItem.theme_text_color = "Custom"
             listItem.text_color = ThemeClsColor
-            img_latter = state.imageDir + '/text_images/{}.png'.format(
+            img_latter = kivy_state.imageDir + '/text_images/{}.png'.format(
                 avatarImageFirstLetter(subject[0].strip()))
             message_row.ids.avater_img.source = img_latter
             message_row.ids.time_tag.text = str(ShowTimeHistoy(item[7]))
@@ -175,9 +176,9 @@ class Trash(Screen):
         elif self.table_name == 'sent':
             sqlExecute(
                 "DELETE FROM sent WHERE ackdata = ?;", self.delete_index)
-        if int(state.trash_count) > 0:
+        if int(kivy_state.trash_count) > 0:
             # msg_count_objs.trash_cnt.badge_text = str(
-            #     int(state.trash_count) - 1)
-            self.set_TrashCnt(int(state.trash_count) - 1)
-            state.trash_count = str(int(state.trash_count) - 1)
+            #     int(kivy_state.trash_count) - 1)
+            self.set_TrashCnt(int(kivy_state.trash_count) - 1)
+            kivy_state.trash_count = str(int(kivy_state.trash_count) - 1)
             Clock.schedule_once(self.callback_for_screen_load, 1)

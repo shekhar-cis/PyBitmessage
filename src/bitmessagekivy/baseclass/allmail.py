@@ -9,6 +9,7 @@ from kivy.properties import (
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.label import MDLabel
 
+import kivy_state
 import state
 
 from bitmessagekivy.baseclass.common import (
@@ -31,9 +32,9 @@ class Allmails(Screen):
     def __init__(self, *args, **kwargs):
         """Method Parsing the address"""
         super(Allmails, self).__init__(*args, **kwargs)
-        if state.association == '':
+        if kivy_state.association == '':
             if state.kivyapp.variable_1:
-                state.association = state.kivyapp.variable_1[0]
+                kivy_state.association = state.kivyapp.variable_1[0]
         Clock.schedule_once(self.init_ui, 0)
 
     def init_ui(self, dt=0):
@@ -43,16 +44,16 @@ class Allmails(Screen):
 
     def loadMessagelist(self):
         """Load Inbox, Sent anf Draft list of messages"""
-        self.account = state.association
+        self.account = kivy_state.association
         self.ids.tag_label.text = ''
         self.allMessageQuery(0, 20)
         if self.all_mails:
             self.ids.tag_label.text = 'All Mails'
             state.kivyapp.get_inbox_count()
             state.kivyapp.get_sent_count()
-            state.all_count = str(
-                int(state.sent_count) + int(state.inbox_count))
-            self.set_AllmailCnt(state.all_count)
+            kivy_state.all_count = str(
+                int(kivy_state.sent_count) + int(kivy_state.inbox_count))
+            self.set_AllmailCnt(kivy_state.all_count)
             self.set_mdlist()
             # self.ids.refresh_layout.bind(scroll_y=self.check_scroll_y)
             self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
@@ -101,7 +102,7 @@ class Allmails(Screen):
             listItem.secondary_text = secondary_text
             listItem.theme_text_color = "Custom"
             listItem.text_color = ThemeClsColor
-            img_latter = state.imageDir + '/text_images/{}.png'.format(
+            img_latter = kivy_state.imageDir + '/text_images/{}.png'.format(
                 avatarImageFirstLetter(body.strip()))
             message_row.ids.avater_img.source = img_latter
             listItem.bind(on_release=partial(
@@ -117,7 +118,7 @@ class Allmails(Screen):
             # listItem.text_color = ThemeClsColor
 
             # listItem.add_widget(AvatarSampleWidget(
-            #     source=state.imageDir + '/text_images/{}.png'.format(
+            #     source=kivy_state.imageDir + '/text_images/{}.png'.format(
             #         avatarImageFirstLetter(body.strip()))))
             # listItem.bind(on_release=partial(
             #     self.mail_detail, item[5], item[4], message_row))
@@ -147,9 +148,9 @@ class Allmails(Screen):
         if instance.state == 'closed':
             instance.ids.delete_msg.disabled = True
             if instance.open_progress == 0.0:
-                state.detailPageType = folder
-                state.is_allmail = True
-                state.mail_id = unique_id
+                kivy_state.detailPageType = folder
+                kivy_state.is_allmail = True
+                kivy_state.mail_id = unique_id
                 if self.manager:
                     src_mng_obj = self.manager
                 else:
@@ -178,21 +179,21 @@ class Allmails(Screen):
             msg_count_objs = self.parent.parent.parent.ids.content_drawer.ids
             nav_lay_obj = self.parent.parent.parent.ids
         if folder == 'inbox':
-            msg_count_objs.inbox_cnt.ids.badge_txt.text = showLimitedCnt(int(state.inbox_count) - 1)
-            state.inbox_count = str(int(state.inbox_count) - 1)
+            msg_count_objs.inbox_cnt.ids.badge_txt.text = showLimitedCnt(int(kivy_state.inbox_count) - 1)
+            kivy_state.inbox_count = str(int(kivy_state.inbox_count) - 1)
             nav_lay_obj.sc1.ids.ml.clear_widgets()
-            nav_lay_obj.sc1.loadMessagelist(state.association)
+            nav_lay_obj.sc1.loadMessagelist(kivy_state.association)
         else:
-            msg_count_objs.send_cnt.ids.badge_txt.text = showLimitedCnt(int(state.sent_count) - 1)
-            state.sent_count = str(int(state.sent_count) - 1)
+            msg_count_objs.send_cnt.ids.badge_txt.text = showLimitedCnt(int(kivy_state.sent_count) - 1)
+            kivy_state.sent_count = str(int(kivy_state.sent_count) - 1)
             nav_lay_obj.sc4.ids.ml.clear_widgets()
-            nav_lay_obj.sc4.loadSent(state.association)
+            nav_lay_obj.sc4.loadSent(kivy_state.association)
         if folder != 'inbox':
-            msg_count_objs.allmail_cnt.ids.badge_txt.text = showLimitedCnt(int(state.all_count) - 1)
-            state.all_count = str(int(state.all_count) - 1)
-        msg_count_objs.trash_cnt.ids.badge_txt.text = showLimitedCnt(int(state.trash_count) + 1)
-        state.trash_count = str(int(state.trash_count) + 1)
-        if int(state.all_count) <= 0:
+            msg_count_objs.allmail_cnt.ids.badge_txt.text = showLimitedCnt(int(kivy_state.all_count) - 1)
+            kivy_state.all_count = str(int(kivy_state.all_count) - 1)
+        msg_count_objs.trash_cnt.ids.badge_txt.text = showLimitedCnt(int(kivy_state.trash_count) + 1)
+        kivy_state.trash_count = str(int(kivy_state.trash_count) + 1)
+        if int(kivy_state.all_count) <= 0:
             self.ids.tag_label.text = ''
         # nav_lay_obj.sc5.clear_widgets()
         # nav_lay_obj.sc5.add_widget(Trash())

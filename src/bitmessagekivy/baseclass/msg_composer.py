@@ -26,6 +26,7 @@ from kivy.uix.textinput import TextInput
 from kivymd.uix.behaviors.hover_behavior import HoverBehavior
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.theming import ThemableBehavior
+import kivy_state
 import state
 import queues
 
@@ -94,7 +95,7 @@ class DropDownWidget(BoxLayout):
             )
             if status == "success":
                 navApp.root.ids.sc3.children[0].active = True
-                if state.detailPageType == "draft" and state.send_draft_mail:
+                if kivy_state.detailPageType == "draft" and kivy_state.send_draft_mail:
                     sqlExecute(
                         "UPDATE sent SET toaddress = ?"
                         ", fromaddress = ? , subject = ?"
@@ -107,11 +108,11 @@ class DropDownWidget(BoxLayout):
                         message,
                         int(time.time()),
                         int(time.time()),
-                        state.send_draft_mail)
+                        kivy_state.send_draft_mail)
                     self.parent.parent.screens[13].clear_widgets()
                     self.parent.parent.screens[13].add_widget(Factory.Draft())
-                    # state.detailPageType = ''
-                    # state.send_draft_mail = None
+                    # kivy_state.detailPageType = ''
+                    # kivy_state.send_draft_mail = None
                 else:
                     # toAddress = addBMIfNotPresent(toAddress)
                     if (addressVersionNumber > 4) or (
@@ -145,24 +146,24 @@ class DropDownWidget(BoxLayout):
                         3,  #encoding
                         BMConfigParser().safeGetInt(
                             'bitmessagesettings', 'ttl'))
-                state.check_sent_acc = fromAddress
-                # state.msg_counter_objs = self.parent.parent.parent.parent\
+                kivy_state.check_sent_acc = fromAddress
+                # kivy_state.msg_counter_objs = self.parent.parent.parent.parent\
                 #     .parent.parent.children[2].children[0].ids
-                if state.detailPageType == 'draft' \
-                        and state.send_draft_mail:
-                    state.draft_count = str(int(state.draft_count) - 1)
-                    # state.msg_counter_objs.draft_cnt.badge_text = (
-                    #     state.draft_count)
-                    state.detailPageType = ''
-                    state.send_draft_mail = None
+                if kivy_state.detailPageType == 'draft' \
+                        and kivy_state.send_draft_mail:
+                    kivy_state.draft_count = str(int(kivy_state.draft_count) - 1)
+                    # kivy_state.msg_counter_objs.draft_cnt.badge_text = (
+                    #     kivy_state.draft_count)
+                    kivy_state.detailPageType = ''
+                    kivy_state.send_draft_mail = None
                 self.parent.parent.parent.ids.sc4.update_sent_messagelist()
                 allmailCnt_obj = state.kivyapp.root.ids.content_drawer.ids.allmail_cnt
-                allmailCnt_obj.ids.badge_txt.text = showLimitedCnt(int(state.all_count) + 1)
-                state.all_count = str(int(state.all_count) + 1)
+                allmailCnt_obj.ids.badge_txt.text = showLimitedCnt(int(kivy_state.all_count) + 1)
+                kivy_state.all_count = str(int(kivy_state.all_count) + 1)
                 Clock.schedule_once(self.callback_for_msgsend, 3)
                 queues.workerQueue.put(('sendmessage', addBMIfNotPresent(toAddress)))
                 print("sqlExecute successfully #######################")
-                state.in_composer = True
+                kivy_state.in_composer = True
                 return
             else:
                 msg = 'Enter a valid recipients address'
@@ -176,7 +177,7 @@ class DropDownWidget(BoxLayout):
     def callback_for_msgsend(dt=0):  # pylint: disable=unused-argument
         """Callback method for messagesend"""
         state.kivyapp.root.ids.sc3.children[0].active = False
-        state.in_sent_method = True
+        kivy_state.in_sent_method = True
         state.kivyapp.back_press()
         toast("sent")
 

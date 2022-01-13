@@ -17,6 +17,7 @@ from kivymd.uix.list import (
 from kivymd.uix.selectioncontrol import MDSwitch
 from kivy.uix.screenmanager import Screen
 
+import kivy_state
 import state
 
 from bitmessagekivy.baseclass.common import (
@@ -57,7 +58,7 @@ class MyAddress(Screen):
         # pylint: disable=unnecessary-lambda, deprecated-lambda
         # self.addresses_list = state.kivyapp.variable_1
         self.addresses_list = BMConfigParser().addresses()
-        if state.searcing_text:
+        if kivy_state.searcing_text:
             self.ids.refresh_layout.scroll_y = 1.0
             filtered_list = [
                 x for x in BMConfigParser().addresses()
@@ -75,13 +76,13 @@ class MyAddress(Screen):
             content = MDLabel(
                 font_style='Caption',
                 theme_text_color='Primary',
-                text="No address found!" if state.searcing_text
+                text="No address found!" if kivy_state.searcing_text
                 else "yet no address is created by user!!!!!!!!!!!!!",
                 halign='center',
                 size_hint_y=None,
                 valign='top')
             self.ids.ml.add_widget(content)
-            if not state.searcing_text and not self.is_add_created:
+            if not kivy_state.searcing_text and not self.is_add_created:
                 try:
                     self.manager.current = 'login'
                 except Exception:
@@ -106,11 +107,11 @@ class MyAddress(Screen):
             except Exception:
                 pass
             meny.add_widget(AvatarSampleWidget(
-                source=state.imageDir + '/text_images/{}.png'.format(
+                source=kivy_state.imageDir + '/text_images/{}.png'.format(
                     avatarImageFirstLetter(item['text'].strip()))))
             meny.bind(on_press=partial(
                 self.myadd_detail, item['secondary_text'], item['text']))
-            if state.association == item['secondary_text'] and is_enable == 'true':
+            if kivy_state.association == item['secondary_text'] and is_enable == 'true':
                 badge_obj = BadgeText(
                     size_hint=(None, None),
                     size=[90 if platform == 'android' else 50, 60],
@@ -184,7 +185,7 @@ class MyAddress(Screen):
         While the spinner remains on the screen"""
         def refresh_callback(interval):
             """Method used for loading the myaddress screen data"""
-            state.searcing_text = ''
+            kivy_state.searcing_text = ''
             # state.kivyapp.root.ids.sc10.children[2].active = False
             self.ids.search_bar.ids.search_field.text = ''
             self.has_refreshed = True
@@ -203,7 +204,7 @@ class MyAddress(Screen):
                     BMConfigParser().get(address, 'label').lower(),
                     address.lower()
                 ]
-                if (state.searcing_text).lower() in x
+                if (kivy_state.searcing_text).lower() in x
         ]:
             return True
         return False

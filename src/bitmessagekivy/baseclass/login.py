@@ -7,6 +7,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
 from kivy.uix.screenmanager import Screen
 
+import kivy_state
 import state
 
 from bitmessagekivy.baseclass.common import toast

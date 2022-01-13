@@ -15,6 +15,7 @@ from kivymd.uix.list import (
 from bitmessagekivy.baseclass.common import toast
 
 # import queues
+import kivy_state
 import state
 
 
@@ -24,7 +25,7 @@ class Payment(Screen):
     def get_free_credits(self, instance):
         """Get the available credits"""
         # pylint: disable=no-self-use
-        state.availabe_credit = instance.parent.children[1].text
+        kivy_state.availabe_credit = instance.parent.children[1].text
         existing_credits = state.kivyapp.root.ids.sc18.ids.cred.text
         if float(existing_credits.split()[1]) > 0:
             toast(
@@ -33,7 +34,7 @@ class Payment(Screen):
         else:
             toast('Coins added to your account!')
             state.kivyapp.root.ids.sc18.ids.cred.text = '{0}'.format(
-                state.availabe_credit)
+                kivy_state.availabe_credit)
 
     @staticmethod
     def create_hidden_payment_address():

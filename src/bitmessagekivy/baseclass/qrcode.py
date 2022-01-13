@@ -1,3 +1,4 @@
+import kivy_state
 import state
 from bitmessagekivy.baseclass.common import toast
 from kivy.uix.screenmanager import Screen
