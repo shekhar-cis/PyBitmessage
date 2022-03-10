@@ -20,7 +20,7 @@ from bitmessagekivy.baseclass.common import (
     ThemeClsColor, SwipeToDeleteItem
 )
 from bitmessagekivy.baseclass.popup import AddbookDetailPopup
-
+from bitmessagekivy.baseclass.addressbook_widgets import HelperAddressBook
 
 class AddressBook(Screen):
     """AddressBook Screen class for kivy Ui"""
@@ -58,15 +58,26 @@ class AddressBook(Screen):
             self.set_mdList(0, 20)
             self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
         else:
-            content = MDLabel(
-                font_style='Caption',
-                theme_text_color='Primary',
-                text="No contact found!" if state.searcing_text
-                else "No contact found yet...... ",
-                halign='center',
-                size_hint_y=None,
-                valign='top')
-            self.ids.ml.add_widget(content)
+            # content = MDLabel(
+            #     font_style='Caption',
+            #     theme_text_color='Primary',
+            #     text="No contact found!" if state.searcing_text
+            #     else "No contact found yet...... ",
+            #     halign='center',
+            #     size_hint_y=None,
+            #     valign='top')
+            self.ids.ml.add_widget(HelperAddressBook.default_label_while_empty())
+
+    # def show_default_content(self):
+    #     content = MDLabel(
+    #         font_style='Caption',
+    #         theme_text_color='Primary',
+    #         text="No contact found!" if state.searcing_text
+    #         else "No contact found yet...... ",
+    #         halign='center',
+    #         size_hint_y=None,
+    #         valign='top')
+    #     return content        
 
     def set_mdList(self, start_index, end_index):
         """Creating the mdList"""
@@ -116,32 +127,34 @@ class AddressBook(Screen):
         if instance.state == 'closed':
             instance.ids.delete_msg.disabled = True
             if instance.open_progress == 0.0:
-                obj = AddbookDetailPopup()
-                self.address_label = obj.address_label = label
-                self.address = obj.address = address
-                width = .9 if platform == 'android' else .8
-                self.addbook_popup = MDDialog(
-                    type="custom",
-                    size_hint=(width, .25),
-                    content_cls=obj,
-                    buttons=[
-                        MDRaisedButton(
-                            text="Send message to",
-                            on_release=self.send_message_to,
-                        ),
-                        MDRaisedButton(
-                            text="Save",
-                            on_release=self.update_addbook_label,
-                        ),
-                        MDRaisedButton(
-                            text="Cancel",
-                            on_release=self.close_pop,
-                        ),
-                    ],
-                )
-                # self.addbook_popup.set_normal_height()
-                self.addbook_popup.auto_dismiss = False
-                self.addbook_popup.open()
+                HelperAddressBook.address_detail_popup(self, address, label, instance)
+                # obj = AddbookDetailPopup()
+                # self.address_label = obj.address_label = label
+                # self.address = obj.address = address
+                # width = .9 if platform == 'android' else .8
+                # self.addbook_popup = MDDialog(
+                #     type="custom",
+                #     size_hint=(width, .25),
+                #     content_cls=obj,
+                #     buttons=[
+                #         MDRaisedButton(
+                #             text="Send message to",
+                #             on_release=self.send_message_to,
+                #         ),
+                #         MDRaisedButton(
+                #             text="Save",
+                #             on_release=self.update_addbook_label,
+                #         ),
+                #         MDRaisedButton(
+                #             text="Cancel",
+                #             on_release=self.close_pop,
+                #         ),
+                #     ],
+                # )
+                # # self.addbook_popup.set_normal_height()
+                # self.addbook_popup = HelperAddressBook.address_detail_popup(self)
+                # self.addbook_popup.auto_dismiss = False
+                # self.addbook_popup.open()
         else:
             instance.ids.delete_msg.disabled = False
 

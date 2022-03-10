@@ -246,6 +246,9 @@ class NavigateApp(MDApp):
         return Builder.load_file(
             os.path.join(os.path.dirname(__file__), 'main.kv'))
 
+    def set_screen(self, screen_name):
+        self.root.ids.scr_mngr.current = screen_name
+
     def run(self):
         """Running the widgets"""
         kivyuisignaler.release()

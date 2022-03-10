@@ -310,7 +310,7 @@ class Main(object):
             asyncoreThread = BMNetworkThread()
             asyncoreThread.daemon = True
             asyncoreThread.start()
-            for i in range(config.safeGet('threads', 'receive')):
+            for i in range(config.safeGetInt('threads', 'receive')):
                 receiveQueueThread = ReceiveQueueThread(i)
                 receiveQueueThread.daemon = True
                 receiveQueueThread.start()
