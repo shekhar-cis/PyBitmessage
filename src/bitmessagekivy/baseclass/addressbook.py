@@ -1,4 +1,3 @@
-from turtle import pd
 from bitmessagekivy.get_platform import platform
 from bitmessagekivy import kivy_helper_search
 from helper_sql import sqlExecute
@@ -22,7 +21,8 @@ from bitmessagekivy.baseclass.common import (
 from bitmessagekivy.baseclass.popup import AddbookDetailPopup
 from bitmessagekivy.baseclass.addressbook_widgets import HelperAddressBook
 
-class AddressBook(Screen):
+
+class AddressBook(Screen, HelperAddressBook):
     """AddressBook Screen class for kivy Ui"""
 
     queryreturn = ListProperty()
@@ -58,6 +58,7 @@ class AddressBook(Screen):
             self.set_mdList(0, 20)
             self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
         else:
+            """This is still exprimental, may need to make changes somewhere"""
             # content = MDLabel(
             #     font_style='Caption',
             #     theme_text_color='Primary',
@@ -66,18 +67,7 @@ class AddressBook(Screen):
             #     halign='center',
             #     size_hint_y=None,
             #     valign='top')
-            self.ids.ml.add_widget(HelperAddressBook.default_label_while_empty())
-
-    # def show_default_content(self):
-    #     content = MDLabel(
-    #         font_style='Caption',
-    #         theme_text_color='Primary',
-    #         text="No contact found!" if state.searcing_text
-    #         else "No contact found yet...... ",
-    #         halign='center',
-    #         size_hint_y=None,
-    #         valign='top')
-    #     return content        
+            self.ids.ml.add_widget(self.default_label_when_empty())  
 
     def set_mdList(self, start_index, end_index):
         """Creating the mdList"""
@@ -127,34 +117,34 @@ class AddressBook(Screen):
         if instance.state == 'closed':
             instance.ids.delete_msg.disabled = True
             if instance.open_progress == 0.0:
-                HelperAddressBook.address_detail_popup(self, address, label, instance)
-                # obj = AddbookDetailPopup()
-                # self.address_label = obj.address_label = label
-                # self.address = obj.address = address
-                # width = .9 if platform == 'android' else .8
-                # self.addbook_popup = MDDialog(
-                #     type="custom",
-                #     size_hint=(width, .25),
-                #     content_cls=obj,
-                #     buttons=[
-                #         MDRaisedButton(
-                #             text="Send message to",
-                #             on_release=self.send_message_to,
-                #         ),
-                #         MDRaisedButton(
-                #             text="Save",
-                #             on_release=self.update_addbook_label,
-                #         ),
-                #         MDRaisedButton(
-                #             text="Cancel",
-                #             on_release=self.close_pop,
-                #         ),
-                #     ],
-                # )
-                # # self.addbook_popup.set_normal_height()
-                # self.addbook_popup = HelperAddressBook.address_detail_popup(self)
-                # self.addbook_popup.auto_dismiss = False
-                # self.addbook_popup.open()
+                obj = AddbookDetailPopup()
+                self.address_label = obj.address_label = label
+                self.address = obj.address = address
+                width = .9 if platform == 'android' else .8
+                self.addbook_popup = MDDialog(
+                    type="custom",
+                    size_hint=(width, .25),
+                    content_cls=obj,
+                    buttons=[
+                        MDRaisedButton(
+                            text="Send message to",
+                            on_release=self.send_message_to,
+                        ),
+                        MDRaisedButton(
+                            text="Save",
+                            on_release=self.update_addbook_label,
+                        ),
+                        MDRaisedButton(
+                            text="Cancel",
+                            on_release=self.close_pop,
+                        ),
+                    ],
+                )
+                # self.addbook_popup.set_normal_height()
+                self.addbook_popup = HelperAddressBook.address_detail_popup(self)
+                self.addbook_popup.auto_dismiss = False
+                self.addbook_popup.open()
+                # HelperAddressBook.address_detail_popup(address, label, instance,)
         else:
             instance.ids.delete_msg.disabled = False
 
@@ -190,7 +180,7 @@ class AddressBook(Screen):
             state.kivyapp.root.ids.sc11.loadAddresslist(None, 'All', '')
             self.addbook_popup.dismiss()
             toast('Saved')
-
+    
     def send_message_to(self, instance):
         """Method used to fill to_address of composer autofield"""
         state.kivyapp.set_navbar_for_composer()
@@ -202,3 +192,6 @@ class AddressBook(Screen):
         window_obj.sc3.children[1].ids.body.text = ''
         window_obj.scr_mngr.current = 'create'
         self.addbook_popup.dismiss()
+
+
+
