@@ -9,7 +9,7 @@ from kivymd.uix.label import MDLabel
 from bitmessagekivy.baseclass.popup import AddbookDetailPopup
 
 
-class HelperAddressBook:
+class HelperAddressBook(object):
     """Widget used in Addressbook are here"""
 
     @staticmethod
@@ -17,15 +17,13 @@ class HelperAddressBook:
             content = MDLabel(
                 font_style='Caption',
                 theme_text_color='Primary',
-                # TODO: searcing_text(typo), need to create a kivy_state.py and add kivy related variables
+                # TODO: searcing_text(typo) need to create a kivy_state.py and add kivy related variables
                 text="No contact found!" if state.searcing_text
-                else "No contact found yet...... ",
-                halign='center',
-                size_hint_y=None,
-                valign='top')
+                else "No contact found yet...... ", halign='center', size_hint_y=None, valign='top')
             return content
 
-    def address_detail_popup(self, send_message, update_address, close_popup, width, obj):
+    @staticmethod
+    def address_detail_popup(obj, send_message, update_address, close_popup, width):
         retval = MDDialog(
                     type="custom",
                     size_hint=(width, .25),
@@ -46,3 +44,16 @@ class HelperAddressBook:
                     ],
                 )
         return retval
+    
+    @staticmethod
+    def compose_message(from_addr=None, to_addr=None, subject=None, body=None): 
+        window_obj = state.kivyapp.root.ids
+        if to_addr:
+            window_obj.sc3.children[1].ids.txt_input.text = to_addr
+        if from_addr:
+            window_obj.sc3.children[1].ids.txt_input.text = from_addr
+        window_obj.sc3.children[1].ids.ti.text = ''
+        window_obj.sc3.children[1].ids.btn.text = 'Select'
+        window_obj.sc3.children[1].ids.subject.text = ''
+        window_obj.sc3.children[1].ids.body.text = ''
+        window_obj.scr_mngr.current = 'create'

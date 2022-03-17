@@ -14,6 +14,7 @@ from kivy.uix.screenmanager import Screen
 
 import state
 
+from debug import logger
 from bitmessagekivy.baseclass.common import (
     avatarImageFirstLetter, toast,
     ThemeClsColor, SwipeToDeleteItem
@@ -39,7 +40,7 @@ class AddressBook(Screen, HelperAddressBook):
     def init_ui(self, dt=0):
         """Clock Schdule for method AddressBook"""
         self.loadAddresslist(None, 'All', '')
-        print(dt)
+        logger.debug(dt)
 
     def loadAddresslist(self, account, where="", what=""):
         """Clock Schdule for method AddressBook"""
@@ -142,8 +143,8 @@ class AddressBook(Screen, HelperAddressBook):
                 # )
                 # self.addbook_popup.set_normal_height()
                 self.addbook_popup = self.address_detail_popup(
-                    self.send_message_to, self.update_addbook_label,
-                    self.close_pop, width=width, obj=obj)
+                    obj, self.send_message_to, self.update_addbook_label,
+                    self.close_pop, width)
                 self.addbook_popup.auto_dismiss = False
                 self.addbook_popup.open()
         else:
@@ -156,7 +157,7 @@ class AddressBook(Screen, HelperAddressBook):
         if self.ids.ml.children is not None:
             self.ids.tag_label.text = ''
         sqlExecute(
-            "DELETE FROM  addressbook WHERE address = '{}';".format(address))
+            "DELETE FROM addressbook WHERE address = ?", address)
         toast('Address Deleted')
 
     def close_pop(self, instance):
@@ -174,22 +175,23 @@ class AddressBook(Screen, HelperAddressBook):
             stored_labels.remove(label)
         if label and label not in stored_labels:
             sqlExecute(
-                "UPDATE addressbook SET label = '{}' WHERE"
-                " address = '{}';".format(
-                    label, self.addbook_popup.content_cls.address))
+                "UPDATE addressbook SET label = ? WHERE"
+                "address = ?", label, self.addbook_popup.content_cls.address)
             state.kivyapp.root.ids.sc11.ids.ml.clear_widgets()
             state.kivyapp.root.ids.sc11.loadAddresslist(None, 'All', '')
             self.addbook_popup.dismiss()
             toast('Saved')
-    
+
     def send_message_to(self, instance):
         """Method used to fill to_address of composer autofield"""
         state.kivyapp.set_navbar_for_composer()
-        window_obj = state.kivyapp.root.ids
-        window_obj.sc3.children[1].ids.txt_input.text = self.address
-        window_obj.sc3.children[1].ids.ti.text = ''
-        window_obj.sc3.children[1].ids.btn.text = 'Select'
-        window_obj.sc3.children[1].ids.subject.text = ''
-        window_obj.sc3.children[1].ids.body.text = ''
-        window_obj.scr_mngr.current = 'create'
+        # import pdb; pdb.set_trace()
+        self.compose_message(None, self.address, None, None)
+        # window_obj = state.kivyapp.root.ids
+        # window_obj.sc3.children[1].ids.txt_input.text = self.address
+        # window_obj.sc3.children[1].ids.ti.text = ''
+        # window_obj.sc3.children[1].ids.btn.text = 'Select'
+        # window_obj.sc3.children[1].ids.subject.text = ''
+        # window_obj.sc3.children[1].ids.body.text = ''
+        # window_obj.scr_mngr.current = 'create'
         self.addbook_popup.dismiss()
