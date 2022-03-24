@@ -42,12 +42,12 @@ class HelperMyAddress(object):
             size=[90 if platform == 'android' else 50, 60],
             text='Active', halign='center',
             font_style='Body1', theme_text_color='Custom',
-            text_color=ThemeClsColor
+            text_color=ThemeClsColor, font_size = '13sp'
         )
-        badge_obj.font_size = '13sp'
         return badge_obj
 
-    def myaddress_detail_popup(self, obj, width):
+    @staticmethod
+    def myaddress_detail_popup(obj, width):
         show_myaddress_dialogue = MDDialog(
             type="custom",
             size_hint=(width, .25),
@@ -55,7 +55,8 @@ class HelperMyAddress(object):
         )
         return show_myaddress_dialogue
 
-    def inactive_address_popup(self, width, callback_for_menu_items):
+    @staticmethod
+    def inactive_address_popup(width, callback_for_menu_items):
         dialog_box = MDDialog(
             text='Address is not currently active. Please click on Toggle button to active it.',
             size_hint=(width, .25),
