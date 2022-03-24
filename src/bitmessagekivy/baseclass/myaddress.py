@@ -1,8 +1,15 @@
-from bitmessagekivy.get_platform import platform
+# pylint: disable=unused-argument, consider-using-f-string, import-error
+# pylint: disable=unnecessary-comprehension, no-member, no-name-in-module
+"""
+myaddress.py
+==============
+All generated addresses are managed in MyAddress
+"""
+
 from functools import partial
+from bitmessagekivy.get_platform import platform
 from bmconfigparser import BMConfigParser
 from kivy.clock import Clock
-# from kivy.metrics import dp
 from kivy.properties import (
     ListProperty,
     StringProperty
@@ -25,6 +32,7 @@ from bitmessagekivy.baseclass.common import (
 )
 from bitmessagekivy.baseclass.popup import MyaddDetailPopup
 
+from bitmessagekivy.baseclass.myaddress_widgets import HelperMyAddress
 
 class ToggleBtn(IRightBodyTouch, MDSwitch):
     """ToggleBtn class for kivy Ui"""
@@ -34,11 +42,11 @@ class CustomTwoLineAvatarIconListItem(TwoLineAvatarIconListItem):
     """CustomTwoLineAvatarIconListItem class for kivy Ui"""
 
 
-class BadgeText(IRightBodyTouch, MDLabel):
-    """BadgeText class for kivy Ui"""
+# class BadgeText(IRightBodyTouch, MDLabel):
+#     """BadgeText class for kivy Ui"""
 
 
-class MyAddress(Screen):
+class MyAddress(Screen, HelperMyAddress):
     """MyAddress screen class for kivy Ui"""
 
     address_label = StringProperty()
@@ -72,15 +80,15 @@ class MyAddress(Screen):
             self.set_mdList(0, 15)
             self.ids.refresh_layout.bind(scroll_y=self.check_scroll_y)
         else:
-            content = MDLabel(
-                font_style='Caption',
-                theme_text_color='Primary',
-                text="No address found!" if state.searcing_text
-                else "yet no address is created by user!!!!!!!!!!!!!",
-                halign='center',
-                size_hint_y=None,
-                valign='top')
-            self.ids.ml.add_widget(content)
+            # content = MDLabel(
+            #     font_style='Caption',
+            #     theme_text_color='Primary',
+            #     text="No address found!" if state.searcing_text
+            #     else "yet no address is created by user!!!!!!!!!!!!!",
+            #     halign='center',
+            #     size_hint_y=None,
+            #     valign='top')
+            self.ids.ml.add_widget(self.default_label_when_empty())
             if not state.searcing_text and not self.is_add_created:
                 try:
                     self.manager.current = 'login'
@@ -111,15 +119,16 @@ class MyAddress(Screen):
             meny.bind(on_press=partial(
                 self.myadd_detail, item['secondary_text'], item['text']))
             if state.association == item['secondary_text'] and is_enable == 'true':
-                badge_obj = BadgeText(
-                    size_hint=(None, None),
-                    size=[90 if platform == 'android' else 50, 60],
-                    text='Active', halign='center',
-                    font_style='Body1', theme_text_color='Custom',
-                    text_color=ThemeClsColor
-                )
-                badge_obj.font_size = '13sp'
-                meny.add_widget(badge_obj)
+                # badge_obj = BadgeText(
+                #     size_hint=(None, None),
+                #     size=[90 if platform == 'android' else 50, 60],
+                #     text='Active', halign='center',
+                #     font_style='Body1', theme_text_color='Custom',
+                #     text_color=ThemeClsColor
+                # )
+                # badge_obj.font_size = '13sp'
+                # meny.add_widget(badge_obj)
+                meny.add_widget(self.is_active_badge())
             else:
                 meny.add_widget(ToggleBtn(active=True if is_enable == 'true' else False))
             self.ids.ml.add_widget(meny)
@@ -142,42 +151,49 @@ class MyAddress(Screen):
     # @staticmethod
     def myadd_detail(self, fromaddress, label, *args):
         """Load myaddresses details"""
+
         if BMConfigParser().get(fromaddress, 'enabled') == 'true':
             obj = MyaddDetailPopup()
             self.address_label = obj.address_label = label
             self.text_address = obj.address = fromaddress
             width = .9 if platform == 'android' else .6
-            self.myadddetail_popup = MDDialog(
-                type="custom",
-                size_hint=(width, .25),
-                content_cls=obj,
-            )
+            # self.myadddetail_popup = MDDialog(
+            #     type="custom",
+            #     size_hint=(width, .25),
+            #     content_cls=obj,
+            # )
+            self.myadddetail_popup = self.myaddress_detail_popup(obj, width)
+
             # self.myadddetail_popup.set_normal_height()
             self.myadddetail_popup.auto_dismiss = False
             self.myadddetail_popup.open()
             # p.set_address(fromaddress, label)
         else:
             width = .8 if platform == 'android' else .55
-            dialog_box = MDDialog(
-                text='Address is not currently active. Please click on Toggle button to active it.',
-                size_hint=(width, .25),
-                buttons=[
-                    MDFlatButton(
-                        text="Ok", on_release=lambda x: callback_for_menu_items("Ok")
-                    ),
-                ],
-            )
-            dialog_box.open()
+            # dialog_box = MDDialog(
+            #     text='Address is not currently active. Please click on Toggle button to active it.',
+            #     size_hint=(width, .25),
+            #     buttons=[
+            #         MDFlatButton(
+            #             text="Ok", on_release=lambda x: callback_for_menu_items("Ok")
+            #         ),
+            #     ],
+            # )
+            # import pdb; pdb.set_trace()
+            self.dialog_box = self.inactive_address_popup(width, self.callback_for_menu_items)
+            self.dialog_box.open()
 
-        def callback_for_menu_items(text_item, *arg):
-            """Callback of alert box"""
-            dialog_box.dismiss()
-            toast(text_item)
+        # def callback_for_menu_items(text_item, *arg):
+        #     """Callback of alert box"""
+        #     import pdb; pdb.set_trace()
+        #     dialog_box.dismiss()
+        #     toast(text_item)
 
     # @staticmethod
-    # def callback_for_menu_items(text_item, *arg):
-    #     """Callback of alert box"""
-    #     toast(text_item)
+    def callback_for_menu_items(self, text_item, *arg):
+        """Callback of alert box"""
+        self.dialog_box.dismiss()
+        toast(text_item)
 
     def refresh_callback(self, *args):
         """Method updates the state of application,
