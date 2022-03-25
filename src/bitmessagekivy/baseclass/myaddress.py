@@ -6,6 +6,7 @@ myaddress.py
 All generated addresses are managed in MyAddress
 """
 
+import os
 from functools import partial
 from bitmessagekivy.get_platform import platform
 from bmconfigparser import BMConfigParser
@@ -114,8 +115,10 @@ class MyAddress(Screen, HelperMyAddress):
             except Exception:
                 pass
             meny.add_widget(AvatarSampleWidget(
-                source=state.imageDir + '/text_images/{}.png'.format(
-                    avatarImageFirstLetter(item['text'].strip()))))
+                source=os.path.join(
+                    state.imageDir, 'text_images/{}.png'.format(avatarImageFirstLetter(item["text"].strip())))
+            ))
+                # source=os.path.join(state.imageDir + '/text_images/{}.jpg'.format(avatarImageFirstLetter(item['text'].strip())))
             meny.bind(on_press=partial(
                 self.myadd_detail, item['secondary_text'], item['text']))
             if state.association == item['secondary_text'] and is_enable == 'true':
