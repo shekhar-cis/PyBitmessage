@@ -13,6 +13,7 @@ from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen
 
 import state
+import os
 
 from debug import logger
 from bitmessagekivy.baseclass.common import (
@@ -83,8 +84,9 @@ class AddressBook(Screen, HelperAddressBook):
             # listItem.add_widget(AvatarSampleWidget(
             #     source=state.imageDir + '/text_images/{}.png'.format(
             #         avatarImageFirstLetter(item[0].strip()))))
-            image = state.imageDir + "/text_images/{}.png".format(
-                avatarImageFirstLetter(item[0].strip()))
+            image = os.path.join(
+                state.imageDir, "text_images", "{}.png".format(avatarImageFirstLetter(item[0].strip()))
+            )
             message_row.ids.avater_img.source = image
             listItem.bind(on_release=partial(
                 self.addBook_detail, item[1], item[0], message_row))
