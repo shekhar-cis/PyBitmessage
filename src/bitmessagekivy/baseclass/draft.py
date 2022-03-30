@@ -1,5 +1,6 @@
 import time
 
+import os
 from bitmessagekivy import kivy_helper_search
 from bmconfigparser import BMConfigParser
 from helper_sql import sqlExecute
@@ -20,9 +21,10 @@ from bitmessagekivy.baseclass.common import (
     SwipeToDeleteItem, ShowTimeHistoy
 )
 from bitmessagekivy.baseclass.maildetail import MailDetail
+from bitmessagekivy.baseclass.draft_widgets import HelperDraft
 
 
-class Draft(Screen):
+class Draft(Screen, HelperDraft):
     """Draft screen class for kivy Ui"""
 
     data = ListProperty()
@@ -63,14 +65,14 @@ class Draft(Screen):
             self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
         else:
             self.set_draftCnt('0')
-            content = MDLabel(
-                font_style='Caption',
-                theme_text_color='Primary',
-                text="yet no message for this account!!!!!!!!!!!!!",
-                halign='center',
-                size_hint_y=None,
-                valign='top')
-            self.ids.ml.add_widget(content)
+            # content = MDLabel(
+            #     font_style='Caption',
+            #     theme_text_color='Primary',
+            #     text="yet no message for this account!!!!!!!!!!!!!",
+            #     halign='center',
+            #     size_hint_y=None,
+            #     valign='top')
+            self.ids.ml.add_widget(self.default_label_when_empty())
 
     def draftDataQuery(self, xAddress, where, what, start_indx=0, end_indx=20):
         """This methosd is for retrieving draft messages"""
@@ -104,7 +106,7 @@ class Draft(Screen):
             listItem.secondary_text = item["text"]
             listItem.theme_text_color = "Custom"
             listItem.text_color = ThemeClsColor
-            message_row.ids.avater_img.source = state.imageDir + '/avatar.png'
+            message_row.ids.avater_img.source = os.path.join(state.imageDir, 'avatar.png')
             listItem.bind(on_release=partial(
                 self.draft_detail, item['ackdata'], message_row))
             message_row.ids.time_tag.text = str(ShowTimeHistoy(item['senttime']))
@@ -144,7 +146,7 @@ class Draft(Screen):
 
     def delete_draft(self, data_index, instance, *args):
         """Delete draft message permanently"""
-        sqlExecute("DELETE FROM sent WHERE ackdata = ?;", data_index)
+        sqlExecute("DELETE FROM sent WHERE ackdata = ?", data_index)
         if int(state.draft_count) > 0:
             state.draft_count = str(int(state.draft_count) - 1)
             self.set_draftCnt(state.draft_count)
