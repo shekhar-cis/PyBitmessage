@@ -80,7 +80,8 @@ class Draft(Screen, HelperDraft):
             xAddress, self.account, "draft", where, what,
             False, start_indx, end_indx)
 
-    def set_draftCnt(self, Count):  # pylint: disable=no-self-use
+    @staticmethod
+    def set_draftCnt(Count):
         """This method set the count of draft mails"""
         draftCnt_obj = state.kivyapp.root.ids.content_drawer.ids.draft_cnt
         draftCnt_obj.ids.badge_txt.text = showLimitedCnt(int(Count))
