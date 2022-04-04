@@ -1,53 +1,60 @@
-# pylint: disable=no-member, too-many-arguments
+# pylint: disable=too-many-arguments, no-name-in-module, import-error
+# pylint: disable=too-few-public-methods, no-member
+
 """
 MyAddress widgets are here.
 """
-from bitmessagekivy.get_platform import platform
 
-from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
-from kivymd.uix.list import (IRightBodyTouch, TwoLineAvatarIconListItem)
+from kivymd.uix.list import IRightBodyTouch
 
 import state
 
-from bitmessagekivy.baseclass.common import (
-    avatarImageFirstLetter, AvatarSampleWidget, ThemeClsColor,
-    toast
-)
+from bitmessagekivy.get_platform import platform
+from bitmessagekivy.baseclass.common import ThemeClsColor
+
 
 class BadgeText(IRightBodyTouch, MDLabel):
-    """BadgeText class for kivy Ui"""
+    """BadgeText class for kivy UI"""
 
-class HelperMyAddress(object):
+
+# pylint: disable=no-init, old-style-class
+class DefaultLabelMixin:
     """Widget used in MyAddress are here"""
-    def __init__(self):
-        pass
 
     @staticmethod
     def default_label_when_empty():
         """This function returns default message when no address is generated."""
+        empty_search_label = "No address found!"
+        no_address_found = "yet no address is created by user!!!!!!!!!!!!!"
         content = MDLabel(
             font_style='Caption',
             theme_text_color='Primary',
-            text="No address found!" if state.searching_text
-            else "yet no address is created by user!!!!!!!!!!!!!", halign='center', size_hint_y=None, valign='top')
+            text=empty_search_label if state.searching_text  # FIXME: Need to replace state with kivy_state
+            else no_address_found, halign='center', size_hint_y=None, valign='top')
         return content
+
+
+class HelperMyAddress(DefaultLabelMixin):
+    """Widget used in MyAddress are here"""
 
     @staticmethod
     def is_active_badge():
+        """This function show the 'active' label of active Address."""
         badge_obj = BadgeText(
             size_hint=(None, None),
             size=[90 if platform == 'android' else 50, 60],
             text='Active', halign='center',
             font_style='Body1', theme_text_color='Custom',
-            text_color=ThemeClsColor, font_size = '13sp'
+            text_color=ThemeClsColor, font_size='13sp'
         )
         return badge_obj
 
     @staticmethod
     def myaddress_detail_popup(obj, width):
+        """This method show the details of address as popup opens."""
         show_myaddress_dialogue = MDDialog(
             type="custom",
             size_hint=(width, .25),
@@ -57,6 +64,7 @@ class HelperMyAddress(object):
 
     @staticmethod
     def inactive_address_popup(width, callback_for_menu_items):
+        """This method shows the warning popup if the address is inactive"""
         dialog_box = MDDialog(
             text='Address is not currently active. Please click on Toggle button to active it.',
             size_hint=(width, .25),
