@@ -1,27 +1,39 @@
-import time
+# pylint: disable=unused-argument, import-error, too-many-arguments
+# pylint: disable=unnecessary-comprehension, no-member
 
-import os
-from bitmessagekivy import kivy_helper_search
-from bmconfigparser import BMConfigParser
-from helper_sql import sqlExecute
+"""
+draft.py
+==============
+
+Draft screen
+
+"""
+
 from functools import partial
-from addresses import decodeAddress
+import time
+import os
+
+
 from kivy.clock import Clock
 from kivy.properties import (
     ListProperty,
     StringProperty
 )
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.label import MDLabel
 
-import state
-
+from bitmessagekivy import kivy_helper_search
 from bitmessagekivy.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor,
     SwipeToDeleteItem, ShowTimeHistoy
 )
 from bitmessagekivy.baseclass.maildetail import MailDetail
 from bitmessagekivy.baseclass.draft_widgets import HelperDraft
+
+from bmconfigparser import BMConfigParser
+from addresses import decodeAddress
+
+import state
+from helper_sql import sqlExecute
 
 
 class Draft(Screen, HelperDraft):
@@ -56,8 +68,9 @@ class Draft(Screen, HelperDraft):
         xAddress = 'fromaddress'
         self.ids.tag_label.text = ''
         self.draftDataQuery(xAddress, where, what)
+    #     state.msg_counter_objs.draft_cnt.children[0].children[0].text = showLimitedCnt(len(self.queryreturn))
         # if state.msg_counter_objs:
-        #     state.msg_counter_objs.draft_cnt.children[0].children[0].text = showLimitedCnt(len(self.queryreturn))
+
         if self.queryreturn:
             self.ids.tag_label.text = 'Draft'
             self.set_draftCnt(state.draft_count)
