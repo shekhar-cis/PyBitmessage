@@ -16,15 +16,15 @@ class HelperDraft(object):
     def __init__(self):
         pass
 
-    @staticmethod
-    def default_label_when_empty():
-        """This function returns default message while no address is there."""
-        empty_screen_msg = "yet no message for this account!!!!!!!!!!!!!"
-        content = MDLabel(
-            font_style='Caption',
-            theme_text_color='Primary',
-            text=empty_screen_msg,
-            halign='center',
-            size_hint_y=None,
-            valign='top')
-        return content
+    # @staticmethod
+    # def default_label_when_empty():
+    #     """This function returns default message while no address is there."""
+    #     empty_screen_msg = "yet no message for this account!!!!!!!!!!!!!"
+    #     content = MDLabel(
+    #         font_style='Caption',
+    #         theme_text_color='Primary',
+    #         text=empty_screen_msg,
+    #         halign='center',
+    #         size_hint_y=None,
+    #         valign='top')
+    #     return content

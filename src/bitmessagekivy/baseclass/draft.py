@@ -24,7 +24,7 @@ from kivy.uix.screenmanager import Screen
 from bitmessagekivy import kivy_helper_search
 from bitmessagekivy.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor,
-    SwipeToDeleteItem, ShowTimeHistoy
+    SwipeToDeleteItem, ShowTimeHistoy, empty_screen_label
 )
 from bitmessagekivy.baseclass.maildetail import MailDetail
 from bitmessagekivy.baseclass.draft_widgets import HelperDraft
@@ -34,7 +34,7 @@ from addresses import decodeAddress
 
 import state
 from helper_sql import sqlExecute
-
+import helper_sent
 
 class Draft(Screen, HelperDraft):
     """Draft screen class for kivy Ui"""
@@ -85,7 +85,8 @@ class Draft(Screen, HelperDraft):
             #     halign='center',
             #     size_hint_y=None,
             #     valign='top')
-            self.ids.ml.add_widget(self.default_label_when_empty())
+            label_str = "yet no message for this account!!!!!!!!!!!!!2"
+            self.ids.ml.add_widget(empty_screen_label(label_str))
 
     def draftDataQuery(self, xAddress, where, what, start_indx=0, end_indx=20):
         """This methosd is for retrieving draft messages"""
@@ -160,7 +161,7 @@ class Draft(Screen, HelperDraft):
 
     def delete_draft(self, data_index, instance, *args):
         """Delete draft message permanently"""
-        sqlExecute("DELETE FROM sent WHERE ackdata = ?", data_index)
+        helper_sent.delete(data_index)
         if int(state.draft_count) > 0:
             state.draft_count = str(int(state.draft_count) - 1)
             self.set_draftCnt(state.draft_count)
