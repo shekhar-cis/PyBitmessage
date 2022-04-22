@@ -8,23 +8,26 @@ from kivymd.uix.label import MDLabel
 
 from bitmessagekivy.baseclass.popup import AddbookDetailPopup
 
-no_address_found = "No contact found yet...??..."
-empty_search_label = "No contact found!??"
 
+label_str = "No contact found yet......"
+no_search_res_found = "No contact found!"
 
 
 class DefaultLabelMixin(object):
-
-    @staticmethod
-    def default_label_when_empty():
-        content = MDLabel(
-            font_style='Caption',
-            theme_text_color='Primary',
-            # TODO: searcing_text(typo) need to create a kivy_state.py and add kivy related variables
-            text=empty_search_label if state.searcing_text else no_address_found,
-            halign='center', size_hint_y=None, valign='top')
-        return content
-
+    pass
+"""
+    # @staticmethod
+    # def default_label_when_empty():
+    #     content = MDLabel(
+    #         font_style='Caption',
+    #         theme_text_color='Primary',
+    #         # TODO: searcing_text(typo) need to create a kivy_state.py and add kivy related variables
+    #         text=no_search_res_found if state.searcing_text else label_str,
+    #         halign='center', 
+    #         size_hint_y=None, 
+    #         valign='top')
+    #     return content
+"""
 
 class HelperAddressBook(DefaultLabelMixin):
     """Widget used in Addressbook are here"""

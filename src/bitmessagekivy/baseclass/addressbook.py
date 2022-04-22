@@ -17,7 +17,7 @@ import os
 
 from debug import logger
 from bitmessagekivy.baseclass.common import (
-    avatarImageFirstLetter, toast,
+    avatarImageFirstLetter, toast, empty_screen_label,
     ThemeClsColor, SwipeToDeleteItem
 )
 from bitmessagekivy.baseclass.popup import AddbookDetailPopup
@@ -31,6 +31,8 @@ class AddressBook(Screen, HelperAddressBook):
     has_refreshed = True
     address_label = StringProperty()
     address = StringProperty()
+    label_str = "No contact found yet......"
+    no_search_res_found = "No search result found"
 
     def __init__(self, *args, **kwargs):
         """Getting AddressBook Details"""
@@ -69,7 +71,7 @@ class AddressBook(Screen, HelperAddressBook):
             #     halign='center',
             #     size_hint_y=None,
             #     valign='top')
-            self.ids.ml.add_widget(self.default_label_when_empty())
+            self.ids.ml.add_widget(empty_screen_label(self.label_str, self.no_search_res_found))
 
     def set_mdList(self, start_index, end_index):
         """Creating the mdList"""
