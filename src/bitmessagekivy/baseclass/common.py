@@ -17,6 +17,10 @@ from kivy.properties import (
     StringProperty
 )
 
+from kivymd.uix.label import MDLabel
+
+import state
+
 
 ThemeClsColor = [0.12, 0.58, 0.95, 1]
 
@@ -142,3 +146,16 @@ class CutsomSwipeToDeleteItem(MDCardSwipe):
     cla = Window.size[0] / 2
     swipe_distance = NumericProperty(cla)
     opening_time = NumericProperty(0.5)
+
+
+def empty_screen_label(label_str=None, no_search_res_found=None):
+    """This function returns default message while no address is there."""
+    # empty_screen_msg = "yet no message for this account!!!!!!!!!!!!!"
+    content = MDLabel(
+        font_style='Caption',
+        theme_text_color='Primary',
+        text=no_search_res_found if state.searcing_text else label_str,
+        halign='center',
+        size_hint_y=None,
+        valign='top')
+    return content
