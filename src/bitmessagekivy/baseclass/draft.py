@@ -23,7 +23,7 @@ from kivy.uix.screenmanager import Screen
 
 from bitmessagekivy import kivy_helper_search
 from bitmessagekivy.baseclass.common import (
-    showLimitedCnt, toast, ThemeClsColor,
+    showLimitedCnt, toast, ThemeClsColor, mdlist_message_content,
     SwipeToDeleteItem, ShowTimeHistoy, empty_screen_label
 )
 from bitmessagekivy.baseclass.maildetail import MailDetail
@@ -43,6 +43,7 @@ class Draft(Screen, HelperDraft):
     account = StringProperty()
     queryreturn = ListProperty()
     has_refreshed = True
+    label_str = "yet no message for this account!!!!!!!!!!!!!"
 
     def __init__(self, *args, **kwargs):
         """Method used for storing draft messages"""
@@ -85,8 +86,7 @@ class Draft(Screen, HelperDraft):
             #     halign='center',
             #     size_hint_y=None,
             #     valign='top')
-            label_str = "yet no message for this account!!!!!!!!!!!!!2"
-            self.ids.ml.add_widget(empty_screen_label(label_str))
+            self.ids.ml.add_widget(empty_screen_label(self.label_str))
 
     def draftDataQuery(self, xAddress, where, what, start_indx=0, end_indx=20):
         """This methosd is for retrieving draft messages"""
@@ -104,15 +104,7 @@ class Draft(Screen, HelperDraft):
         """This method is used to create mdlist"""
         data = []
         total_draft_msg = len(self.ids.ml.children)
-        for mail in self.queryreturn:
-            third_text = mail[3].replace('\n', ' ')
-            data.append({
-                'text': mail[1].strip(),
-                'secondary_text': mail[2][:10] + '...........' if len(
-                    mail[2]) > 10 else mail[2] + '\n' + " " + (
-                        third_text[:25] + '...!') if len(
-                            third_text) > 25 else third_text,
-                'ackdata': mail[5], 'senttime': mail[6]})
+        mdlist_message_content(self.queryreturn,data=data)
         for item in data:
             message_row = SwipeToDeleteItem(
                 text='Draft',
