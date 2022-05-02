@@ -16,11 +16,9 @@ from kivy.properties import (
     NumericProperty,
     StringProperty
 )
-
 from kivymd.uix.label import MDLabel
 
 import state
-
 
 ThemeClsColor = [0.12, 0.58, 0.95, 1]
 
@@ -74,7 +72,7 @@ def chipTag(text):
 
 
 def toast(text):
-    """Method will display the toast message"""
+    """Function will display the toast message"""
     kivytoast.toast(text)
 
 def showLimitedCnt(total_msg):
@@ -85,8 +83,8 @@ def showLimitedCnt(total_msg):
 def avatarImageFirstLetter(letter_string):
     """This function is used to the first letter for the avatar image"""
     try:
-        if letter_string[0].upper() >= 'A' and letter_string[0].upper() <= 'Z':
-            img_latter = letter_string[0].upper()
+        if letter_string.title()[0] >= 'A' and letter_string.title()[0] <= 'Z':
+            img_latter = letter_string.title()[0]
         elif int(letter_string[0]) >= 0 and int(letter_string[0]) <= 9:
             img_latter = letter_string[0]
         else:
@@ -149,8 +147,7 @@ class CutsomSwipeToDeleteItem(MDCardSwipe):
 
 
 def empty_screen_label(label_str=None, no_search_res_found=None):
-    """This function returns default message while no address is there."""
-    # empty_screen_msg = "yet no message for this account!!!!!!!!!!!!!"
+    """Returns default text on screen when no address is there."""
     content = MDLabel(
         font_style='Caption',
         theme_text_color='Primary',
@@ -159,3 +156,15 @@ def empty_screen_label(label_str=None, no_search_res_found=None):
         size_hint_y=None,
         valign='top')
     return content
+
+
+def mdlist_message_content(queryreturn, data, max_len=None, min_len=None):
+    for mail in queryreturn:
+        third_text = mail[3].replace('\n', ' ')
+        data.append({
+            'text': mail[1].strip(),
+            'secondary_text': mail[2][:10] + '...........' if len(
+                mail[2]) > 10 else mail[2] + '\n' + " " + (
+                    third_text[:25] + '...!') if len(
+                        third_text) > 25 else third_text,
+            'ackdata': mail[5], 'senttime': mail[6]})
