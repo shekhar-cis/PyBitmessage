@@ -83,16 +83,14 @@ def showLimitedCnt(total_msg):
 def avatarImageFirstLetter(letter_string):
     """This function is used to the first letter for the avatar image"""
     try:
-        if letter_string.title()[0] >= 'A' and letter_string.title()[0] <= 'Z':
-            img_latter = letter_string.title()[0]
-        elif int(letter_string[0]) >= 0 and int(letter_string[0]) <= 9:
-            img_latter = letter_string[0]
+        if isinstance(letter_string, int):
+            return letter_string[0]
+        elif isinstance(letter_string, str) and letter_string[0].isalnum():
+            return letter_string.title()[0]
         else:
-            img_latter = '!'
-    except ValueError:
-        img_latter = '!'
-    return img_latter if img_latter else '!'
-
+            return '!'
+    except IndexError:
+        return '!'
 
 def AddTimeWidget(time):  # pylint: disable=redefined-outer-name, W0201
     """This method is used to create TimeWidget"""
@@ -158,7 +156,7 @@ def empty_screen_label(label_str=None, no_search_res_found=None):
     return content
 
 
-def mdlist_message_content(queryreturn, data, max_len=None, min_len=None):
+def mdlist_message_content(queryreturn, data, max_len=25, min_len=10):
     for mail in queryreturn:
         third_text = mail[3].replace('\n', ' ')
         data.append({
