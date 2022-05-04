@@ -8,6 +8,8 @@ from struct import pack, unpack
 
 from debug import logger
 
+from bmconfigparser import BMConfigParser
+
 ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 
@@ -276,3 +278,15 @@ def addBMIfNotPresent(address):
     """Prepend BM- to an address if it doesn't already have it"""
     address = str(address).strip()
     return address if address[:3] == 'BM-' else 'BM-' + address
+
+
+def disable_addresses(address):
+    """"To disable the Address"""
+    BMConfigParser().set(str(address), 'enabled', 'false')
+    BMConfigParser().save()
+
+
+def enable_addresses(address):
+    """"To enable the Address"""
+    BMConfigParser().set(address, 'enabled', 'true')
+    BMConfigParser().save()
