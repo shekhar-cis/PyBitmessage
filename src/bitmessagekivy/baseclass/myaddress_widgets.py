@@ -65,8 +65,9 @@ class HelperMyAddress(DefaultLabelMixin):
     @staticmethod
     def inactive_address_popup(width, callback_for_menu_items):
         """This method shows the warning popup if the address is inactive"""
+        dialog_text = 'Address is not currently active. Please click on Toggle button to active it.'
         dialog_box = MDDialog(
-            text='Address is not currently active. Please click on Toggle button to active it.',
+            text=dialog_text,
             size_hint=(width, .25),
             buttons=[
                 MDFlatButton(

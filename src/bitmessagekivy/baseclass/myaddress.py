@@ -31,6 +31,9 @@ from bitmessagekivy.baseclass.common import (
     avatarImageFirstLetter, AvatarSampleWidget, ThemeClsColor,
     toast
 )
+
+from addresses import disable_addresses, enable_addresses
+
 from bitmessagekivy.baseclass.popup import MyaddDetailPopup
 
 from bitmessagekivy.baseclass.myaddress_widgets import HelperMyAddress
@@ -217,20 +220,16 @@ class MyAddress(Screen, HelperMyAddress):
     @staticmethod
     def filter_address(address):
         """Method will filter the my address list data"""
-        if [
-                x for x in [
-                    BMConfigParser().get(address, 'label').lower(),
-                    address.lower()
-                ]
-                if (state.searcing_text).lower() in x
-        ]:
+        # import pdb; pdb.set_trace()
+        searched_text = state.searcing_text.lower()
+        if BMConfigParser().search_addresses(address, searched_text):
             return True
         return False
+        # if [x for x in [BMConfigParser().get(address, 'label').lower(), address.lower()] if (state.searcing_text).lower() in x]:
 
-    def disableAddress(self, address, instance):
-        """This method is use for disabling address"""
-        BMConfigParser().set(str(address), 'enabled', 'false')
-        BMConfigParser().save()
+    def disable_address_ui(self, address, instance):
+        """This method is used to disable addresses from UI"""
+        BMConfigParser().enable_addresses(address)
         instance.parent.parent.theme_text_color = 'Primary'
         instance.parent.parent.canvas.children[3].rgba = [0.5, 0.5, 0.5, 0.5]
         # try:
@@ -240,10 +239,9 @@ class MyAddress(Screen, HelperMyAddress):
         toast('Address disabled')
         Clock.schedule_once(self.address_permision_callback, 0)
 
-    def enableAddress(self, address, instance):
-        """This method is use for enabling address"""
-        BMConfigParser().set(address, 'enabled', 'true')
-        BMConfigParser().save()
+    def enable_address_ui(self, address, instance):
+        """This method is used to enable addresses from UI"""
+        BMConfigParser().disable_addresses(address)
         instance.parent.parent.theme_text_color = 'Custom'
         instance.parent.parent.canvas.children[3].rgba = [0, 0, 0, 0]
         # try:
@@ -265,6 +263,6 @@ class MyAddress(Screen, HelperMyAddress):
         """This method is used for enable or disable address"""
         addr = instance.parent.parent.secondary_text
         if instance.active:
-            self.enableAddress(addr, instance)
+            self.enable_address_ui(addr, instance)
         else:
-            self.disableAddress(addr, instance)
+            self.disable_address_ui(addr, instance)
