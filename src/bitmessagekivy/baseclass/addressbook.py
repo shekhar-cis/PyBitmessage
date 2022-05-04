@@ -1,4 +1,3 @@
-from turtle import pd
 from bitmessagekivy.get_platform import platform
 from bitmessagekivy import kivy_helper_search
 from helper_sql import sqlExecute
@@ -14,21 +13,26 @@ from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen
 
 import state
+import os
 
+from debug import logger
 from bitmessagekivy.baseclass.common import (
-    avatarImageFirstLetter, toast,
+    avatarImageFirstLetter, toast, empty_screen_label,
     ThemeClsColor, SwipeToDeleteItem
 )
 from bitmessagekivy.baseclass.popup import AddbookDetailPopup
 from bitmessagekivy.baseclass.addressbook_widgets import HelperAddressBook
 
-class AddressBook(Screen):
+
+class AddressBook(Screen, HelperAddressBook):
     """AddressBook Screen class for kivy Ui"""
 
     queryreturn = ListProperty()
     has_refreshed = True
     address_label = StringProperty()
     address = StringProperty()
+    label_str = "No contact found yet......"
+    no_search_res_found = "No search result found"
 
     def __init__(self, *args, **kwargs):
         """Getting AddressBook Details"""
@@ -39,7 +43,7 @@ class AddressBook(Screen):
     def init_ui(self, dt=0):
         """Clock Schdule for method AddressBook"""
         self.loadAddresslist(None, 'All', '')
-        print(dt)
+        logger.debug(dt)
 
     def loadAddresslist(self, account, where="", what=""):
         """Clock Schdule for method AddressBook"""
@@ -58,6 +62,7 @@ class AddressBook(Screen):
             self.set_mdList(0, 20)
             self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
         else:
+            """This is still exprimental, may need to make changes somewhere"""
             # content = MDLabel(
             #     font_style='Caption',
             #     theme_text_color='Primary',
@@ -66,18 +71,7 @@ class AddressBook(Screen):
             #     halign='center',
             #     size_hint_y=None,
             #     valign='top')
-            self.ids.ml.add_widget(HelperAddressBook.default_label_while_empty())
-
-    # def show_default_content(self):
-    #     content = MDLabel(
-    #         font_style='Caption',
-    #         theme_text_color='Primary',
-    #         text="No contact found!" if state.searcing_text
-    #         else "No contact found yet...... ",
-    #         halign='center',
-    #         size_hint_y=None,
-    #         valign='top')
-    #     return content        
+            self.ids.ml.add_widget(empty_screen_label(self.label_str, self.no_search_res_found))
 
     def set_mdList(self, start_index, end_index):
         """Creating the mdList"""
@@ -92,8 +86,9 @@ class AddressBook(Screen):
             # listItem.add_widget(AvatarSampleWidget(
             #     source=state.imageDir + '/text_images/{}.png'.format(
             #         avatarImageFirstLetter(item[0].strip()))))
-            image = state.imageDir + "/text_images/{}.png".format(
-                avatarImageFirstLetter(item[0].strip()))
+            image = os.path.join(
+                state.imageDir, "text_images", "{}.png".format(avatarImageFirstLetter(item[0].strip()))
+            )
             message_row.ids.avater_img.source = image
             listItem.bind(on_release=partial(
                 self.addBook_detail, item[1], item[0], message_row))
@@ -127,11 +122,10 @@ class AddressBook(Screen):
         if instance.state == 'closed':
             instance.ids.delete_msg.disabled = True
             if instance.open_progress == 0.0:
-                HelperAddressBook.address_detail_popup(self, address, label, instance)
-                # obj = AddbookDetailPopup()
-                # self.address_label = obj.address_label = label
-                # self.address = obj.address = address
-                # width = .9 if platform == 'android' else .8
+                obj = AddbookDetailPopup()
+                self.address_label = obj.address_label = label
+                self.address = obj.address = address
+                width = .9 if platform == 'android' else .8
                 # self.addbook_popup = MDDialog(
                 #     type="custom",
                 #     size_hint=(width, .25),
@@ -151,10 +145,12 @@ class AddressBook(Screen):
                 #         ),
                 #     ],
                 # )
-                # # self.addbook_popup.set_normal_height()
-                # self.addbook_popup = HelperAddressBook.address_detail_popup(self)
-                # self.addbook_popup.auto_dismiss = False
-                # self.addbook_popup.open()
+                # self.addbook_popup.set_normal_height()
+                self.addbook_popup = self.address_detail_popup(
+                    obj, self.send_message_to, self.update_addbook_label,
+                    self.close_pop, width)
+                self.addbook_popup.auto_dismiss = False
+                self.addbook_popup.open()
         else:
             instance.ids.delete_msg.disabled = False
 
@@ -165,7 +161,7 @@ class AddressBook(Screen):
         if self.ids.ml.children is not None:
             self.ids.tag_label.text = ''
         sqlExecute(
-            "DELETE FROM  addressbook WHERE address = '{}';".format(address))
+            "DELETE FROM addressbook WHERE address = ?", address)
         toast('Address Deleted')
 
     def close_pop(self, instance):
@@ -183,9 +179,8 @@ class AddressBook(Screen):
             stored_labels.remove(label)
         if label and label not in stored_labels:
             sqlExecute(
-                "UPDATE addressbook SET label = '{}' WHERE"
-                " address = '{}';".format(
-                    label, self.addbook_popup.content_cls.address))
+                "UPDATE addressbook SET label = ? WHERE"
+                "address = ?", label, self.addbook_popup.content_cls.address)
             state.kivyapp.root.ids.sc11.ids.ml.clear_widgets()
             state.kivyapp.root.ids.sc11.loadAddresslist(None, 'All', '')
             self.addbook_popup.dismiss()
@@ -194,11 +189,13 @@ class AddressBook(Screen):
     def send_message_to(self, instance):
         """Method used to fill to_address of composer autofield"""
         state.kivyapp.set_navbar_for_composer()
-        window_obj = state.kivyapp.root.ids
-        window_obj.sc3.children[1].ids.txt_input.text = self.address
-        window_obj.sc3.children[1].ids.ti.text = ''
-        window_obj.sc3.children[1].ids.btn.text = 'Select'
-        window_obj.sc3.children[1].ids.subject.text = ''
-        window_obj.sc3.children[1].ids.body.text = ''
-        window_obj.scr_mngr.current = 'create'
+        # import pdb; pdb.set_trace()
+        self.compose_message(None, self.address, None, None)
+        # window_obj = state.kivyapp.root.ids
+        # window_obj.sc3.children[1].ids.txt_input.text = self.address
+        # window_obj.sc3.children[1].ids.ti.text = ''
+        # window_obj.sc3.children[1].ids.btn.text = 'Select'
+        # window_obj.sc3.children[1].ids.subject.text = ''
+        # window_obj.sc3.children[1].ids.body.text = ''
+        # window_obj.scr_mngr.current = 'create'
         self.addbook_popup.dismiss()
