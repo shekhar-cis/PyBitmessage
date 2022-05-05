@@ -61,6 +61,9 @@ from bitmessagekivy.baseclass.common import toast
 from qr_scanner.zbarcam import ZBarCam
 from pyzbar.pyzbar import ZBarSymbol
 
+# import pdb; pdb.set_trace()
+from bitmessagekivy.kivy_state import KivyStateVariables
+
 if platform != "android":
     from kivy.config import Config
     Config.set("input", "mouse", "mouse, multitouch_on_demand")
@@ -208,8 +211,11 @@ class CustomSpinner(Spinner):
 class NavigateApp(MDApp):
     """Navigation Layout of class"""
     # pylint: disable=too-many-public-methods,inconsistent-return-statements
-
     # theme_cls = ThemeManager()
+    def __init__(self):
+        super(NavigateApp, self).__init__()
+        self.kivy_state_obj = KivyStateVariables()
+
     previous_date = ObjectProperty()
     obj_1 = ObjectProperty()
     variable_1 = ListProperty(addr for addr in BMConfigParser().addresses()

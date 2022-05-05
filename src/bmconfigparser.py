@@ -194,3 +194,18 @@ class BMConfigParser(configparser.ConfigParser):
         if value < 0 or value > 8:
             return False
         return True
+    
+    @staticmethod
+    def search_addresses(address, searched_text):
+        return [x for x in [BMConfigParser().get(address, 'label').lower(), address.lower()] 
+        if searched_text in x]
+
+    def disable_address(self, address):
+        """"To disable the Address"""
+        self.set(str(address), 'enabled', 'false')
+        self.save()
+
+    def enable_address(self, address):
+        """"To enable the Address"""
+        self.set(address, 'enabled', 'true')
+        self.save()
