@@ -211,7 +211,6 @@ class CustomSpinner(Spinner):
 class NavigateApp(MDApp):
     """Navigation Layout of class"""
     # pylint: disable=too-many-public-methods,inconsistent-return-statements
-    kivyy = KivyStateVariables()
     # theme_cls = ThemeManager()
     def __init__(self):
         super(NavigateApp, self).__init__()
