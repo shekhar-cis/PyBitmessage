@@ -34,3 +34,4 @@ class KivyStateVariables(object):
         self.in_sent_method = False
         self.in_search_mode = False
         self.imageDir = None
+        self.sqlReady = False  # set to true by sqlTread when ready for processing
