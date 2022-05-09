@@ -1,8 +1,16 @@
-from bitmessagekivy.get_platform import platform
+# pylint: disable=unused-argument, consider-using-f-string, import-error
+# pylint: disable=unnecessary-comprehension, no-member, no-name-in-module
+"""
+myaddress.py
+==============
+All generated addresses are managed in MyAddress
+"""
+
+import os
 from functools import partial
+from bitmessagekivy.get_platform import platform
 from bmconfigparser import BMConfigParser
 from kivy.clock import Clock
-# from kivy.metrics import dp
 from kivy.properties import (
     ListProperty,
     StringProperty
@@ -23,8 +31,11 @@ from bitmessagekivy.baseclass.common import (
     avatarImageFirstLetter, AvatarSampleWidget, ThemeClsColor,
     toast
 )
+
+
 from bitmessagekivy.baseclass.popup import MyaddDetailPopup
 
+from bitmessagekivy.baseclass.myaddress_widgets import HelperMyAddress
 
 class ToggleBtn(IRightBodyTouch, MDSwitch):
     """ToggleBtn class for kivy Ui"""
@@ -34,11 +45,11 @@ class CustomTwoLineAvatarIconListItem(TwoLineAvatarIconListItem):
     """CustomTwoLineAvatarIconListItem class for kivy Ui"""
 
 
-class BadgeText(IRightBodyTouch, MDLabel):
-    """BadgeText class for kivy Ui"""
+# class BadgeText(IRightBodyTouch, MDLabel):
+#     """BadgeText class for kivy Ui"""
 
 
-class MyAddress(Screen):
+class MyAddress(Screen, HelperMyAddress):
     """MyAddress screen class for kivy Ui"""
 
     address_label = StringProperty()
@@ -72,15 +83,15 @@ class MyAddress(Screen):
             self.set_mdList(0, 15)
             self.ids.refresh_layout.bind(scroll_y=self.check_scroll_y)
         else:
-            content = MDLabel(
-                font_style='Caption',
-                theme_text_color='Primary',
-                text="No address found!" if state.searcing_text
-                else "yet no address is created by user!!!!!!!!!!!!!",
-                halign='center',
-                size_hint_y=None,
-                valign='top')
-            self.ids.ml.add_widget(content)
+            # content = MDLabel(
+            #     font_style='Caption',
+            #     theme_text_color='Primary',
+            #     text="No address found!" if state.searcing_text
+            #     else "yet no address is created by user!!!!!!!!!!!!!",
+            #     halign='center',
+            #     size_hint_y=None,
+            #     valign='top')
+            self.ids.ml.add_widget(self.default_label_when_empty())
             if not state.searcing_text and not self.is_add_created:
                 try:
                     self.manager.current = 'login'
@@ -106,20 +117,23 @@ class MyAddress(Screen):
             except Exception:
                 pass
             meny.add_widget(AvatarSampleWidget(
-                source=state.imageDir + '/text_images/{}.png'.format(
-                    avatarImageFirstLetter(item['text'].strip()))))
+                source=os.path.join(
+                    state.imageDir, 'text_images/{}.png'.format(avatarImageFirstLetter(item["text"].strip())))
+            ))
+                # source=os.path.join(state.imageDir + '/text_images/{}.jpg'.format(avatarImageFirstLetter(item['text'].strip())))
             meny.bind(on_press=partial(
                 self.myadd_detail, item['secondary_text'], item['text']))
             if state.association == item['secondary_text'] and is_enable == 'true':
-                badge_obj = BadgeText(
-                    size_hint=(None, None),
-                    size=[90 if platform == 'android' else 50, 60],
-                    text='Active', halign='center',
-                    font_style='Body1', theme_text_color='Custom',
-                    text_color=ThemeClsColor
-                )
-                badge_obj.font_size = '13sp'
-                meny.add_widget(badge_obj)
+                # badge_obj = BadgeText(
+                #     size_hint=(None, None),
+                #     size=[90 if platform == 'android' else 50, 60],
+                #     text='Active', halign='center',
+                #     font_style='Body1', theme_text_color='Custom',
+                #     text_color=ThemeClsColor
+                # )
+                # badge_obj.font_size = '13sp'
+                # meny.add_widget(badge_obj)
+                meny.add_widget(self.is_active_badge())
             else:
                 meny.add_widget(ToggleBtn(active=True if is_enable == 'true' else False))
             self.ids.ml.add_widget(meny)
@@ -142,42 +156,49 @@ class MyAddress(Screen):
     # @staticmethod
     def myadd_detail(self, fromaddress, label, *args):
         """Load myaddresses details"""
+
         if BMConfigParser().get(fromaddress, 'enabled') == 'true':
             obj = MyaddDetailPopup()
             self.address_label = obj.address_label = label
             self.text_address = obj.address = fromaddress
             width = .9 if platform == 'android' else .6
-            self.myadddetail_popup = MDDialog(
-                type="custom",
-                size_hint=(width, .25),
-                content_cls=obj,
-            )
+            # self.myadddetail_popup = MDDialog(
+            #     type="custom",
+            #     size_hint=(width, .25),
+            #     content_cls=obj,
+            # )
+            self.myadddetail_popup = self.myaddress_detail_popup(obj, width)
+
             # self.myadddetail_popup.set_normal_height()
             self.myadddetail_popup.auto_dismiss = False
             self.myadddetail_popup.open()
             # p.set_address(fromaddress, label)
         else:
             width = .8 if platform == 'android' else .55
-            dialog_box = MDDialog(
-                text='Address is not currently active. Please click on Toggle button to active it.',
-                size_hint=(width, .25),
-                buttons=[
-                    MDFlatButton(
-                        text="Ok", on_release=lambda x: callback_for_menu_items("Ok")
-                    ),
-                ],
-            )
-            dialog_box.open()
+            # dialog_box = MDDialog(
+            #     text='Address is not currently active. Please click on Toggle button to active it.',
+            #     size_hint=(width, .25),
+            #     buttons=[
+            #         MDFlatButton(
+            #             text="Ok", on_release=lambda x: callback_for_menu_items("Ok")
+            #         ),
+            #     ],
+            # )
+            # import pdb; pdb.set_trace()
+            self.dialog_box = self.inactive_address_popup(width, self.callback_for_menu_items)
+            self.dialog_box.open()
 
-        def callback_for_menu_items(text_item, *arg):
-            """Callback of alert box"""
-            dialog_box.dismiss()
-            toast(text_item)
+        # def callback_for_menu_items(text_item, *arg):
+        #     """Callback of alert box"""
+        #     import pdb; pdb.set_trace()
+        #     dialog_box.dismiss()
+        #     toast(text_item)
 
     # @staticmethod
-    # def callback_for_menu_items(text_item, *arg):
-    #     """Callback of alert box"""
-    #     toast(text_item)
+    def callback_for_menu_items(self, text_item, *arg):
+        """Callback of alert box"""
+        self.dialog_box.dismiss()
+        toast(text_item)
 
     def refresh_callback(self, *args):
         """Method updates the state of application,
@@ -198,20 +219,16 @@ class MyAddress(Screen):
     @staticmethod
     def filter_address(address):
         """Method will filter the my address list data"""
-        if [
-                x for x in [
-                    BMConfigParser().get(address, 'label').lower(),
-                    address.lower()
-                ]
-                if (state.searcing_text).lower() in x
-        ]:
+        # import pdb; pdb.set_trace()
+        searched_text = state.searcing_text.lower()
+        if BMConfigParser().search_addresses(address, searched_text):
             return True
         return False
+        # if [x for x in [BMConfigParser().get(address, 'label').lower(), address.lower()] if (state.searcing_text).lower() in x]:
 
-    def disableAddress(self, address, instance):
-        """This method is use for disabling address"""
-        BMConfigParser().set(str(address), 'enabled', 'false')
-        BMConfigParser().save()
+    def disable_address_ui(self, address, instance):
+        """This method is used to disable addresses from UI"""
+        BMConfigParser().enable_address(address)
         instance.parent.parent.theme_text_color = 'Primary'
         instance.parent.parent.canvas.children[3].rgba = [0.5, 0.5, 0.5, 0.5]
         # try:
@@ -221,10 +238,9 @@ class MyAddress(Screen):
         toast('Address disabled')
         Clock.schedule_once(self.address_permision_callback, 0)
 
-    def enableAddress(self, address, instance):
-        """This method is use for enabling address"""
-        BMConfigParser().set(address, 'enabled', 'true')
-        BMConfigParser().save()
+    def enable_address_ui(self, address, instance):
+        """This method is used to enable addresses from UI"""
+        BMConfigParser().disable_address(address)
         instance.parent.parent.theme_text_color = 'Custom'
         instance.parent.parent.canvas.children[3].rgba = [0, 0, 0, 0]
         # try:
@@ -246,6 +262,6 @@ class MyAddress(Screen):
         """This method is used for enable or disable address"""
         addr = instance.parent.parent.secondary_text
         if instance.active:
-            self.enableAddress(addr, instance)
+            self.enable_address_ui(addr, instance)
         else:
-            self.disableAddress(addr, instance)
+            self.disable_address_ui(addr, instance)
