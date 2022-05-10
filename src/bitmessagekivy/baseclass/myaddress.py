@@ -24,12 +24,13 @@ from kivymd.uix.list import (
 )
 from kivymd.uix.selectioncontrol import MDSwitch
 from kivy.uix.screenmanager import Screen
+from kivy.app import App
 
 import state
 
 from bitmessagekivy.baseclass.common import (
     avatarImageFirstLetter, AvatarSampleWidget, ThemeClsColor,
-    toast
+    toast, empty_screen_label
 )
 
 
@@ -57,10 +58,14 @@ class MyAddress(Screen, HelperMyAddress):
     addresses_list = ListProperty()
     has_refreshed = True
     is_add_created = False
+    label_str = "yet no address is created by user!!!!!!!!!!!!!"
+    no_search_result = "No address found!"
 
     def __init__(self, *args, **kwargs):
         """Clock schdule for method Myaddress accounts"""
         super(MyAddress, self).__init__(*args, **kwargs)
+        self.kivy_running_app = App.get_running_app()
+        self.kivy_state = self.kivy_running_app.kivy_state_obj
         Clock.schedule_once(self.init_ui, 0)
 
     def init_ui(self, dt=0):
@@ -68,7 +73,7 @@ class MyAddress(Screen, HelperMyAddress):
         # pylint: disable=unnecessary-lambda, deprecated-lambda
         # self.addresses_list = state.kivyapp.variable_1
         self.addresses_list = BMConfigParser().addresses()
-        if state.searcing_text:
+        if self.kivy_state.searcing_text:
             self.ids.refresh_layout.scroll_y = 1.0
             filtered_list = [
                 x for x in BMConfigParser().addresses()
@@ -91,8 +96,8 @@ class MyAddress(Screen, HelperMyAddress):
             #     halign='center',
             #     size_hint_y=None,
             #     valign='top')
-            self.ids.ml.add_widget(self.default_label_when_empty())
-            if not state.searcing_text and not self.is_add_created:
+            self.ids.ml.add_widget(empty_screen_label(self.label_str, self.no_search_result))
+            if not self.kivy_state.searcing_text and not self.is_add_created:
                 try:
                     self.manager.current = 'login'
                 except Exception:
@@ -205,7 +210,7 @@ class MyAddress(Screen, HelperMyAddress):
         While the spinner remains on the screen"""
         def refresh_callback(interval):
             """Method used for loading the myaddress screen data"""
-            state.searcing_text = ''
+            self.kivy_state.searcing_text = ''
             # state.kivyapp.root.ids.sc10.children[2].active = False
             self.ids.search_bar.ids.search_field.text = ''
             self.has_refreshed = True
@@ -220,7 +225,7 @@ class MyAddress(Screen, HelperMyAddress):
     def filter_address(address):
         """Method will filter the my address list data"""
         # import pdb; pdb.set_trace()
-        searched_text = state.searcing_text.lower()
+        searched_text = MyAddress().kivy_state.searcing_text.lower()
         if BMConfigParser().search_addresses(address, searched_text):
             return True
         return False
