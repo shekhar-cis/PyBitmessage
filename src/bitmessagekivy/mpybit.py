@@ -287,7 +287,7 @@ class NavigateApp(MDApp):
 
             self.root_window.children[1].ids.toolbar.title = address_label
             state.association = text
-            state.searcing_text = ''
+            self.kivy_state_obj.searcing_text = ''
             LoadingPopup().open()
             self.set_message_count()
             for nav_obj in self.root.ids.content_drawer.children[
@@ -482,7 +482,7 @@ class NavigateApp(MDApp):
                     if state.detailPageType == 'sent' else 'inbox' \
                     if state.detailPageType == 'inbox' else 'draft'
                 self.back_press()
-                if state.in_search_mode and state.searcing_text:
+                if state.in_search_mode and self.kivy_state_obj.searcing_text:
                     toolbar_obj = self.root.ids.toolbar
                     toolbar_obj.left_action_items = [
                         ['arrow-left', lambda x: self.closeSearchScreen()]]
@@ -517,7 +517,7 @@ class NavigateApp(MDApp):
             self.root.ids.scr_mngr.transition.direction = 'right'
             self.root.ids.scr_mngr.transition.bind(on_complete=self.reset)
             return True
-        elif key == 13 and state.searcing_text and not state.in_composer:
+        elif key == 13 and self.kivy_state_obj.searcing_text and not state.in_composer:
             if state.search_screen == 'inbox':
                 self.root.ids.sc1.children[1].active = True
                 Clock.schedule_once(self.search_callback, 0.5)
@@ -729,8 +729,8 @@ class NavigateApp(MDApp):
     def searchQuery(self, instance):
         """Showing searched mails"""
         state.search_screen = self.root.ids.scr_mngr.current
-        state.searcing_text = str(instance.text).strip()
-        if instance.focus and state.searcing_text:
+        self.kivy_state_obj.searcing_text = str(instance.text).strip()
+        if instance.focus and self.kivy_state_obj.searcing_text:
             toolbar_obj = self.root.ids.toolbar
             toolbar_obj.left_action_items = [
                 ['arrow-left', lambda x: self.closeSearchScreen()]]
@@ -746,14 +746,14 @@ class NavigateApp(MDApp):
                 BMConfigParser().get(
                     state.association, 'label'), state.association)
             self.root.ids.toolbar.title = address_label
-        state.searcing_text = ''
+        self.kivy_state_obj.searcing_text = ''
         self.refreshScreen()
         state.in_search_mode = False
 
     def refreshScreen(self):
         """Method show search button only on inbox or sent screen"""
         # pylint: disable=unused-variable
-        state.searcing_text = ''
+        self.kivy_state_obj.searcing_text = ''
         if state.search_screen == 'inbox':
             self.root.ids.sc1.ids.inbox_search.ids.search_field.text = ''
             # try:
