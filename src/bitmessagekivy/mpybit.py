@@ -683,7 +683,7 @@ class NavigateApp(MDApp):
             " where fromaddress = '{0}' and  folder = 'trash' )"
             "+(SELECT count(*) FROM inbox where toaddress = '{0}' and"
             " folder = 'trash') AS SumCount".format(state.association))[0][0])
-        state.draft_count = str(sqlQuery(
+        self.kivy_state_obj.draft_count = str(sqlQuery(
             "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
             " folder = 'draft' ;".format(state.association))[0][0])
         state.all_count = str(int(state.sent_count) + int(state.inbox_count))
@@ -691,7 +691,7 @@ class NavigateApp(MDApp):
             msg_counter_objs.send_cnt.badge_text = state.sent_count
             msg_counter_objs.inbox_cnt.badge_text = state.inbox_count
             msg_counter_objs.trash_cnt.badge_text = state.trash_count
-            msg_counter_objs.draft_cnt.badge_text = state.draft_count
+            msg_counter_objs.draft_cnt.badge_text = self.kivy_state_obj.draft_count
             msg_counter_objs.allmail_cnt.badge_text = state.all_count
 
     def on_start(self):
