@@ -228,7 +228,7 @@ class MyAddress(Screen, HelperMyAddress):
 
     def disable_address_ui(self, address, instance):
         """This method is used to disable addresses from UI"""
-        BMConfigParser().enable_address(address)
+        BMConfigParser().disable_address(address)
         instance.parent.parent.theme_text_color = 'Primary'
         instance.parent.parent.canvas.children[3].rgba = [0.5, 0.5, 0.5, 0.5]
         # try:
@@ -240,7 +240,7 @@ class MyAddress(Screen, HelperMyAddress):
 
     def enable_address_ui(self, address, instance):
         """This method is used to enable addresses from UI"""
-        BMConfigParser().disable_address(address)
+        BMConfigParser().enable_address(address)
         instance.parent.parent.theme_text_color = 'Custom'
         instance.parent.parent.canvas.children[3].rgba = [0, 0, 0, 0]
         # try:
