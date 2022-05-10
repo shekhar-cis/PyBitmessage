@@ -26,6 +26,8 @@ from bitmessagekivy.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor, mdlist_message_content,
     SwipeToDeleteItem, ShowTimeHistoy, empty_screen_label
 )
+from kivy.app import App
+
 from bitmessagekivy.baseclass.maildetail import MailDetail
 from bitmessagekivy.baseclass.draft_widgets import HelperDraft
 
@@ -48,9 +50,11 @@ class Draft(Screen, HelperDraft):
     def __init__(self, *args, **kwargs):
         """Method used for storing draft messages"""
         super(Draft, self).__init__(*args, **kwargs)
-        if state.association == '':
+        self.kivy_running_app = App.get_running_app()
+        self.kivy_state = self.kivy_running_app.kivy_state_obj
+        if self.kivy_state.association == '':
             if state.kivyapp.variable_1:
-                state.association = state.kivyapp.variable_1[0]
+                self.kivy_state.association = state.kivyapp.variable_1[0]
         Clock.schedule_once(self.init_ui, 0)
 
     def init_ui(self, dt=0):
@@ -65,16 +69,16 @@ class Draft(Screen, HelperDraft):
 
     def loadDraft(self, where="", what=""):
         """Load draft list for Draft messages"""
-        self.account = state.association
+        self.account = self.kivy_state.association
         xAddress = 'fromaddress'
         self.ids.tag_label.text = ''
         self.draftDataQuery(xAddress, where, what)
-    #     state.msg_counter_objs.draft_cnt.children[0].children[0].text = showLimitedCnt(len(self.queryreturn))
+        # state.msg_counter_objs.draft_cnt.children[0].children[0].text = showLimitedCnt(len(self.queryreturn))
         # if state.msg_counter_objs:
 
         if self.queryreturn:
             self.ids.tag_label.text = 'Draft'
-            self.set_draftCnt(state.draft_count)
+            self.set_draftCnt(self.kivy_state.draft_count)
             self.set_mdList()
             self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
         else:
@@ -139,8 +143,8 @@ class Draft(Screen, HelperDraft):
         if instance.state == 'closed':
             instance.ids.delete_msg.disabled = True
             if instance.open_progress == 0.0:
-                state.detailPageType = 'draft'
-                state.mail_id = ackdata
+                self.kivy_state.detailPageType = 'draft'
+                self.kivy_state.mail_id = ackdata
                 if self.manager:
                     src_mng_obj = self.manager
                 else:
@@ -154,10 +158,10 @@ class Draft(Screen, HelperDraft):
     def delete_draft(self, data_index, instance, *args):
         """Delete draft message permanently"""
         helper_sent.delete(data_index)
-        if int(state.draft_count) > 0:
-            state.draft_count = str(int(state.draft_count) - 1)
-            self.set_draftCnt(state.draft_count)
-            if int(state.draft_count) <= 0:
+        if int(self.kivy_state.draft_count) > 0:
+            self.kivy_state.draft_count = str(int(self.kivy_state.draft_count) - 1)
+            self.set_draftCnt(self.kivy_state.draft_count)
+            if int(self.kivy_state.draft_count) <= 0:
                 # self.ids.identi_tag.children[0].text = ''
                 self.ids.tag_label.text = ''
         self.ids.ml.remove_widget(instance.parent.parent)
@@ -199,9 +203,10 @@ class Draft(Screen, HelperDraft):
                 'draft',
                 encoding,
                 BMConfigParser().safeGetInt('bitmessagesettings', 'ttl'))
-            state.msg_counter_objs = src_object.children[2].children[0].ids
-            state.draft_count = str(int(state.draft_count) + 1) \
-                if state.association == fromAddress else state.draft_count
+            
+            # state.msg_counter_objs = src_object.children[2].children[0].ids
+            Draft().kivy_state.draft_count = str(int(Draft().kivy_state.draft_count) + 1) \
+                if state.association == fromAddress else Draft().kivy_state.draft_count
             src_object.ids.sc16.clear_widgets()
             src_object.ids.sc16.add_widget(Draft())
             toast('Save draft')
