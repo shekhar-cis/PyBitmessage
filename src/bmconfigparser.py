@@ -4,6 +4,7 @@ BMConfigParser class definition and default configuration settings
 # pylint: disable=no-self-use, arguments-differ
 import configparser
 import os
+import shared
 import shutil
 from datetime import datetime
 
@@ -194,18 +195,27 @@ class BMConfigParser(configparser.ConfigParser):
         if value < 0 or value > 8:
             return False
         return True
-    
+
     @staticmethod
     def search_addresses(address, searched_text):
-        return [x for x in [BMConfigParser().get(address, 'label').lower(), address.lower()] 
-        if searched_text in x]
+        """Return the searched label of MyAddress"""
+        return [x for x in [BMConfigParser().get(address, 'label').lower(),
+                address.lower()] if searched_text in x]
 
     def disable_address(self, address):
         """"To disable the Address"""
-        self.set(str(address), 'enabled', 'false')
-        self.save()
+        try:
+            self.set(str(address), 'enabled', 'false')
+            self.save()
+            shared.reloadMyAddressHashes()
+        except (KeyError, TypeError) as e:
+            raise configparser.NoSectionError(e)
 
     def enable_address(self, address):
         """"To enable the Address"""
-        self.set(address, 'enabled', 'true')
-        self.save()
+        try:
+            self.set(address, 'enabled', 'true')
+            self.save()
+            shared.reloadMyAddressHashes()
+        except (KeyError, TypeError) as e:
+            raise configparser.NoSectionError(e)
