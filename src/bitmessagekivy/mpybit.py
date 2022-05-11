@@ -815,7 +815,7 @@ class NavigateApp(MDApp):
                 delete_btn]
         elif state.detailPageType == 'sent':
             dynamic_list = [delete_btn]
-        elif state.detailPageType == 'draft':
+        elif self.kivy_state_obj.detailPageType == 'draft':
             dynamic_list = [
                 ['pencil', lambda x: self.root.ids.sc14.write_msg(self)],
                 delete_btn]
