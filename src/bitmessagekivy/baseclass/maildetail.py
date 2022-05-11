@@ -219,10 +219,10 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
 
     def write_msg(self, navApp):
         """Write on draft mail"""
-        state.send_draft_mail = state.mail_id
+        state.send_draft_mail = self.kivy_state.mail_id
         data = sqlQuery(
             "select toaddress, fromaddress, subject, message from sent where"
-            " ackdata = ?;", state.mail_id)
+            " ackdata = ?;", self.kivy_state.mail_id)
         composer_ids = (
             self.parent.parent.ids.sc3.children[1].ids)
         composer_ids.ti.text = data[0][1]
