@@ -480,7 +480,7 @@ class NavigateApp(MDApp):
             elif self.root.ids.scr_mngr.current == "mailDetail":
                 self.root.ids.scr_mngr.current = 'sent'\
                     if state.detailPageType == 'sent' else 'inbox' \
-                    if state.detailPageType == 'inbox' else 'draft'
+                    if self.kivy_state_obj.detailPageType == 'inbox' else 'draft'
                 self.back_press()
                 if state.in_search_mode and self.kivy_state_obj.searcing_text:
                     toolbar_obj = self.root.ids.toolbar
@@ -563,7 +563,7 @@ class NavigateApp(MDApp):
         composer_objs = self.root
         from_addr = str(self.root.ids.sc3.children[1].ids.ti.text)
         # to_addr = str(self.root.ids.sc3.children[1].ids.txt_input.text)
-        if from_addr and state.detailPageType != 'draft' \
+        if from_addr and self.kivy_state_obj.detailPageType != 'draft' \
                 and not state.in_sent_method:
             Draft().draft_msg(composer_objs)
         return
@@ -648,7 +648,7 @@ class NavigateApp(MDApp):
             self.root.ids.scr_mngr.transition = SlideTransition()
         self.root.ids.scr_mngr.transition.direction = 'right'
         self.root.ids.scr_mngr.transition.bind(on_complete=self.reset)
-        if state.is_allmail or state.detailPageType == 'draft':
+        if state.is_allmail or self.kivy_state_obj.detailPageType == 'draft':
             state.is_allmail = False
         state.detailPageType = ''
         state.in_composer = False
@@ -685,7 +685,7 @@ class NavigateApp(MDApp):
             " folder = 'trash') AS SumCount".format(state.association))[0][0])
         self.kivy_state_obj.draft_count = str(sqlQuery(
             "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
-            " folder = 'draft' ;".format(state.association))[0][0])
+            " folder = 'draft' ;".format(self.kivy_state_obj.association))[0][0])
         state.all_count = str(int(state.sent_count) + int(state.inbox_count))
         if msg_counter_objs:
             msg_counter_objs.send_cnt.badge_text = state.sent_count
