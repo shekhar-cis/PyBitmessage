@@ -19,7 +19,7 @@ from kivymd.uix.list import (
     IRightBodyTouch
 )
 from kivy.uix.screenmanager import Screen
-
+from kivy.app import App
 import state
 
 from bitmessagekivy.baseclass.common import (
@@ -93,16 +93,19 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
     def __init__(self, *args, **kwargs):
         """Mail Details method"""
         super(MailDetail, self).__init__(*args, **kwargs)
+        self.kivy_running_app = App.get_running_app()
+        self.kivy_state = self.kivy_running_app.kivy_state_obj
         Clock.schedule_once(self.init_ui, 0)
 
     def init_ui(self, dt=0):
         """Clock Schdule for method MailDetail mails"""
         self.page_type = state.detailPageType if state.detailPageType else ''
+        # import pdb; pdb.set_trace()
         try:
-            if state.detailPageType == 'sent' or state.detailPageType == 'draft':
+            if state.detailPageType == 'sent' or self.kivy_state.detailPageType == 'draft':
                 data = sqlQuery(
                     "select toaddress, fromaddress, subject, message, status,"
-                    " ackdata, senttime from sent where ackdata = ?;", state.mail_id)
+                    " ackdata, senttime from sent where ackdata = ?;", self.kivy_state.mail_id)
                 state.status = self
                 state.ackdata = data[0][5]
                 self.assign_mail_details(data)
@@ -129,7 +132,7 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
         if len(data[0]) == 7:
             self.status = data[0][4]
         self.time_tag = ShowTimeHistoy(data[0][4]) if state.detailPageType == 'inbox' else ShowTimeHistoy(data[0][6])
-        self.avatarImg = os.path.join(state.imageDir, 'avatar.png') if state.detailPageType == 'draft' else \
+        self.avatarImg = os.path.join(state.imageDir, 'avatar.png') if self.kivy_state.detailPageType == 'draft' else \
         (os.path.join(state.imageDir, 'text_images', '{0}.png'.format(avatarImageFirstLetter(self.subject.strip()))))
         self.timeinseconds = data[0][4] if state.detailPageType == 'inbox' else data[0][6]
 
