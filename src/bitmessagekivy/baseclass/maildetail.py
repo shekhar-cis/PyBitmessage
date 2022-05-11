@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from bitmessagekivy.get_platform import platform
@@ -25,7 +26,7 @@ from bitmessagekivy.baseclass.common import (
     toast, avatarImageFirstLetter, ShowTimeHistoy
 )
 from bitmessagekivy.baseclass.popup import SenderDetailPopup
-
+import helper_sent
 
 class OneLineListTitle(OneLineListItem):
     """OneLineListTitle class for kivy Ui"""
@@ -128,8 +129,8 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
         if len(data[0]) == 7:
             self.status = data[0][4]
         self.time_tag = ShowTimeHistoy(data[0][4]) if state.detailPageType == 'inbox' else ShowTimeHistoy(data[0][6])
-        self.avatarImg = state.imageDir + '/avatar.png' if state.detailPageType == 'draft' else (
-            state.imageDir + '/text_images/{0}.png'.format(avatarImageFirstLetter(self.subject.strip())))
+        self.avatarImg = os.path.join(state.imageDir, 'avatar.png') if state.detailPageType == 'draft' else \
+        (os.path.join(state.imageDir, 'text_images', '{0}.png'.format(avatarImageFirstLetter(self.subject.strip()))))
         self.timeinseconds = data[0][4] if state.detailPageType == 'inbox' else data[0][6]
 
     def delete_mail(self):
@@ -158,6 +159,7 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
             self.parent.screens[0].loadMessagelist(state.association)
 
         elif state.detailPageType == 'draft':
+            helper_sent.delete(state.mail_id)
             sqlExecute("DELETE FROM sent WHERE ackdata = ?;", state.mail_id)
             msg_count_objs.draft_cnt.ids.badge_txt.text = str(
                 int(state.draft_count) - 1)
