@@ -196,6 +196,8 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
     def inbox_reply(self):
         """Reply inbox messages"""
         state.in_composer = True
+        from_address = ' wrote:--------------\n'
+        time_str = '\n\n --------------On '
         data = sqlQuery(
             "select toaddress, fromaddress, subject, message, received from inbox where"
             " msgid = ?;", state.mail_id)
@@ -210,7 +212,7 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
         # sender_name = BMConfigParser().get(data[0][1], 'label')
         sender_name = data[0][1]
         composer_obj.body.text = (
-            '\n\n --------------On ' + time_tag + ', ' + sender_name + ' wrote:--------------\n' + data[0][3])
+            time_str + time_tag + ', ' + sender_name + from_address + data[0][3])
         composer_obj.body.focus = True
         composer_obj.body.cursor = (0, 0)
         state.kivyapp.root.ids.sc3.children[1].ids.rv.data = ''
