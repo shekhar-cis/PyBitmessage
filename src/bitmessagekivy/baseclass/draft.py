@@ -206,7 +206,7 @@ class Draft(Screen, HelperDraft):
             
             # state.msg_counter_objs = src_object.children[2].children[0].ids
             Draft().kivy_state.draft_count = str(int(Draft().kivy_state.draft_count) + 1) \
-                if state.association == fromAddress else Draft().kivy_state.draft_count
+                if Draft().kivy_state.association == fromAddress else Draft().kivy_state.draft_count
             src_object.ids.sc16.clear_widgets()
             src_object.ids.sc16.add_widget(Draft())
             toast('Save draft')
