@@ -196,10 +196,10 @@ class BMConfigParser(configparser.ConfigParser):
             return False
         return True
 
-    @staticmethod
-    def search_addresses(address, searched_text):
+    def search_addresses(self, address, searched_text):
         """Return the searched label of MyAddress"""
-        return [x for x in [BMConfigParser().get(address, 'label').lower(),
+        # import pdb; pdb.set_trace()
+        return [x for x in [self.get(address, 'label').lower(),
                 address.lower()] if searched_text in x]
 
     def disable_address(self, address):
