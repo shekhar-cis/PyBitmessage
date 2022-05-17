@@ -10,6 +10,7 @@ from kivy.properties import (
     NumericProperty
 )
 from kivy.factory import Factory
+from kivy.app import App
 
 from kivymd.uix.button import MDFlatButton, MDIconButton
 from kivymd.uix.dialog import MDDialog
@@ -92,16 +93,18 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
     def __init__(self, *args, **kwargs):
         """Mail Details method"""
         super(MailDetail, self).__init__(*args, **kwargs)
+        self.kivy_running_app = App.get_running_app()
+        self.kivy_state = self.kivy_running_app.kivy_state_obj
         Clock.schedule_once(self.init_ui, 0)
 
     def init_ui(self, dt=0):
         """Clock Schdule for method MailDetail mails"""
         self.page_type = state.detailPageType if state.detailPageType else ''
         try:
-            if state.detailPageType == 'sent' or state.detailPageType == 'draft':
+            if state.detailPageType == 'sent' or self.kivy_state.detailPageType == 'draft':
                 data = sqlQuery(
                     "select toaddress, fromaddress, subject, message, status,"
-                    " ackdata, senttime from sent where ackdata = ?;", state.mail_id)
+                    " ackdata, senttime from sent where ackdata = ?;", self.kivy_state.mail_id)
                 state.status = self
                 state.ackdata = data[0][5]
                 self.assign_mail_details(data)
@@ -128,7 +131,7 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
         if len(data[0]) == 7:
             self.status = data[0][4]
         self.time_tag = ShowTimeHistoy(data[0][4]) if state.detailPageType == 'inbox' else ShowTimeHistoy(data[0][6])
-        self.avatarImg = state.imageDir + '/avatar.png' if state.detailPageType == 'draft' else (
+        self.avatarImg = state.imageDir + '/avatar.png' if self.kivy_state.detailPageType == 'draft' else (
             state.imageDir + '/text_images/{0}.png'.format(avatarImageFirstLetter(self.subject.strip())))
         self.timeinseconds = data[0][4] if state.detailPageType == 'inbox' else data[0][6]
 
@@ -157,11 +160,11 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
             self.parent.screens[0].ids.ml.clear_widgets()
             self.parent.screens[0].loadMessagelist(state.association)
 
-        elif state.detailPageType == 'draft':
-            sqlExecute("DELETE FROM sent WHERE ackdata = ?;", state.mail_id)
+        elif self.kivy_state.detailPageType == 'draft':
+            sqlExecute("DELETE FROM sent WHERE ackdata = ?;", self.kivy_state.mail_id)
             msg_count_objs.draft_cnt.ids.badge_txt.text = str(
-                int(state.draft_count) - 1)
-            state.draft_count = str(int(state.draft_count) - 1)
+                int(self.kivy_state.draft_count) - 1)
+            self.kivy_state.draft_count = str(int(self.kivy_state.draft_count) - 1)
             self.parent.screens[13].clear_widgets()
             self.parent.screens[13].add_widget(Factory.Draft())
 
@@ -214,10 +217,10 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
 
     def write_msg(self, navApp):
         """Write on draft mail"""
-        state.send_draft_mail = state.mail_id
+        state.send_draft_mail = self.kivy_state.mail_id
         data = sqlQuery(
             "select toaddress, fromaddress, subject, message from sent where"
-            " ackdata = ?;", state.mail_id)
+            " ackdata = ?;", self.kivy_state.mail_id)
         composer_ids = (
             self.parent.parent.ids.sc3.children[1].ids)
         composer_ids.ti.text = data[0][1]

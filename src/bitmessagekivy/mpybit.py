@@ -645,7 +645,7 @@ class NavigateApp(MDApp):
             self.root.ids.scr_mngr.transition = SlideTransition()
         self.root.ids.scr_mngr.transition.direction = 'right'
         self.root.ids.scr_mngr.transition.bind(on_complete=self.reset)
-        if state.is_allmail or state.detailPageType == 'draft':
+        if state.is_allmail or self.kivy_state_obj.detailPageType == 'draft':
             state.is_allmail = False
         state.detailPageType = ''
         state.in_composer = False
@@ -812,7 +812,7 @@ class NavigateApp(MDApp):
                 delete_btn]
         elif state.detailPageType == 'sent':
             dynamic_list = [delete_btn]
-        elif state.detailPageType == 'draft':
+        elif self.kivy_state_obj.detailPageType == 'draft':
             dynamic_list = [
                 ['pencil', lambda x: self.root.ids.sc14.write_msg(self)],
                 delete_btn]
