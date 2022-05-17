@@ -60,10 +60,7 @@ from bitmessagekivy.baseclass.common import toast
 
 from qr_scanner.zbarcam import ZBarCam
 from pyzbar.pyzbar import ZBarSymbol
-
-# import pdb; pdb.set_trace()
 from bitmessagekivy.kivy_state import KivyStateVariables
-
 if platform != "android":
     from kivy.config import Config
     Config.set("input", "mouse", "mouse, multitouch_on_demand")
@@ -683,15 +680,15 @@ class NavigateApp(MDApp):
             " where fromaddress = '{0}' and  folder = 'trash' )"
             "+(SELECT count(*) FROM inbox where toaddress = '{0}' and"
             " folder = 'trash') AS SumCount".format(state.association))[0][0])
-        state.draft_count = str(sqlQuery(
+        self.kivy_state_obj.draft_count = str(sqlQuery(
             "SELECT COUNT(*) FROM sent WHERE fromaddress = '{}' and"
-            " folder = 'draft' ;".format(state.association))[0][0])
+            " folder = 'draft' ;".format(self.kivy_state_obj.association))[0][0])
         state.all_count = str(int(state.sent_count) + int(state.inbox_count))
         if msg_counter_objs:
             msg_counter_objs.send_cnt.badge_text = state.sent_count
             msg_counter_objs.inbox_cnt.badge_text = state.inbox_count
             msg_counter_objs.trash_cnt.badge_text = state.trash_count
-            msg_counter_objs.draft_cnt.badge_text = state.draft_count
+            msg_counter_objs.draft_cnt.badge_text = self.kivy_state_obj.draft_count
             msg_counter_objs.allmail_cnt.badge_text = state.all_count
 
     def on_start(self):
