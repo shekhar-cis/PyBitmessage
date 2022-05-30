@@ -2,6 +2,7 @@ from datetime import datetime
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import dp
+from kivy.app import App
 from kivymd.uix.list import (
     ILeftBody,
     IRightBodyTouch,
@@ -82,13 +83,29 @@ def showLimitedCnt(total_msg):
 
 def avatarImageFirstLetter(letter_string):
     """This function is used to the first letter for the avatar image"""
+    # try:
+    #     if isinstance(letter_string, int):
+    #         letter_string = str(letter_string)
+    #     letter_string = letter_string.title()[0]
+    #     if image_exists:
+    #         return letter
+    #     raise IndexError
+    # except IndexError:
+    #     return '!'
+    # import pdb; pdb.set_trace()
+    
     try:
-        if isinstance(letter_string, int):
-            return letter_string[0]
-        elif isinstance(letter_string, str) and letter_string[0].isalnum():
-            return letter_string.title()[0]
-        else:
-            return '!'
+        image_letter = letter_string.title()[0]
+        if image_letter.isalnum():
+            return image_letter
+        return '!'
+
+        # if isinstance(letter_string, int):
+        #     return letter_string[0]
+        # elif isinstance(letter_string, str) and letter_string[0].isalnum():
+        #     return letter_string.title()[0]
+        # else:
+        #     return '!'
     except IndexError:
         return '!'
 
@@ -146,10 +163,13 @@ class CutsomSwipeToDeleteItem(MDCardSwipe):
 
 def empty_screen_label(label_str=None, no_search_res_found=None):
     """Returns default text on screen when no address is there."""
+    kivy_running_app = App.get_running_app()
+    kivy_state = kivy_running_app.kivy_state_obj
+    # import pdb; pdb.set_trace()
     content = MDLabel(
         font_style='Caption',
         theme_text_color='Primary',
-        text=no_search_res_found if state.searcing_text else label_str,
+        text=no_search_res_found if kivy_state.searcing_text else label_str,
         halign='center',
         size_hint_y=None,
         valign='top')

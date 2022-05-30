@@ -1,9 +1,8 @@
-import state
-from bitmessagekivy.baseclass.common import toast
 from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty
 from kivy_garden.qrcode import QRCodeWidget
-
+from bitmessagekivy.baseclass.common import toast
+import state
 
 class ShowQRCode(Screen):
     """ShowQRCode Screen class for kivy Ui"""

@@ -1,10 +1,10 @@
 '''
-    This is for pamyent related part
+    This is for payment related part
 '''
 from kivy.uix.boxlayout import BoxLayout
-from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
 from kivy.uix.screenmanager import Screen
 
+from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import (
     IRightBodyTouch,
