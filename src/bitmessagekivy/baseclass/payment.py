@@ -3,6 +3,7 @@
 '''
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
+from kivy.app import App
 
 from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
 from kivymd.uix.label import MDLabel
@@ -20,11 +21,13 @@ import state
 
 class Payment(Screen):
     """Payment Screen class for kivy Ui"""
+    kivy_running_app = App.get_running_app()
+    kivy_state = kivy_running_app.kivy_state_obj
 
     def get_free_credits(self, instance):
         """Get the available credits"""
         # pylint: disable=no-self-use
-        state.availabe_credit = instance.parent.children[1].text
+        self.kivy_state.availabe_credit = instance.parent.children[1].text
         existing_credits = state.kivyapp.root.ids.sc18.ids.cred.text
         if float(existing_credits.split()[1]) > 0:
             toast(
@@ -33,7 +36,7 @@ class Payment(Screen):
         else:
             toast('Coins added to your account!')
             state.kivyapp.root.ids.sc18.ids.cred.text = '{0}'.format(
-                state.availabe_credit)
+                self.kivy_state.availabe_credit)
 
     @staticmethod
     def create_hidden_payment_address():
