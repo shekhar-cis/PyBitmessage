@@ -16,26 +16,32 @@ from kivymd.uix.list import (
 from bitmessagekivy.baseclass.common import toast
 
 # import queues
-import state
+# import state
 
 
 class Payment(Screen):
     """Payment Screen class for kivy Ui"""
-    kivy_running_app = App.get_running_app()
-    kivy_state = kivy_running_app.kivy_state_obj
+
+    def __init__(self, *args, **kwargs):
+        super(Payment, self).__init__(*args, **kwargs)
+        self.kivy_running_app = App.get_running_app()
+        self.kivy_state = self.kivy_running_app.kivy_state_obj
 
     def get_free_credits(self, instance):
         """Get the available credits"""
         # pylint: disable=no-self-use
         self.kivy_state.availabe_credit = instance.parent.children[1].text
-        existing_credits = state.kivyapp.root.ids.sc18.ids.cred.text
+        # existing_credits = state.kivyapp.root.ids.sc18.ids.cred.text
+        existing_credits = self.kivy_running_app.root.ids.sc18.ids.cred.text
         if float(existing_credits.split()[1]) > 0:
             toast(
-                'We already have added free coins'
+                'We already have added free Credit'
                 ' for the subscription to your account!')
         else:
-            toast('Coins added to your account!')
-            state.kivyapp.root.ids.sc18.ids.cred.text = '{0}'.format(
+            toast('Credit added to your account!')
+            # state.kivyapp.root.ids.sc18.ids.cred.text = '{0}'.format(
+            #     self.kivy_state.availabe_credit)
+            self.kivy_running_app.root.ids.sc18.ids.cred.text = '{0}'.format(
                 self.kivy_state.availabe_credit)
 
     @staticmethod
