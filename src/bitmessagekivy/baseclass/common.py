@@ -161,11 +161,14 @@ class CutsomSwipeToDeleteItem(MDCardSwipe):
     opening_time = NumericProperty(0.5)
 
 
-def empty_screen_label(label_str=None, no_search_res_found=None):
-    """Returns default text on screen when no address is there."""
+def kivy_state_variables():
     kivy_running_app = App.get_running_app()
     kivy_state = kivy_running_app.kivy_state_obj
-    # import pdb; pdb.set_trace()
+    return kivy_state
+
+def empty_screen_label(label_str=None, no_search_res_found=None):
+    """Returns default text on screen when no address is there."""
+    kivy_state = kivy_state_variables()
     content = MDLabel(
         font_style='Caption',
         theme_text_color='Primary',
