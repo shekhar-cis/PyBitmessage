@@ -5,6 +5,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 from kivy.app import App
 
+from bitmessagekivy.baseclass.common import kivy_state_variables
+
 from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import (
@@ -24,15 +26,14 @@ class Payment(Screen):
 
     def __init__(self, *args, **kwargs):
         super(Payment, self).__init__(*args, **kwargs)
-        self.kivy_running_app = App.get_running_app()
-        self.kivy_state = self.kivy_running_app.kivy_state_obj
+        self.kivy_state = kivy_state_variables()
 
     def get_free_credits(self, instance):
         """Get the available credits"""
         # pylint: disable=no-self-use
         self.kivy_state.availabe_credit = instance.parent.children[1].text
-        # existing_credits = state.kivyapp.root.ids.sc18.ids.cred.text
-        existing_credits = self.kivy_running_app.root.ids.sc18.ids.cred.text
+        # existing_credits = state.kivyapp.root.ids.sc18.ids.cred.texpt
+        existing_credits = App.get_running_app().root.ids.sc18.ids.cred.text
         if float(existing_credits.split()[1]) > 0:
             toast(
                 'We already have added free Credit'
