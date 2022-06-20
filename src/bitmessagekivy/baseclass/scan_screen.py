@@ -53,7 +53,9 @@ class ScanScreen(Screen):
         if platform != "android":
             import cv2
             cap = cv2.VideoCapture(0)
-            while(cap.isOpened()):
+            # import pdb; pdb.set_trace()
+            is_cam_open = cap.isOpened()
+            while is_cam_open:
                 print('Camera is available!')
                 self.camera_avaialbe = True
                 break
@@ -77,7 +79,7 @@ class ScanScreen(Screen):
         if not self.children:
             tmp = Builder.load_file(
                 os.path.join(
-                    os.path.dirname(os.path.dirname(__file__)), "kv/{}.kv").format("scanner")
+                    os.path.dirname(os.path.dirname(__file__)), "kv", "{}.kv").format("scanner")
             )
             self.add_widget(tmp)
         if platform == "android":
@@ -103,7 +105,6 @@ class ScanScreen(Screen):
         self.xcam = self.children[0].ids.zbarcam.ids.xcamera
         if platform == "android":
             self.xcam.play = True
-
         else:
             Clock.schedule_once(self.open_cam, 0)
 
