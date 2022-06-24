@@ -6,6 +6,7 @@ from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
 from kivy.uix.screenmanager import Screen
+from kivy.app import App
 
 import state
 
@@ -56,16 +57,16 @@ class Random(Screen):
                 payloadLengthExtraBytes))
             self.parent.parent.ids.toolbar.opacity = 1
             self.parent.parent.ids.toolbar.disabled = False
-            state.kivyapp.loadMyAddressScreen(True)
+            App.get_running_app().loadMyAddressScreen(True)
             self.manager.current = 'myaddress'
             Clock.schedule_once(self.address_created_callback, 6)
 
     def address_created_callback(self, dt=0):  # pylint: disable=unused-argument
         """New address created"""
-        state.kivyapp.loadMyAddressScreen(False)
-        state.kivyapp.root.ids.sc10.ids.ml.clear_widgets()
-        state.kivyapp.root.ids.sc10.is_add_created = True
-        state.kivyapp.root.ids.sc10.init_ui()
+        App.get_running_app().loadMyAddressScreen(False)
+        App.get_running_app().root.ids.sc10.ids.ml.clear_widgets()
+        App.get_running_app().root.ids.sc10.is_add_created = True
+        App.get_running_app().root.ids.sc10.init_ui()
         self.reset_address_spinner()
         toast('New address created')
 
