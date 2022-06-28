@@ -1,4 +1,4 @@
-import queues
+# import queues
 
 from bmconfigparser import BMConfigParser
 from kivy.clock import Clock
@@ -7,8 +7,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
 from kivy.uix.screenmanager import Screen
 from kivy.app import App
-
-import state
+from common_backend import AddressGenerator
+# import state
 
 from bitmessagekivy.baseclass.common import toast
 
@@ -43,18 +43,19 @@ class Random(Screen):
         entered_label = str(self.ids.add_random_bx.children[0].ids.lab.text).strip()
         if not entered_label:
             self.ids.add_random_bx.children[0].ids.lab.focus = True
-        streamNumberForAddress = 1
-        eighteenByteRipe = False
-        nonceTrialsPerByte = 1000
-        payloadLengthExtraBytes = 1000
-        lables = [BMConfigParser().get(obj, 'label')
-                  for obj in BMConfigParser().addresses()]
-        if entered_label and entered_label not in lables:
+        is_address = AddressGenerator.generate_address(entered_label)
+        # streamNumberForAddress = 1
+    #     eighteenByteRipe = False
+    #     nonceTrialsPerByte = 1000
+    #     payloadLengthExtraBytes = 1000
+        # labels = [BMConfigParser().get(obj, 'label')
+        #           for obj in BMConfigParser().addresses()]
+        if is_address:
             toast('Address Creating...')
-            queues.addressGeneratorQueue.put((
-                'createRandomAddress', 4, streamNumberForAddress, entered_label, 1,
-                "", eighteenByteRipe, nonceTrialsPerByte,
-                payloadLengthExtraBytes))
+            # queues.addressGeneratorQueue.put((
+            #     'createRandomAddress', 4, streamNumberForAddress, entered_label, 1,
+            #     "", eighteenByteRipe, nonceTrialsPerByte,
+            #     payloadLengthExtraBytes))
             self.parent.parent.ids.toolbar.opacity = 1
             self.parent.parent.ids.toolbar.disabled = False
             App.get_running_app().loadMyAddressScreen(True)
@@ -81,21 +82,21 @@ class Random(Screen):
 
     @staticmethod
     def add_validation(instance):
-        """Checking validation at address creation time"""
+        """Retrieve created labels and validate"""
         entered_label = str(instance.text.strip())
-        lables = [BMConfigParser().get(obj, 'label')
-                  for obj in BMConfigParser().addresses()]
-        if entered_label in lables:
-            instance.error = True
-            instance.helper_text = 'it is already exist you'\
-                ' can try this Ex. ( {0}_1, {0}_2 )'.format(
-                    entered_label)
-        elif entered_label:
-            instance.error = False
-        else:
-            instance.error = False
-            instance.helper_text = 'This field is required'
-
+        # labels = [BMConfigParser().get(obj, 'label')
+        #           for obj in BMConfigParser().addresses()]
+        AddressGenerator.address_validation(instance, entered_label)
+        # if entered_label in lables:
+        #     instance.error = True
+        #     instance.helper_text = 'it is already exist you'\
+        #         ' can try this Ex. ( {0}_1, {0}_2 )'.format(
+        #             entered_label)
+        # elif entered_label:
+        #     instance.error = False
+        # else:
+        #     instance.error = False
+        #     instance.helper_text = 'This field is required'
     def reset_address_label(self):
         """Resetting address labels"""
         if not self.ids.add_random_bx.children:
