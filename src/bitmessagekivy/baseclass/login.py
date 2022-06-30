@@ -43,7 +43,10 @@ class Random(Screen):
         entered_label = str(self.ids.add_random_bx.children[0].ids.lab.text).strip()
         if not entered_label:
             self.ids.add_random_bx.children[0].ids.lab.focus = True
-        is_address = AddressGenerator.generate_address(entered_label)
+        is_address = AddressGenerator.start_address_generation(
+            entered_label, streamNumberForAddress=1, eighteenByteRipe=False,
+            nonceTrialsPerByte=1000, payloadLengthExtraBytes=1000
+        )
         # streamNumberForAddress = 1
     #     eighteenByteRipe = False
     #     nonceTrialsPerByte = 1000
