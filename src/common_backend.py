@@ -1,21 +1,22 @@
+"""
+Common methods and functions for kivy and qt.
+"""
+
 import queues
 from bmconfigparser import BMConfigParser
-from bitmessagekivy.baseclass.common import toast
 
 
 class AddressGenerator:
 
     @staticmethod
-    def generate_address(entered_label):
-        """"Return True if the label is uniqe"""
-        streamNumberForAddress = 1
-        eighteenByteRipe = False
-        nonceTrialsPerByte = 1000
-        payloadLengthExtraBytes = 1000
+    def start_address_generation(
+        entered_label, streamNumberForAddress=1, eighteenByteRipe=False,
+        nonceTrialsPerByte=1000, payloadLengthExtraBytes=1000
+    ):
+        """"Return True if the label is unique"""
         labels = [BMConfigParser().get(obj, 'label')
                   for obj in BMConfigParser().addresses()]
         if entered_label and entered_label not in labels:
-            toast('Address Creating...')
             queues.addressGeneratorQueue.put((
                 'createRandomAddress', 4, streamNumberForAddress, entered_label, 1,
                 "", eighteenByteRipe, nonceTrialsPerByte,
