@@ -9,7 +9,7 @@ from bmconfigparser import BMConfigParser
 class AddressGenerator:
 
     @staticmethod
-    def start_address_generation(
+    def random_address_generation(
         label, streamNumberForAddress=1, eighteenByteRipe=False,
         nonceTrialsPerByte=1000, payloadLengthExtraBytes=1000
     ):

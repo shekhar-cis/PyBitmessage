@@ -7,7 +7,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors.elevation import RectangularElevationBehavior
 from kivy.uix.screenmanager import Screen
 from kivy.app import App
-from common_backend import AddressGenerator
+from backend.address_generator import AddressGenerator
 # import state
 
 from bitmessagekivy.baseclass.common import toast
@@ -43,7 +43,7 @@ class Random(Screen):
         entered_label = str(self.ids.add_random_bx.children[0].ids.lab.text).strip()
         if not entered_label:
             self.ids.add_random_bx.children[0].ids.lab.focus = True
-        is_address = AddressGenerator.start_address_generation(
+        is_address = AddressGenerator.random_address_generation(
             entered_label, streamNumberForAddress=1, eighteenByteRipe=False,
             nonceTrialsPerByte=1000, payloadLengthExtraBytes=1000
         )
