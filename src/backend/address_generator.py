@@ -4,14 +4,15 @@ Common methods and functions for kivy and qt.
 
 import queues
 from bmconfigparser import BMConfigParser
-
+from defaults import networkDefaultProofOfWorkNonceTrialsPerByte, networkDefaultPayloadLengthExtraBytes
 
 class AddressGenerator:
 
     @staticmethod
     def random_address_generation(
         label, streamNumberForAddress=1, eighteenByteRipe=False,
-        nonceTrialsPerByte=1000, payloadLengthExtraBytes=1000
+        nonceTrialsPerByte=networkDefaultProofOfWorkNonceTrialsPerByte,
+        payloadLengthExtraBytes=networkDefaultPayloadLengthExtraBytes
     ):
         """"Return True if the label is unique"""
         labels = [BMConfigParser().get(obj, 'label')
@@ -37,5 +38,5 @@ class AddressGenerator:
         elif label:
             instance.error = False
         else:
-            instance.error = False
+            instance.error = True
             instance.helper_text = 'This field is required'
