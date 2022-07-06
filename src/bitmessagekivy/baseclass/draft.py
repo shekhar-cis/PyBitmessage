@@ -24,7 +24,8 @@ from kivy.uix.screenmanager import Screen
 from bitmessagekivy import kivy_helper_search
 from bitmessagekivy.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor, mdlist_message_content,
-    SwipeToDeleteItem, ShowTimeHistoy, empty_screen_label
+    SwipeToDeleteItem, ShowTimeHistoy, empty_screen_label,
+    mail_detail_screen
 )
 from kivy.app import App
 
@@ -141,17 +142,19 @@ class Draft(Screen, HelperDraft):
     def draft_detail(self, ackdata, instance, *args):
         """Show draft Details"""
         if instance.state == 'closed':
+            folder = 'draft'
             instance.ids.delete_msg.disabled = True
-            if instance.open_progress == 0.0:
-                self.kivy_state.detailPageType = 'draft'
-                self.kivy_state.mail_id = ackdata
-                if self.manager:
-                    src_mng_obj = self.manager
-                else:
-                    src_mng_obj = self.parent.parent
-                src_mng_obj.screens[11].clear_widgets()
-                src_mng_obj.screens[11].add_widget(MailDetail())
-                src_mng_obj.current = 'mailDetail'
+            mail_detail_screen(self, ackdata, instance, folder, *args)
+            # if instance.open_progress == 0.0:
+            #     self.kivy_state.detailPageType = 'draft'
+            #     self.kivy_state.mail_id = ackdata
+            #     if self.manager:
+            #         src_mng_obj = self.manager
+            #     else:
+            #         src_mng_obj = self.parent.parent
+            #     src_mng_obj.screens[11].clear_widgets()
+            #     src_mng_obj.screens[11].add_widget(MailDetail())
+            #     src_mng_obj.current = 'mailDetail'
         else:
             instance.ids.delete_msg.disabled = False
 
