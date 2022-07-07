@@ -14,7 +14,7 @@ import state
 from bitmessagekivy.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor,
     avatarImageFirstLetter, CutsomSwipeToDeleteItem,
-    ShowTimeHistoy
+    ShowTimeHistoy, mail_detail_screen
 )
 from bitmessagekivy.baseclass.maildetail import MailDetail
 # from bitmessagekivy.baseclass.trash import Trash
@@ -144,19 +144,22 @@ class Allmails(Screen):
 
     def mail_detail(self, unique_id, folder, instance, *args):
         """Load sent and inbox mail details"""
+        # import pdb;pdb.set_trace()
         if instance.state == 'closed':
             instance.ids.delete_msg.disabled = True
-            if instance.open_progress == 0.0:
-                state.detailPageType = folder
-                state.is_allmail = True
-                state.mail_id = unique_id
-                if self.manager:
-                    src_mng_obj = self.manager
-                else:
-                    src_mng_obj = self.parent.parent
-                src_mng_obj.screens[11].clear_widgets()
-                src_mng_obj.screens[11].add_widget(MailDetail())
-                src_mng_obj.current = 'mailDetail'
+            state.is_allmail = True
+            mail_detail_screen(self, unique_id, instance, folder, *args)
+
+            # if instance.open_progress == 0.0:
+            #     state.detailPageType = folder
+            #     state.mail_id = unique_id
+            #     if self.manager:
+            #         src_mng_obj = self.manager
+            #     else:
+            #         src_mng_obj = self.parent.parent
+            #     src_mng_obj.screens[11].clear_widgets()
+            #     src_mng_obj.screens[11].add_widget(MailDetail())
+            #     src_mng_obj.current = 'mailDetail'
         else:
             instance.ids.delete_msg.disabled = False
 
