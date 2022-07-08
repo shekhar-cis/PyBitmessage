@@ -18,6 +18,11 @@ def trash(msgid):
     queues.UISignalQueue.put(('removeInboxRowByMsgid', msgid))
 
 
+def delete(ack_data):
+    """Delet"""
+    sqlExecute("DELETE FROM inbox WHERE msgid = ?", ack_data)
+
+
 def isMessageAlreadyInInbox(sigHash):
     """Check for previous instances of this message"""
     queryReturn = sqlQuery(
