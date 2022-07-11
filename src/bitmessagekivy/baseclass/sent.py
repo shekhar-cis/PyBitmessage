@@ -17,7 +17,7 @@ from bitmessagekivy.baseclass.common import (
     toast, SwipeToDeleteItem, ShowTimeHistoy
 )
 from bitmessagekivy.baseclass.maildetail import MailDetail
-
+import helper_sent
 
 class Sent(Screen):
     """Sent Screen class for kivy Ui"""
@@ -206,17 +206,20 @@ class Sent(Screen):
             state.all_count = str(int(state.all_count) - 1)
             if int(state.sent_count) <= 0:
                 self.ids.tag_label.text = ''
-        sqlExecute(
-            "UPDATE sent SET folder = 'trash'"
-            " WHERE ackdata = ?;", data_index)
+        # sqlExecute(
+        #     "UPDATE sent SET folder = 'trash'"
+        #     " WHERE ackdata = ?;", data_index)
+        helper_sent.trash(data_index)
         self.ids.ml.remove_widget(instance.parent.parent)
         toast('Deleted')
 
     def archive(self, data_index, instance, *args):
         """Archive sent mail from sent mail listing"""
-        sqlExecute(
-            "UPDATE sent SET folder = 'trash'"
-            " WHERE ackdata = ?;", data_index)
+        # sqlExecute(
+        #     "UPDATE sent SET folder = 'trash'"
+        #     " WHERE ackdata = ?;", data_index)
+        helper_sent.trash(data_index)
+
         self.ids.ml.remove_widget(instance.parent.parent)
         self.update_trash()
 

@@ -32,7 +32,6 @@ from bitmessagekivy.baseclass.common import kivy_state_variables
 def mail_detail_screen(screen_name, msg_id, instance, folder, *args):
     kivy_state = kivy_state_variables()
     if instance.open_progress == 0.0:
-        import pdb; pdb.set_trace()
         kivy_state.detailPageType = folder
         kivy_state.mail_id = msg_id
         if screen_name.manager:

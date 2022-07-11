@@ -191,15 +191,15 @@ def mdlist_message_content(queryreturn, data, max_len=25, min_len=10):
             'ackdata': mail[5], 'senttime': mail[6]})
 
 
-def mail_detail_screen(screen_name, msg_id, instance, folder, *args):
-    if instance.open_progress == 0.0:
-        state.detailPageType = folder
-        state.mail_id = msg_id
-        if screen_name.manager:
-            src_mng_obj = screen_name.manager
-        else:
-            src_mng_obj = screen_name.parent.parent
-        src_mng_obj.screens[11].clear_widgets()
-        from bitmessagekivy.baseclass.maildetail import MailDetail
-        src_mng_obj.screens[11].add_widget(MailDetail())
-        src_mng_obj.current = "mailDetail"
+# def mail_detail_screen(screen_name, msg_id, instance, folder, *args):
+#     if instance.open_progress == 0.0:
+#         state.detailPageType = folder
+#         state.mail_id = msg_id
+#         if screen_name.manager:
+#             src_mng_obj = screen_name.manager
+#         else:
+#             src_mng_obj = screen_name.parent.parent
+#         src_mng_obj.screens[11].clear_widgets()
+#         from bitmessagekivy.baseclass.maildetail import MailDetail
+#         src_mng_obj.screens[11].add_widget(MailDetail())
+#         src_mng_obj.current = "mailDetail"
