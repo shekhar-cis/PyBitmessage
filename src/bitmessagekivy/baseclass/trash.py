@@ -66,13 +66,13 @@ class Trash(Screen):
             "SELECT toaddress, fromaddress, subject, message,"
             " folder ||',' || 'sent' as  folder, ackdata As"
             " id, DATE(senttime) As actionTime, senttime as msgtime FROM sent"
-            " WHERE folder = 'trash'  and fromaddress = '{0}' UNION"
+            " WHERE folder = 'trash'  and fromaddress = ? UNION"
             " SELECT toaddress, fromaddress, subject, message,"
             " folder ||',' || 'inbox' as  folder, msgid As id,"
             " DATE(received) As actionTime, received as msgtime FROM inbox"
-            " WHERE folder = 'trash' and toaddress = '{0}'"
-            " ORDER BY actionTime DESC limit {1}, {2}".format(
-                state.association, start_indx, end_indx))
+            " WHERE folder = 'trash' and toaddress = ?"
+            " ORDER BY actionTime DESC limit ?, ?", 
+            state.association, state.association, start_indx, end_indx)
 
     def set_TrashCnt(self, Count):  # pylint: disable=no-self-use
         """This method is used to set trash message count"""

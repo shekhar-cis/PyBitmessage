@@ -14,8 +14,10 @@ import state
 from bitmessagekivy.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor,
     avatarImageFirstLetter, CutsomSwipeToDeleteItem,
-    ShowTimeHistoy, mail_detail_screen
+    ShowTimeHistoy
 )
+from bitmessagekivy.baseclass.common_mail_detail import mail_detail_screen
+
 from bitmessagekivy.baseclass.maildetail import MailDetail
 # from bitmessagekivy.baseclass.trash import Trash
 

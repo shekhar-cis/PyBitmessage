@@ -25,10 +25,10 @@ from bitmessagekivy import kivy_helper_search
 from bitmessagekivy.baseclass.common import (
     showLimitedCnt, toast, ThemeClsColor, mdlist_message_content,
     SwipeToDeleteItem, ShowTimeHistoy, empty_screen_label,
-    mail_detail_screen
 )
 from kivy.app import App
 
+from bitmessagekivy.baseclass.common_mail_detail import mail_detail_screen
 from bitmessagekivy.baseclass.maildetail import MailDetail
 from bitmessagekivy.baseclass.draft_widgets import HelperDraft
 
