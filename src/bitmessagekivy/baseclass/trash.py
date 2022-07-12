@@ -17,7 +17,7 @@ import state
 from bitmessagekivy.baseclass.common import (
     toast, showLimitedCnt, ThemeClsColor,
     CutsomSwipeToDeleteItem, ShowTimeHistoy,
-    avatarImageFirstLetter
+    avatarImageFirstLetter, empty_screen_label
 )
 
 
@@ -28,6 +28,7 @@ class Trash(Screen):
     has_refreshed = True
     delete_index = None
     table_name = StringProperty()
+    no_msg_found_str = "Yet no trashed message for this account!"
 
     def __init__(self, *args, **kwargs):
         """Trash method, delete sent message and add in Trash"""
@@ -51,14 +52,14 @@ class Trash(Screen):
             self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
         else:
             self.set_TrashCnt('0')
-            content = MDLabel(
-                font_style='Caption',
-                theme_text_color='Primary',
-                text="yet no trashed message for this account!!!!!!!!!!!!!",
-                halign='center',
-                size_hint_y=None,
-                valign='top')
-            self.ids.ml.add_widget(content)
+            # content = MDLabel(
+            #     font_style='Caption',
+            #     theme_text_color='Primary',
+            #     text="yet no trashed message for this account!!!!!!!!!!!!!",
+            #     halign='center',
+            #     size_hint_y=None,
+            #     valign='top') 
+            self.ids.ml.add_widget(empty_screen_label(self.no_msg_found_str))
 
     def trashDataQuery(self, start_indx, end_indx):
         """Trash message query"""
