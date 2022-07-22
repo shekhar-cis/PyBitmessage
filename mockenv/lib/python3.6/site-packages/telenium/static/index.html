@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top nav">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">Telenium</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="navpage active" data-page="project">
+                    <a href="#">Project</a>
+                </li>
+                <li class="navpage" data-page="tests">
+                    <a href="#">Tests</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <div class="navbar-form narbar-left">
+                        <button class="btn btn-default" disabled="disabled" style="display: none" id="btn-save">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                        </button>
+                        <div class="form-group">
+                            <button class="btn btn-default" id="btn-execute">
+                                <div class="progress-spinner progress-spinner-tiny hidden"></div>
+                                <span class="glyphicon glyphicon-play"></span>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" haspopup="true" aria-expanded="false">
+                        Export <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" id="btn-export-python">Export to Python (unittest)</a></li>
+                        <li><a href="#" id="btn-export-json">Export to JSON</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page container" id="page-project">
+        <h1 class="page-header">Project</h1>
+        <div class="form-group">
+            <label for="">Project name</label>
+            <input type="text" class="form-control" data-settings-key="project">
+            <p class="help-block">
+                Name of your test, used for generating class name
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="">Application Entrypoint</label>
+            <input type="text" class="form-control" data-settings-key="entrypoint">
+            <p class="help-block">
+                Path to your main.py (or any other entrypoint)
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="">Application args</label>
+            <input type="text" class="form-control" data-settings-key="args">
+            <p class="help-block">
+                Argument of your application
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="">Application startup timeout</label>
+            <input type="text" class="form-control" data-settings-key="application-timeout" value="10">
+            <p class="help-block">
+                Maximum time to wait the application to spin up
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="">Command timeout</label>
+            <input type="text" class="form-control" data-settings-key="command-timeout" value="5">
+            <p class="help-block">
+                Maximum time to wait for a selector or a command to work
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="">Environments</label>
+            <table class="table table-stripped">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tl-env"></tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" id="btn-add-env">Add environment</button>
+        </div>
+    </div>
+
+    <div class="page container hidden" id="page-tests">
+        <h1 class="page-header">Tests</h1>
+        <div class="toolbar-right">
+            <div class="form-inline">
+                <div class="form-group">
+                    <select id="tl-tests" class="form-control">
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="btn-add-test">Add</button>
+                <button class="btn btn-primary" id="btn-clone-test">Clone</button>
+                <button class="btn btn-success" id="btn-run-tests">Run all</button>
+            </div>
+        </div>
+
+        <div class="progress-box hidden">
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="">Test name</label>
+            <input type="text" class="form-control" data-test-key="name">
+        </div>
+
+        <table class="table table-stripped sorted-table" id="tl-steps-container">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Action</th>
+                    <th>Arguments</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tl-steps">
+            </tbody>
+        </table>
+
+        <div class="toolbar">
+            <button class="btn btn-primary" id="btn-add-step">Add step</button>
+            <button class="btn btn-success" id="btn-run-steps">Run steps</button>
+            <button class="btn btn-danger" id="btn-delete-test">Delete this test</button>
+        </div>
+
+        <div style="height: 40px"></div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-pick-wait">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Pick an element</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Click on a widget in the application</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-pick">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Pick an element</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-export">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Export</h4>
+                </div>
+                <div class="modal-body">
+                    <pre></pre>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="btn-export-save">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="x-tmpl-mustache" id="tpl-pick-list">
+        {{#selectors}}
+        <button onclick="telenium_pick_use($(this).data('selector'))" data-selector="{{.}}">{{.}}</button>
+        <br/>
+        {{/selectors}}
+    </script>
+
+    <script type="x-tmpl-mustache" id="tpl-step-new">
+        <tr>
+            <td style="width: 48px;">
+                <div class="test-status test-status-running" style="display: none;">
+                    <div class="progress-spinner"></div>
+                </div>
+                <div class="test-status test-status-success" style="display: none;">
+                <i class="glyphicon glyphicon-ok"></i>
+                </div>
+                <div class="test-status test-status-error" style="display: none;">
+                <i class="glyphicon glyphicon-exclamation-sign"></i>
+                </div>
+            </td>
+            <td style="width: 200px;">
+                <select name="" id="" class="form-control">
+                    <option value="wait_click">Wait and click</option>
+                    <option value="wait_drag" data-arg1="target" data-arg2="duration">Drag</option>
+                    <option value="wait">Wait</option>
+                    <option value="assertExists">Assert exists</option>
+                    <option value="assertNotExists">Assert not exists</option>
+                    <option value="assertAttributeValue"
+                        data-arg1="Conditional expression (must start with the name of the attribute. eg: text == 'Hello')">Assert attribute value</option>
+                    <option value="setAttribute"
+                        data-arg1="Attribute name"
+                        data-arg2="Attribute value (Python value)">Set attribute</option>
+                    <option value="sendKeycode"
+                        data-arg0='Keycode as numeric (27) or capital string (ESCAPE)'
+                        data-arg0-nopick="1">Send a key</option>
+                    <option value="sleep"
+                        data-arg0="Seconds">Sleep</option>
+                    <option value="executeCode"
+                        data-arg0="Python code (app keyword available)">Execute code</option>
+                </select>
+            </td>
+            <td>
+                <div class="input-group">
+                    <input type="text" class="form-control step-selector" value="{{ selector }}">
+                    <span class="btn input-group-addon" onclick="return telenium_pick(this)">
+                        <i class="glyphicon glyphicon-screenshot"></i>
+                    </span>
+                </div>
+                <div class="step-arg-container" style="display: none">
+                    <input type="text" class="form-control step-arg1" value="{{ arg1 }}">
+                    <input type="text" class="form-control step-arg2" value="{{ arg2 }}">
+                </div>
+            </td>
+            <td style="width: 100px;">
+                <button class="btn btn-success" onclick="return telenium_play_step(this)">
+                <i class="glyphicon glyphicon-play"></i>
+                </button>
+                <div class="btn-group">
+                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expended="false">
+                        <i class="glyphicon glyphicon-option-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#" onclick="return telenium_duplicate_step(this)">Duplicate</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <a href="#" onclick="return telenium_remove_step(this)" class="text-danger">Delete</a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </script>
+    <script type="x-tmpl-mustache" id="tpl-env-new">
+        <tr>
+            <td>
+                <input class="form-control" type="text" name="key[]" value="{{ key }}"/>
+            </td>
+            <td>
+                <input class="form-control" type="text" name="value[]" value="{{ value }}"/>
+            </td>
+            <td style="width: 60px;">
+                <button class="btn btn-danger" onclick="return telenium_remove_env(this)">
+                <i class="glyphicon glyphicon-remove"></i>
+                </button>
+            </td>
+        </tr>
+    </script>
+
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/jquery-sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/mustache.min.js"></script>
+    <script src="js/reconnecting-websocket.min.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>

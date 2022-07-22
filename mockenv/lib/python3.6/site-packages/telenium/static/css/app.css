@@ -1,0 +1,95 @@
+
+@keyframes clockwise {
+  to {
+    transform: rotate(360deg) translatez(0);
+  }
+}
+@keyframes counter-clockwise {
+  to {
+    transform: rotate(-360deg) translatez(0);
+  }
+}
+
+body {
+    padding-top: 50px;
+}
+
+button.loading div.hidden {
+    display: block !important;
+}
+
+button.loading span {
+    display: none;
+}
+
+.toolbar-right {
+  margin-top: -60px;
+  float: right;
+}
+
+
+.progress-spinner {
+  height: 32px;
+  width: 32px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgba(112, 112, 112, 0.75) rgba(36, 36, 36, 0.25) rgba(36, 36, 36, 0.25) rgba(36, 36, 36, 0.25);
+  border-radius: 100%;
+  animation: clockwise 0.75s linear infinite;
+}
+
+.progress-spinner-tiny {
+    width: 18px;
+    height: 18px;
+}
+
+.test-status {
+    font-size: 24px;
+}
+
+.test-status-success {
+    color: #5cb85c;
+}
+.test-status-error {
+    color: #d9534f;
+}
+
+#modal-export .modal-dialog {
+    max-width: 90%;
+    width: 1024px;
+}
+#modal-export pre {
+    max-height: 500px;
+}
+
+#tl-tests input.step-selector,
+#tl-tests input.step-arg {
+    font-family: monospace;
+}
+
+.dragged {
+  position: absolute;
+  top: 0;
+  opacity: 0.5;
+  z-index: 2000; }
+.sorted-table tr {
+  cursor: pointer; }
+/* line 96, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+.sorted-table tr.placeholder {
+  display: block;
+  background: red;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: none; }
+  /* line 103, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+  .sorted-table tr.placeholder:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-left-color: red;
+    margin-top: -5px;
+    left: -5px;
+    border-right: none; }

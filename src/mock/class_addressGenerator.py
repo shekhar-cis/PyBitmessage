@@ -9,7 +9,9 @@ import threading
 from six.moves import queue
 
 from pybitmessage import state
+import pdb; pdb.set_trace()
 from pybitmessage import queues
+
 
 from pybitmessage.bmconfigparser import config
 

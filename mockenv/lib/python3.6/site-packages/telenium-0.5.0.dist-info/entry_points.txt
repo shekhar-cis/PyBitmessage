@@ -1,0 +1,4 @@
+[console_scripts]
+telenium = telenium.web:run
+telenium-cli = telenium.client:run
+

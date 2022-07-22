@@ -3,8 +3,8 @@
 import threading
 import time
 
+import pdb; pdb.set_trace()
 from six.moves import queue
-
 try:
     from multiqueue import MultiQueue
 except ImportError:

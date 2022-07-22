@@ -1,5 +1,5 @@
 kivy-garden.qrcode
 https://github.com/kivymd/KivyMD/archive/master.zip
-opencv-python
+# opencv-python
 pyzbar
 telenium
