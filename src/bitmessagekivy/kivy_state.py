@@ -5,6 +5,8 @@ Kivy State variables are assigned here, they are separated from state.py
 =================================
 """
 
+import threading
+
 
 class KivyStateVariables(object):
     """This Class hold all the kivy state variables"""
@@ -34,4 +36,5 @@ class KivyStateVariables(object):
         self.in_sent_method = False
         self.in_search_mode = False
         self.imageDir = None
-        self.sqlReady = False  # set to true by sqlTread when ready for processing
+        # self.sqlReady = False  # set to true by sqlTread when ready for processing
+        self.sql_ready = threading.Event()

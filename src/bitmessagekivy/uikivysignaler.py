@@ -6,13 +6,19 @@ from threading import Thread
 import queues
 import state
 from semaphores import kivyuisignaler
+from bitmessagekivy.baseclass.common import kivy_state_variables
 
 
 class UIkivySignaler(Thread):
     """Kivy ui signaler"""
 
+    def __init__(self, *args, **kwargs):
+        super(UIkivySignaler, self).__init__(*args, **kwargs)
+        self.kivy_state = kivy_state_variables()
+
     def run(self):
-        kivyuisignaler.acquire()
+        self.kivy_state.sql_ready.wait()
+        # kivyuisignaler.acquire()
         while state.shutdown == 0:
             try:
                 command, data = queues.UISignalQueue.get()

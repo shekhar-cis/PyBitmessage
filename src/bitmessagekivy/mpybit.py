@@ -257,7 +257,7 @@ class NavigateApp(MDApp):
 
     def run(self):
         """Running the widgets"""
-        kivyuisignaler.release()
+        self.kivy_state_obj.sql_ready.set()
         super(NavigateApp, self).run()
 
     @staticmethod
