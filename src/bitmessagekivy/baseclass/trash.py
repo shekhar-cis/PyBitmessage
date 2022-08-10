@@ -38,8 +38,8 @@ class Trash(Screen):
     def init_ui(self, dt=0):
         """Clock Schdule for method trash screen"""
         if state.association == '':
-            if state.kivyapp.variable_1:
-                state.association = state.kivyapp.variable_1[0]
+            if state.kivyapp.identity_list:
+                state.association = state.kivyapp.identity_list[0]
         self.ids.tag_label.text = ''
         self.trashDataQuery(0, 20)
         if len(self.trash_messages):

@@ -54,8 +54,8 @@ class Draft(Screen, HelperDraft):
         self.kivy_running_app = App.get_running_app()
         self.kivy_state = self.kivy_running_app.kivy_state_obj
         if self.kivy_state.association == '':
-            if state.kivyapp.variable_1:
-                self.kivy_state.association = state.kivyapp.variable_1[0]
+            if state.kivyapp.identity_list:
+                self.kivy_state.association = state.kivyapp.identity_list[0]
         Clock.schedule_once(self.init_ui, 0)
 
     def init_ui(self, dt=0):

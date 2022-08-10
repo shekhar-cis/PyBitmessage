@@ -5,7 +5,8 @@ from threading import Thread
 
 import queues
 import state
-from semaphores import kivyuisignaler
+from kivy.app import App
+from debug import logger
 from bitmessagekivy.baseclass.common import kivy_state_variables
 
 
@@ -24,13 +25,10 @@ class UIkivySignaler(Thread):
                 command, data = queues.UISignalQueue.get()
                 if command == 'writeNewAddressToTable':
                     address = data[1]
-                    state.kivyapp.variable_1.append(address)
-                # elif command == 'rerenderAddressBook':
-                #     state.kivyapp.obj_1.refreshs()
-                # Need to discuss this
+                    App.get_running_app().identity_list.append(address)
+                elif command == 'updateSentItemStatusByAckdata':
+                    App.get_running_app().status_dispatching(data)
                 elif command == 'writeNewpaymentAddressToTable':
                     pass
-                elif command == 'updateSentItemStatusByAckdata':
-                    state.kivyapp.status_dispatching(data)
             except Exception as e:
-                print(e)
+                logger.debug(e)

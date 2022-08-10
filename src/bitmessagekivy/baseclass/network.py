@@ -10,7 +10,7 @@ from network import objectracker, stats
 class NetworkStat(Screen):
     """NetworkStat class for kivy Ui"""
 
-    text_variable_1 = StringProperty(
+    text_identity_list = StringProperty(
         '{0}::{1}'.format('Total Connections', '0'))
     text_variable_2 = StringProperty(
         'Processed {0} per-to-per messages'.format('0'))
@@ -28,7 +28,7 @@ class NetworkStat(Screen):
 
     def init_ui(self, dt=0):
         """Clock Schdule for method networkstat screen"""
-        self.text_variable_1 = '{0} :: {1}'.format(
+        self.text_identity_list = '{0} :: {1}'.format(
             'Total Connections', str(len(stats.connectedHostsList())))
         self.text_variable_2 = 'Processed {0} per-to-per messages'.format(
             str(state.numberOfMessagesProcessed))

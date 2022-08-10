@@ -71,7 +71,7 @@ class MyAddress(Screen, HelperMyAddress):
     def init_ui(self, dt=0):
         """Clock schdule for method Myaddress accounts"""
         # pylint: disable=unnecessary-lambda, deprecated-lambda
-        # self.addresses_list = state.kivyapp.variable_1
+        # self.addresses_list = state.kivyapp.identity_list
         self.addresses_list = BMConfigParser().addresses()
         if self.kivy_state.searcing_text:
             self.ids.refresh_layout.scroll_y = 1.0
@@ -211,7 +211,7 @@ class MyAddress(Screen, HelperMyAddress):
         def refresh_callback(interval):
             """Method used for loading the myaddress screen data"""
             self.kivy_state.searcing_text = ''
-            # state.kivyapp.root.ids.sc10.children[2].active = False
+            # state.kivyapp.root.ids.id_myaddress.children[2].active = False
             self.ids.search_bar.ids.search_field.text = ''
             self.has_refreshed = True
             self.ids.ml.clear_widgets()
@@ -261,7 +261,7 @@ class MyAddress(Screen, HelperMyAddress):
                      if BMConfigParser().get(str(addr), 'enabled') == 'true']
         self.parent.parent.ids.content_drawer.ids.btn.values = addresses
         self.parent.parent.ids.sc3.children[1].ids.btn.values = addresses
-        state.kivyapp.variable_1 = addresses
+        state.kivyapp.identity_list = addresses
 
     def toggleAction(self, instance):
         """This method is used for enable or disable address"""

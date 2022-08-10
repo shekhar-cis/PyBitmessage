@@ -218,7 +218,7 @@ class NavigateApp(MDApp):
 
     previous_date = ObjectProperty()
     obj_1 = ObjectProperty()
-    variable_1 = ListProperty(addr for addr in BMConfigParser().addresses()
+    identity_list = ListProperty(addr for addr in BMConfigParser().addresses()
                               if BMConfigParser().get(str(addr), 'enabled') == 'true')
     nav_drawer = ObjectProperty()
     state.screen_density = Window.size
@@ -229,8 +229,9 @@ class NavigateApp(MDApp):
     count = 0
     manager_open = False
     file_manager = None
-    state.imageDir = os.path.join('./images', 'kivy')
-    image_path = state.imageDir
+    # state.imageDir = os.path.join(__file__, 'images', 'kivy')
+    state.imageDir = KivyStateVariables().image_dir
+    image_path = KivyStateVariables().image_dir
     tr = Lang("en")  # for changing in franch replace en with fr
 
     def build(self):
@@ -321,8 +322,8 @@ class NavigateApp(MDApp):
         self.root.ids.sc17.clear_widgets()
         self.root.ids.sc17.add_widget(Allmails())
 
-        self.root.ids.sc10.ids.ml.clear_widgets()
-        self.root.ids.sc10.init_ui()
+        self.root.ids.id_myaddress.ids.ml.clear_widgets()
+        self.root.ids.id_myaddress.init_ui()
 
         self.root.ids.scr_mngr.current = 'inbox'
 
@@ -423,8 +424,8 @@ class NavigateApp(MDApp):
 
     def getDefaultAccData(self, instance):
         """Getting Default Account Data"""
-        if self.variable_1:
-            state.association = first_addr = self.variable_1[0]
+        if self.identity_list:
+            state.association = first_addr = self.identity_list[0]
             # if BMConfigParser().get(str(first_addr), 'enabled') == 'true':
                 # img = identiconGeneration.generate(first_addr)
                 # print('line...........................................426')
@@ -450,8 +451,8 @@ class NavigateApp(MDApp):
 
     def get_default_logo(self, instance):
         """Getting default logo image"""
-        if self.variable_1:
-            first_addr = self.variable_1[0]
+        if self.identity_list:
+            first_addr = self.identity_list[0]
             if BMConfigParser().get(str(first_addr), 'enabled') == 'true':
                 if os.path.exists(
                     state.imageDir + '/default_identicon/{}.png'.format(first_addr)):
@@ -512,7 +513,7 @@ class NavigateApp(MDApp):
                 self.root.ids.scr_mngr.current = 'chlist'
                 self.root.ids.scr_mngr.transition = SlideTransition()
             else:
-                if state.kivyapp.variable_1:
+                if state.kivyapp.identity_list:
                     self.root.ids.scr_mngr.current = 'inbox'
             self.root.ids.scr_mngr.transition.direction = 'right'
             self.root.ids.scr_mngr.transition.bind(on_complete=self.reset)
@@ -542,8 +543,8 @@ class NavigateApp(MDApp):
             self.root.ids.sc11.loadAddresslist(None, 'All', '')
             self.root.ids.sc11.children[1].active = False
         elif state.search_screen == 'myaddress':
-            self.root.ids.sc10.ids.ml.clear_widgets()
-            self.root.ids.sc10.init_ui()
+            self.root.ids.id_myaddress.ids.ml.clear_widgets()
+            self.root.ids.id_myaddress.init_ui()
             self.loadMyAddressScreen(False)
         else:
             self.root.ids.sc4.ids.ml.clear_widgets()
@@ -553,10 +554,10 @@ class NavigateApp(MDApp):
 
     def loadMyAddressScreen(self, action):
         """loadMyAddressScreen method spin the loader"""
-        if len(self.root.ids.sc10.children) <= 2:
-            self.root.ids.sc10.children[0].active = action
+        if len(self.root.ids.id_myaddress.children) <= 2:
+            self.root.ids.id_myaddress.children[0].active = action
         else:
-            self.root.ids.sc10.children[1].active = action
+            self.root.ids.id_myaddress.children[1].active = action
 
     def save_draft(self):
         """Saving drafts messages"""
@@ -772,12 +773,12 @@ class NavigateApp(MDApp):
                 1].active = True
             Clock.schedule_once(self.search_callback, 0.5)
         elif state.search_screen == 'myaddress':
-            self.root.ids.sc10.ids.search_bar.ids.search_field.text = ''
+            self.root.ids.id_myaddress.ids.search_bar.ids.search_field.text = ''
             # try:
-            #     self.root.ids.sc10.children[
+            #     self.root.ids.id_myaddress.children[
             #         1].children[2].ids.search_field.text = ''
             # except Exception:
-            #     self.root.ids.sc10.children[
+            #     self.root.ids.id_myaddress.children[
             #         2].children[2].ids.search_field.text = ''
             self.loadMyAddressScreen(True)
             Clock.schedule_once(self.search_callback, 0.5)

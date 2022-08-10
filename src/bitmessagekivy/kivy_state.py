@@ -5,6 +5,7 @@ Kivy State variables are assigned here, they are separated from state.py
 =================================
 """
 
+import os
 import threading
 
 
@@ -36,5 +37,7 @@ class KivyStateVariables(object):
         self.in_sent_method = False
         self.in_search_mode = False
         self.imageDir = None
+        self.image_dir = os.path.abspath(os.path.join('images', 'kivy'))
+
         # self.sqlReady = False  # set to true by sqlTread when ready for processing
         self.sql_ready = threading.Event()

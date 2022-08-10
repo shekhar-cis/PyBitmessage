@@ -34,8 +34,8 @@ class Allmails(Screen):
         """Method Parsing the address"""
         super(Allmails, self).__init__(*args, **kwargs)
         if state.association == '':
-            if state.kivyapp.variable_1:
-                state.association = state.kivyapp.variable_1[0]
+            if state.kivyapp.identity_list:
+                state.association = state.kivyapp.identity_list[0]
         Clock.schedule_once(self.init_ui, 0)
 
     def init_ui(self, dt=0):
