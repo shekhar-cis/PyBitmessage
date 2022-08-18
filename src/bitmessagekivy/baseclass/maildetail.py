@@ -133,7 +133,7 @@ class MailDetail(Screen):  # pylint: disable=too-many-instance-attributes
         if len(data[0]) == 7:
             self.status = data[0][4]
         self.time_tag = ShowTimeHistoy(data[0][4]) if state.detailPageType == 'inbox' else ShowTimeHistoy(data[0][6])
-        self.avatarImg = os.path.join(state.imageDir, 'avatar.png') if self.kivy_state.detailPageType == 'draft' else \
+        self.avatarImg = os.path.join(state.imageDir, 'draft-avatar.png') if self.kivy_state.detailPageType == 'draft' else \
         (os.path.join(state.imageDir, 'text_images', '{0}.png'.format(avatarImageFirstLetter(self.subject.strip()))))
         self.timeinseconds = data[0][4] if state.detailPageType == 'inbox' else data[0][6]
 

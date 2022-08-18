@@ -137,7 +137,7 @@
                     #text: app.tr._('Hello World')
                     icon: 'email-open'
                     divider: None
-                    on_release: app.root.ids.scr_mngr.current = 'inbox'
+                    on_release: app.set_screen('inbox')
                     on_release: root.parent.set_state()
                     on_press: app.load_screen(self)
                 NavigationItem:

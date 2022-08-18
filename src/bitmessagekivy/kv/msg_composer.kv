@@ -38,7 +38,7 @@
                     CustomSpinner:
                         id: btn
                         background_color: app.theme_cls.primary_dark
-                        values: app.identity_list
+                        # values: app.identity_list
                         on_text: root.auto_fill_fromaddr() if self.text != 'Select' else ''
                         option_cls: Factory.get("ComposerSpinnerOption")
                         #background_color: color_button if self.state == 'normal' else color_button_pressed

@@ -118,7 +118,7 @@ class Draft(Screen, HelperDraft):
             listItem.secondary_text = item["text"]
             listItem.theme_text_color = "Custom"
             listItem.text_color = ThemeClsColor
-            message_row.ids.avater_img.source = os.path.join(state.imageDir, 'avatar.png')
+            message_row.ids.avater_img.source = os.path.join(state.imageDir, 'draft-avatar.png')
             listItem.bind(on_release=partial(
                 self.draft_detail, item['ackdata'], message_row))
             message_row.ids.time_tag.text = str(ShowTimeHistoy(item['senttime']))

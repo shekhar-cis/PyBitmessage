@@ -9,13 +9,15 @@
 Bitmessage android(mobile) interface
 """
 
+import importlib
+import json
 from bitmessagekivy.get_platform import platform
 import os
 from bitmessagekivy import identiconGeneration
 from bitmessagekivy import kivy_helper_search
 from bitmessagekivy.uikivysignaler import UIkivySignaler
 from bmconfigparser import BMConfigParser
-# from debug import logger
+from debug import logger
 from functools import partial
 from helper_sql import sqlExecute, sqlQuery
 from kivymd.app import MDApp
@@ -57,7 +59,8 @@ from kivy.lang import Observable
 import ast
 
 from bitmessagekivy.baseclass.common import toast
-
+from bitmessagekivy.baseclass.login import *
+from bitmessagekivy.baseclass.popup import *
 from qr_scanner.zbarcam import ZBarCam
 from pyzbar.pyzbar import ZBarSymbol
 
@@ -83,13 +86,46 @@ elif platform == "android":
         t = Toast.makeText(context, text, length)
         t.show()
 
+data_screen_dict = {}
 
-with open(os.path.join(os.path.dirname(__file__), "screens_data.json")) as read_file:
-    all_data = ast.literal_eval(read_file.read())
-    data_screens = list(all_data.keys())
+def load_screen_json(data_file="screens_data.json"):
+    """Load screens data from json"""
 
-for modules in data_screens:
-    exec(all_data[modules]['Import'])
+    with open(os.path.join(os.path.dirname(__file__), data_file)) as read_file:
+        all_data = json.load(read_file)
+        data_screens = list(all_data.keys())
+
+    # global data_screen_dict
+    for key in all_data:
+        if all_data[key]['Import']:
+            import_data = all_data.get(key)['Import']
+            import_to = import_data.split("import")[1].strip()
+            import_from = import_data.split("import")[0].split('from')[1].strip()
+            data_screen_dict[import_to] = importlib.import_module(import_from, import_to)
+    return data_screens, all_data, 'success'
+
+
+
+# data_screen_dict['Trash'].Trash()
+# with open(os.path.join(os.path.dirname(__file__), "screens_data.json")) as read_file:
+#     # all_data = ast.literal_eval(read_file.read())
+#     all_data = json.load(read_file)
+#     data_screens = list(all_data.keys())
+
+# for key in all_data:
+#     if all_data[key]['Import']:
+#         import_data = all_data.get(key)['Import']
+#         import_to = import_data.split("import")[1].strip()
+#         import_from = import_data.split("import")[0].split('from')[1].strip()
+#         exec_import = importlib.import_module(import_from, import_to)
+#         exec_import
+#         import pdb; pdb.set_trace()
+
+        # importlib.import_module("pybitmessage.bitmessagekivy.baseclass.trash", "Trash")
+
+# for modules in data_screens:
+#     exec(all_data[modules]['Import'])
+#     import pdb; pdb.set_trace()
 
 # pylint: disable=too-few-public-methods,too-many-arguments,attribute-defined-outside-init
 
@@ -208,18 +244,25 @@ class CustomSpinner(Spinner):
                            if BMConfigParser().get(str(addr), 'enabled') == 'true')
 
 
+def get_identity_list():
+    identity_list = ListProperty(
+                    addr for addr in BMConfigParser().addresses()
+                            if BMConfigParser().get(str(addr), 'enabled') == 'true'
+                )
+    return identity_list
+
 class NavigateApp(MDApp):
     """Navigation Layout of class"""
     # pylint: disable=too-many-public-methods,inconsistent-return-statements
     # theme_cls = ThemeManager()
     def __init__(self):
         super(NavigateApp, self).__init__()
+        self.data_screens, self.all_data, response = load_screen_json()
         self.kivy_state_obj = KivyStateVariables()
 
     previous_date = ObjectProperty()
     obj_1 = ObjectProperty()
-    identity_list = ListProperty(addr for addr in BMConfigParser().addresses()
-                              if BMConfigParser().get(str(addr), 'enabled') == 'true')
+    identity_list = get_identity_list()
     nav_drawer = ObjectProperty()
     state.screen_density = Window.size
     window_size = state.screen_density
@@ -236,13 +279,14 @@ class NavigateApp(MDApp):
 
     def build(self):
         """Method builds the widget"""
-        for kv in data_screens:
+        # for kv in self.data_screens:
+        for kv in self.data_screens:
             Builder.load_file(
                 os.path.join(
                     os.path.dirname(__file__),
                     'kv',
                     # f'{all_data[kv]["kv_string"]}.kv',
-                    '{0}.kv'.format(all_data[kv]["kv_string"]),
+                    '{0}.kv'.format(self.all_data[kv]["kv_string"]),
                 )
             )
         # self.obj_1 = AddressBook()
@@ -314,13 +358,14 @@ class NavigateApp(MDApp):
         self.root.ids.sc4.loadSent(state.association)
 
         self.root.ids.sc16.clear_widgets()
-        self.root.ids.sc16.add_widget(Draft())
+        self.root.ids.sc16.add_widget(data_screen_dict['Draft'].Draft())
 
         self.root.ids.sc5.clear_widgets()
-        self.root.ids.sc5.add_widget(Trash())
+        # import pdb; pdb.set_trace()
+        self.root.ids.sc5.add_widget(data_screen_dict['Trash'].Trash())
 
         self.root.ids.sc17.clear_widgets()
-        self.root.ids.sc17.add_widget(Allmails())
+        self.root.ids.sc17.add_widget(data_screen_dict['Allmails'].Allmails())
 
         self.root.ids.id_myaddress.ids.ml.clear_widgets()
         self.root.ids.id_myaddress.init_ui()
@@ -849,7 +894,7 @@ class NavigateApp(MDApp):
             self.root.ids.sc1.children[1].active = False
         elif instance.text == 'All Mails':
             self.root.ids.sc17.clear_widgets()
-            self.root.ids.sc17.add_widget(Allmails())
+            self.root.ids.sc17.add_widget(data_screen_dict['Allmails'].Allmails())
             try:
                 self.root.ids.sc17.children[1].active = False
             except Exception:
@@ -858,7 +903,7 @@ class NavigateApp(MDApp):
             # self.root.ids.sc5.ids.ml.clear_widgets()
             # self.root.ids.sc5.init_ui(0)
             self.root.ids.sc5.clear_widgets()
-            self.root.ids.sc5.add_widget(Trash())
+            self.root.ids.sc5.add_widget(data_screen_dict['Trash'].Trash())
             try:
                 self.root.ids.sc5.children[1].active = False
             except Exception as e:
@@ -963,7 +1008,7 @@ class NavigateApp(MDApp):
 
     def initiate_purchase(self, method_name):
         """initiate_purchase module"""
-        print("Purchasing {} through {}".format(self.product_id, method_name))
+        logger.debug("Purchasing %s through %s", self.product_id, method_name)
 
     def _after_scan(self, text):
         # if platform == 'android':
