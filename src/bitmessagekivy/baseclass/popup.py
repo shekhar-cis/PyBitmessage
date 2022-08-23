@@ -28,19 +28,19 @@ class LoadingPopup(Popup):
         self.dismiss()
 
 
-class GrashofPopup(BoxLayout):
-    """GrashofPopup class for kivy Ui"""
+class AddAddressPopup(BoxLayout):
+    """AddAddressPopup class for kivy Ui"""
 
     valid = False
 
     def __init__(self, **kwargs):
         """Grash of pop screen settings"""
-        super(GrashofPopup, self).__init__(**kwargs)
+        super(AddAddressPopup, self).__init__(**kwargs)
 
     def checkAddress_valid(self, instance):
         """Checking address is valid or not"""
         my_addresses = (
-            state.kivyapp.root.ids.content_drawer.ids.btn.values)
+            state.kivyapp.root.ids.content_drawer.ids.identity_dropdown.values)
         add_book = [addr[1] for addr in kivy_helper_search.search_sql(
             folder="addressbook")]
         entered_text = str(instance.text).strip()

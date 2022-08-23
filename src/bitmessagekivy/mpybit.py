@@ -64,8 +64,14 @@ from bitmessagekivy.baseclass.popup import *
 from qr_scanner.zbarcam import ZBarCam
 from pyzbar.pyzbar import ZBarSymbol
 
-# import pdb; pdb.set_trace()
 from bitmessagekivy.kivy_state import KivyStateVariables
+
+from bitmessagekivy.base_navigation import (
+    BaseLanguage, BaseNavigationItem, BaseNavigationDrawerDivider,
+    BaseNavigationDrawerSubheader, BaseContentNavigationDrawer,
+    BaseCustomSpinner
+)
+
 
 if platform != "android":
     from kivy.config import Config
@@ -119,129 +125,137 @@ def load_screen_json(data_file="screens_data.json"):
 #         import_from = import_data.split("import")[0].split('from')[1].strip()
 #         exec_import = importlib.import_module(import_from, import_to)
 #         exec_import
-#         import pdb; pdb.set_trace()
+#         
 
         # importlib.import_module("pybitmessage.bitmessagekivy.baseclass.trash", "Trash")
 
 # for modules in data_screens:
 #     exec(all_data[modules]['Import'])
-#     import pdb; pdb.set_trace()
+#     
 
 # pylint: disable=too-few-public-methods,too-many-arguments,attribute-defined-outside-init
 
 
-class Lang(Observable):
-    observers = []
-    lang = None
+class Lang(BaseLanguage):
+    """UI Language"""
+    # observers = []
+    # lang = None
 
-    def __init__(self, defaultlang):
-        super(Lang, self).__init__()
-        self.ugettext = None
-        self.lang = defaultlang
-        self.switch_lang(self.lang)
+    # def __init__(self, defaultlang):
+    #     super(Lang, self).__init__()
+    #     self.ugettext = None
+    #     self.lang = defaultlang
+    #     # self.switch_lang(self.lang)
 
-    def _(self, text):
-        # return self.ugettext(text)
-        return text
+    # @staticmethod
+    # def _(text):
+    #     return text
 
-    def fbind(self, name, func, args, **kwargs):
-        if name == "_":
-            self.observers.append((func, args, kwargs))
-        else:
-            return super(Lang, self).fbind(name, func, *largs, **kwargs)
+    # # def _(self, text):
+    # #     # return self.ugettext(text)
+    # #     return text
 
-    def funbind(self, name, func, args, **kwargs):
-        if name == "_":
-            key = (func, args, kwargs)
-            if key in self.observers:
-                self.observers.remove(key)
-        else:
-            return super(Lang, self).funbind(name, func, *args, **kwargs)
+    # # def fbind(self, name, func, args, **kwargs):
+    # #     if name == "_":
+    # #         self.observers.append((func, args, kwargs))
+    # #     else:
+    # #         return super(Lang, self).fbind(name, func, *args, **kwargs)
 
-    def switch_lang(self, lang):
-        # get the right locales directory, and instanciate a gettext
-        # locale_dir = os.path.join(os.path.dirname(__file__), 'translations', 'mo', 'locales')
-        # locales = gettext.translation('langapp', locale_dir, languages=[lang])
-        # self.ugettext = locales.gettext
+    # # def funbind(self, name, func, args, **kwargs):
+    # #     if name == "_":
+    # #         key = (func, args, kwargs)
+    # #         if key in self.observers:
+    # #             self.observers.remove(key)
+    # #     else:
+    # #         return super(Lang, self).funbind(name, func, *args, **kwargs)
 
-        # update all the kv rules attached to this text
-        for func, largs, kwargs in self.observers:
-            func(largs, None, None)
+    # # def switch_lang(self, lang):
+    # #     for func, args, kwargs in self.observers:
+    # #         func(args, None, None)
 
 
-class NavigationItem(OneLineAvatarIconListItem):
+class NavigationItem(BaseNavigationItem):
     """NavigationItem class for kivy Ui"""
-    badge_text = StringProperty()
-    icon = StringProperty()
-    active = BooleanProperty(False)
+    # badge_text = StringProperty()
+    # icon = StringProperty()
+    # active = BooleanProperty(False)
 
-    def currentlyActive(self):
-        """Currenly active"""
-        for nav_obj in self.parent.children:
-            nav_obj.active = False
-        self.active = True
+    # def currentlyActive(self):
+    #     """Currenly active"""
+    #     for nav_obj in self.parent.children:
+    #         nav_obj.active = False
+    #     self.active = True
 
 
-class NavigationDrawerDivider(OneLineListItem):
+class NavigationDrawerDivider(BaseNavigationDrawerDivider):
     """
     A small full-width divider that can be placed
     in the :class:`MDNavigationDrawer`
     """
 
-    disabled = True
-    divider = None
-    _txt_top_pad = NumericProperty(dp(8))
-    _txt_bot_pad = NumericProperty(dp(8))
+    # disabled = True
+    # divider = None
+    # _txt_top_pad = NumericProperty(dp(8))
+    # _txt_bot_pad = NumericProperty(dp(8))
 
-    def __init__(self, **kwargs):
-        # pylint: disable=bad-super-call
-        super(OneLineListItem, self).__init__(**kwargs)
-        self.height = dp(16)
+    # def __init__(self, **kwargs):
+    #     # pylint: disable=bad-super-call
+    #     super(OneLineListItem, self).__init__(**kwargs)
+    #     self.height = dp(16)
 
 
-class NavigationDrawerSubheader(OneLineListItem):
+class NavigationDrawerSubheader(BaseNavigationDrawerSubheader):
     """
     A subheader for separating content in :class:`MDNavigationDrawer`
 
     Works well alongside :class:`NavigationDrawerDivider`
     """
 
-    disabled = True
-    divider = None
-    theme_text_color = 'Secondary'
+    # disabled = True
+    # divider = None
+    # theme_text_color = 'Secondary'
 
 
-class ContentNavigationDrawer(BoxLayout):
+class ContentNavigationDrawer(BaseContentNavigationDrawer):
     """ContentNavigationDrawer class for kivy Uir"""
 
-    def __init__(self, *args, **kwargs):
-        """Method used for contentNavigationDrawer"""
-        super(ContentNavigationDrawer, self).__init__(*args, **kwargs)
-        Clock.schedule_once(self.init_ui, 0)
+    # def __init__(self, *args, **kwargs):
+    #     """Method used for contentNavigationDrawer"""
+    #     super(ContentNavigationDrawer, self).__init__(*args, **kwargs)
+    #     Clock.schedule_once(self.init_ui, 0)
 
-    def init_ui(self, dt=0):
-        """Clock Schdule for class contentNavigationDrawer"""
-        self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
+    # def init_ui(self, dt=0):
+    #     """Clock Schdule for class contentNavigationDrawer"""
+    #     self.ids.scroll_y.bind(scroll_y=self.check_scroll_y)
 
-    def check_scroll_y(self, instance, somethingelse):
-        """show data on scroll down"""
-        if self.ids.btn.is_open:
-            self.ids.btn.is_open = False
+    # def check_scroll_y(self, instance, somethingelse):
+    #     """show data on scroll down"""
+    #     if self.ids.identity_dropdown.is_open:
+    #         self.ids.identity_dropdown.is_open = False
 
 
 class BadgeText(IRightBodyTouch, MDLabel):
     """BadgeText class for kivy Ui"""
 
 
-class CustomSpinner(Spinner):
-    """CustomSpinner class for kivy Ui"""
+class IdentitySpinner(BaseCustomSpinner):
+    """IdentitySpinner class for kivy Ui"""
+
+    # def __init__(self, *args, **kwargs):
+    #     """Method used for setting size of spinner"""
+    #     super(IdentitySpinner, self).__init__(*args, **kwargs)
+    #     self.dropdown_cls.max_height = Window.size[1] / 3
+    #     self.values = list(addr for addr in config.addresses()
+    #                        if config.getboolean(str(addr), 'enabled'))
+
+    # """IdentitySpinner class for kivy Ui"""
 
     def __init__(self, *args, **kwargs):
         """Method used for setting size of spinner"""
-        super(CustomSpinner, self).__init__(*args, **kwargs)
+        super(IdentitySpinner, self).__init__(*args, **kwargs)
         self.dropdown_cls.max_height = Window.size[1] / 3
-        self.values = list(addr for addr in BMConfigParser().addresses()
-                           if BMConfigParser().get(str(addr), 'enabled') == 'true')
+        # self.values = list(addr for addr in BMConfigParser().addresses()
+        #                    if BMConfigParser().get(str(addr), 'enabled') == 'true')
 
 
 def get_identity_list():
@@ -361,7 +375,7 @@ class NavigateApp(MDApp):
         self.root.ids.sc16.add_widget(data_screen_dict['Draft'].Draft())
 
         self.root.ids.sc5.clear_widgets()
-        # import pdb; pdb.set_trace()
+        # 
         self.root.ids.sc5.add_widget(data_screen_dict['Trash'].Trash())
 
         self.root.ids.sc17.clear_widgets()
@@ -387,7 +401,7 @@ class NavigateApp(MDApp):
             title='Add contact\'s',
             type="custom",
             size_hint=(width, .23),
-            content_cls=GrashofPopup(),
+            content_cls=AddAddressPopup(),
             buttons=[
                 MDRaisedButton(
                     text="Save",
@@ -405,8 +419,9 @@ class NavigateApp(MDApp):
         )
         # self.add_popup.set_normal_height()
         self.add_popup.auto_dismiss = False
+        # import pdb; pdb.set_trace()
         self.add_popup.open()
-        # p = GrashofPopup()
+        # p = AddAddressPopup()
         # p.open()
 
     def scan_qr_code(self, instance):
