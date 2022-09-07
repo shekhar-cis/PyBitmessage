@@ -11,8 +11,9 @@ Bitmessage android(mobile) interface
 
 import importlib
 import json
-from bitmessagekivy.get_platform import platform
 import os
+import sys
+from bitmessagekivy.get_platform import platform
 from bitmessagekivy import identiconGeneration
 from bitmessagekivy import kivy_helper_search
 from bitmessagekivy.uikivysignaler import UIkivySignaler
@@ -274,12 +275,13 @@ class NavigateApp(MDApp):
         self.data_screens, self.all_data, response = load_screen_json()
         self.kivy_state_obj = KivyStateVariables()
 
+    kivy_state = KivyStateVariables()
     previous_date = ObjectProperty()
     obj_1 = ObjectProperty()
     identity_list = get_identity_list()
     nav_drawer = ObjectProperty()
-    state.screen_density = Window.size
-    window_size = state.screen_density
+    kivy_state.screen_density = Window.size
+    window_size = kivy_state.screen_density
     app_platform = platform
     title = "PyBitmessage"
     imgstatus = False

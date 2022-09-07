@@ -36,7 +36,7 @@ class KivyStateVariables(object):
         self.availabe_credit = 0
         self.in_sent_method = False
         self.in_search_mode = False
-        self.imageDir = None
+        self.imageDir = os.path.abspath(os.path.join('images', 'kivy'))
         self.image_dir = os.path.abspath(os.path.join('images', 'kivy'))
 
         # self.sqlReady = False  # set to true by sqlTread when ready for processing
