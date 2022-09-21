@@ -78,9 +78,9 @@ class Random(Screen):
         """reseting spinner address and UI"""
         addresses = [addr for addr in BMConfigParser().addresses()
                      if BMConfigParser().get(str(addr), 'enabled') == 'true']
-        self.manager.parent.ids.content_drawer.ids.btn.values = []
+        self.manager.parent.ids.content_drawer.ids.identity_dropdown.values = []
         self.manager.parent.ids.sc3.children[1].ids.btn.values = []
-        self.manager.parent.ids.content_drawer.ids.btn.values = addresses
+        self.manager.parent.ids.content_drawer.ids.identity_dropdown.values = addresses
         self.manager.parent.ids.sc3.children[1].ids.btn.values = addresses
 
     @staticmethod

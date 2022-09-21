@@ -225,10 +225,10 @@ class MyAddress(Screen, HelperMyAddress):
     def filter_address(address):
         """Method will filter the my address list data"""
         # import pdb; pdb.set_trace()
-        searched_text = MyAddress().kivy_state.searcing_text.lower()
-        if BMConfigParser().search_addresses(address, searched_text):
-            return True
-        return False
+        from kivy.app import App
+        searched_text = App.get_running_app().kivy_state_obj.searcing_text.lower()
+        # if BMConfigParser().search_addresses(address, searched_text):
+        return bool(BMConfigParser().search_addresses(address, searched_text))
         # if [x for x in [BMConfigParser().get(address, 'label').lower(), address.lower()] if (state.searcing_text).lower() in x]:
 
     def disable_address_ui(self, address, instance):
